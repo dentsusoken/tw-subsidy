@@ -2,6 +2,7 @@ import { expect } from 'chai';
 import nacl from 'tweetnacl';
 import {
   randomBytes,
+  randomSeed,
   keyPairFromSeed,
   keyPair,
   seedFromSecretKey,
@@ -13,6 +14,11 @@ describe('naclUtils', () => {
   it('randomBytes should work', () => {
     const bytes = randomBytes(32);
     expect(bytes.length).to.eq(32);
+  });
+
+  it('randomSeed should work', () => {
+    const seed = randomSeed();
+    expect(seed.length).to.eq(32);
   });
 
   it('keyPairFromSeed should work', () => {

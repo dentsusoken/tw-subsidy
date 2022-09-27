@@ -4,12 +4,16 @@ export const randomBytes = (length: number) => {
   return nacl.randomBytes(length);
 };
 
+export const randomSeed = () => {
+  return randomBytes(nacl.box.secretKeyLength);
+};
+
 export const keyPairFromSeed = (seed: Uint8Array) => {
   return nacl.sign.keyPair.fromSeed(seed);
 };
 
 export const keyPair = () => {
-  const seed = randomBytes(nacl.box.secretKeyLength);
+  const seed = randomSeed();
   return keyPairFromSeed(seed);
 };
 

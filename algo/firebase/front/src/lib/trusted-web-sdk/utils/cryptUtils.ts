@@ -1,6 +1,6 @@
 import * as crypto from 'crypto';
 
-import { seedFromSecretKey } from './naclUtils';
+import { keyPairFromSeed, randomBytes, seedFromSecretKey } from './naclUtils';
 
 const ALGORITHM = 'aes-256-cbc';
 
@@ -22,13 +22,33 @@ export const createKey = (password: string) => {
   return crypto.scryptSync(password, salt, 32);
 };
 
+export const encryptSeed = (seed: Uint8Array, password: string) => {
+  const key = createKey(password);
+  const iv = randomBytes(16);
+  const cipher = crypto.createCipheriv(ALGORITHM, key, iv);
+  const encBody = cipher.update(seed);
+
+  return Buffer.concat([iv, encBody, cipher.final()]);
+};
+
+export const decryptSeed = (encData: Buffer, password: string) => {
+  const key = createKey(password);
+  const iv = encData.subarray(0, 16);
+  const encBody = encData.subarray(16);
+
+  const decipher = crypto.createDecipheriv(ALGORITHM, key, iv);
+  const decBody = decipher.update(encBody);
+
+  return Uint8Array.from(Buffer.concat([decBody, decipher.final()]));
+};
+
 export const encryptByPassword = (data: string, password: string) => {
   const key = createKey(password);
   const iv = crypto.randomBytes(16);
   const cipher = crypto.createCipheriv(ALGORITHM, key, iv);
-  const encBuf = cipher.update(Buffer.from(data));
+  const encBody = cipher.update(Buffer.from(data));
 
-  return Buffer.concat([iv, encBuf, cipher.final()]).toString('base64');
+  return Buffer.concat([iv, encBody, cipher.final()]).toString('base64');
 };
 
 export const decryptByPassword = (encData: string, password: string) => {
@@ -38,28 +58,35 @@ export const decryptByPassword = (encData: string, password: string) => {
   const encBuf = buf.subarray(16);
 
   const decipher = crypto.createDecipheriv(ALGORITHM, key, iv);
-  const decBuf = decipher.update(encBuf);
+  const decBody = decipher.update(encBuf);
 
-  return Buffer.concat([decBuf, decipher.final()]).toString('utf8');
+  return Buffer.concat([decBody, decipher.final()]).toString('utf8');
 };
 
 export const encryptBySecretKey = (data: string, secretKey: Uint8Array) => {
   const iv = crypto.randomBytes(16);
   const key = seedFromSecretKey(secretKey);
   const cipher = crypto.createCipheriv(ALGORITHM, key, iv);
-  const encBuf = cipher.update(Buffer.from(data));
+  const encBody = cipher.update(Buffer.from(data));
 
-  return Buffer.concat([iv, encBuf, cipher.final()]).toString('base64');
+  return Buffer.concat([iv, encBody, cipher.final()]).toString('base64');
 };
 
 export const decryptBySecretKey = (encData: string, secretKey: Uint8Array) => {
   const buf = Buffer.from(encData, 'base64');
   const key = seedFromSecretKey(secretKey);
   const iv = buf.subarray(0, 16);
-  const encBuf = buf.subarray(16);
+  const encBody = buf.subarray(16);
 
   const decipher = crypto.createDecipheriv(ALGORITHM, key, iv);
-  const decBuf = decipher.update(encBuf);
+  const decBody = decipher.update(encBody);
 
-  return Buffer.concat([decBuf, decipher.final()]).toString('utf8');
+  return Buffer.concat([decBody, decipher.final()]).toString('utf8');
+};
+
+export const secretKeyFromEncSeed = (encData: Buffer, password: string) => {
+  const seed = decryptSeed(encData, password);
+  const keys = keyPairFromSeed(seed);
+
+  return keys.secretKey;
 };

@@ -3,26 +3,40 @@ import { generateAccount } from 'algosdk';
 import {
   createSalt,
   createKey,
+  encryptSeed,
+  decryptSeed,
   encryptByPassword,
   decryptByPassword,
   encryptBySecretKey,
   decryptBySecretKey,
 } from './cryptUtils';
+import { randomSeed } from './naclUtils';
 
 describe('cryptUtils', () => {
   it('createSalt should work', () => {
-    console.log(createSalt('abcdefgh'));
     expect(createSalt('abcdefgh')).to.not.empty;
   });
 
   it('createKey should work', () => {
     const key = createKey('abcdefgh');
-    console.log(key.length, key);
     expect(key).to.not.empty;
   });
 
+  it('encryptSeed should work', () => {
+    const seed = randomSeed();
+    const encData = encryptSeed(seed, 'abcdefgh');
+
+    expect(encData).to.not.empty;
+  });
+
+  it('decryptSeed should work', () => {
+    const seed = randomSeed();
+    const encData = encryptSeed(seed, 'abcdefgh');
+
+    expect(decryptSeed(encData, 'abcdefgh')).to.eql(seed);
+  });
+
   it('encryptByPassword should work', () => {
-    console.log(encryptByPassword('Hello', 'abcdefgh'));
     expect(encryptByPassword('Hello', 'abcdefgh')).to.not.empty;
   });
 
@@ -34,7 +48,6 @@ describe('cryptUtils', () => {
   it('encryptBySecretKey should work', () => {
     const account = generateAccount();
 
-    console.log(encryptBySecretKey('Hello', account.sk));
     expect(encryptBySecretKey('Hello', account.sk)).to.not.empty;
   });
 
