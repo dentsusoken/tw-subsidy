@@ -28,5 +28,5 @@ describe('algodClientState', () => {
 
   it('testAlgodClient should work', async () => {
     expect(await testNetClient.status().do()).to.not.be.empty;
-  });
+  }, 5000);
 });
