@@ -1,25 +1,45 @@
 import { expect } from 'chai';
 import { generateAccount } from 'algosdk';
+
 import {
-  createSalt,
+  genericHash,
   createKey,
+  encrypt,
+  decrypt,
   encryptSeed,
   decryptSeed,
   encryptByPassword,
   decryptByPassword,
   encryptBySecretKey,
   decryptBySecretKey,
+  secretKeyFromEncSeed,
 } from './cryptUtils';
-import { randomSeed } from './naclUtils';
+import { keyPair, randomSeed, seedFromSecretKey } from './naclUtils';
 
 describe('cryptUtils', () => {
-  it('createSalt should work', () => {
-    expect(createSalt('abcdefgh')).to.not.empty;
+  it('genericHash should work', () => {
+    expect(genericHash('abcdefgh').length).to.eq(32);
   });
 
   it('createKey should work', () => {
     const key = createKey('abcdefgh');
-    expect(key).to.not.empty;
+    expect(key.length).to.eq(32);
+  });
+
+  it('encrypt should work', () => {
+    const data = new TextEncoder().encode('Hello');
+    const key = createKey('abcdefgh');
+    const encData = encrypt(data, key);
+
+    expect(encData).to.not.empty;
+  });
+
+  it('decrypt should work', () => {
+    const data = new TextEncoder().encode('Hello');
+    const key = createKey('abcdefgh');
+    const encData = encrypt(data, key);
+
+    expect(decrypt(encData, key)).to.eql(data);
   });
 
   it('encryptSeed should work', () => {
@@ -56,5 +76,14 @@ describe('cryptUtils', () => {
 
     const encData = encryptBySecretKey('Hello', account.sk);
     expect(decryptBySecretKey(encData, account.sk)).to.eq('Hello');
+  });
+
+  it('secretKeyFromEncSeed should work', () => {
+    const keys = keyPair();
+    const seed = seedFromSecretKey(keys.secretKey);
+    const password = 'abcdefgh';
+    const encData = encryptSeed(seed, password);
+
+    expect(secretKeyFromEncSeed(encData, password)).to.eql(keys.secretKey);
   });
 });
