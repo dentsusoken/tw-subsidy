@@ -6,15 +6,11 @@ import {
   createKey,
   encrypt,
   decrypt,
-  encryptSeed,
-  decryptSeed,
   encryptByPassword,
   decryptByPassword,
   encryptBySecretKey,
   decryptBySecretKey,
-  secretKeyFromEncSeed,
 } from './cryptUtils';
-import { keyPair, randomSeed, seedFromSecretKey } from './naclUtils';
 
 describe('cryptUtils', () => {
   it('genericHash should work', () => {
@@ -42,48 +38,30 @@ describe('cryptUtils', () => {
     expect(decrypt(encData, key)).to.eql(data);
   });
 
-  it('encryptSeed should work', () => {
-    const seed = randomSeed();
-    const encData = encryptSeed(seed, 'abcdefgh');
-
-    expect(encData).to.not.empty;
-  });
-
-  it('decryptSeed should work', () => {
-    const seed = randomSeed();
-    const encData = encryptSeed(seed, 'abcdefgh');
-
-    expect(decryptSeed(encData, 'abcdefgh')).to.eql(seed);
-  });
-
   it('encryptByPassword should work', () => {
-    expect(encryptByPassword('Hello', 'abcdefgh')).to.not.empty;
+    expect(encryptByPassword(new TextEncoder().encode('Hello'), 'abcdefgh')).to
+      .not.empty;
   });
 
   it('decryptByPassword should work', () => {
-    const encData = encryptByPassword('Hello', 'abcdefgh');
-    expect(decryptByPassword(encData, 'abcdefgh')).to.eq('Hello');
+    const data = new TextEncoder().encode('Hello');
+    const password = 'abcdefgh';
+    const encData = encryptByPassword(data, password);
+    expect(decryptByPassword(encData, password)).to.eql(data);
   });
 
   it('encryptBySecretKey should work', () => {
     const account = generateAccount();
+    const data = new TextEncoder().encode('Hello');
 
-    expect(encryptBySecretKey('Hello', account.sk)).to.not.empty;
+    expect(encryptBySecretKey(data, account.sk)).to.not.empty;
   });
 
   it('decryptBySecretKey should work', () => {
     const account = generateAccount();
+    const data = new TextEncoder().encode('Hello');
 
-    const encData = encryptBySecretKey('Hello', account.sk);
-    expect(decryptBySecretKey(encData, account.sk)).to.eq('Hello');
-  });
-
-  it('secretKeyFromEncSeed should work', () => {
-    const keys = keyPair();
-    const seed = seedFromSecretKey(keys.secretKey);
-    const password = 'abcdefgh';
-    const encData = encryptSeed(seed, password);
-
-    expect(secretKeyFromEncSeed(encData, password)).to.eql(keys.secretKey);
+    const encData = encryptBySecretKey(data, account.sk);
+    expect(decryptBySecretKey(encData, account.sk)).to.eql(data);
   });
 });

@@ -21,6 +21,10 @@ export const seedFromSecretKey = (secretKey: Uint8Array) => {
   return secretKey.slice(0, nacl.sign.seedLength);
 };
 
+export const publicKeyFromSecretKey = (secretKey: Uint8Array) => {
+  return secretKey.slice(nacl.sign.seedLength);
+};
+
 export const sign = (message: Uint8Array, secretKey: Uint8Array) => {
   return nacl.sign.detached(message, secretKey);
 };
