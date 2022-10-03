@@ -8,12 +8,15 @@
     "start": "next start",
     "lint": "next lint --dir src",
     "lint:fix": "yarn lint --fix",
-    "test": "TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\"}' yarn ts-mocha --paths **/*.spec.ts",
-    "test:watch": "yarn test --watch --watch-files '**/*.ts'"
+    "test": "TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\"}' yarn ts-mocha --timeout 60000 --paths **/*.spec.ts",
+    "test:watch": "yarn test --watch --watch-files '**/*.ts'",
+    "ts-node": "TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\"}' ts-node -r tsconfig-paths/register --transpile-only",
+    "destroyAsset": "yarn ts-node src/lib/algosbt/asset/destroyAsset.ts"
   },
   "dependencies": {
     "aes-js": "^3.1.2",
     "algosdk": "^1.21.0",
+    "dotenv": "^16.0.3",
     "js-sha512": "^0.8.0",
     "next": "12.3.0",
     "pbkdf2": "^3.1.2",
