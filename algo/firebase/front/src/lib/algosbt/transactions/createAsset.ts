@@ -7,10 +7,11 @@ const createAsset = async (
   txnParams: {
     from: string;
     assetName: string;
+    note?: Uint8Array;
   },
   secretKey: Uint8Array
 ) => {
-  const { from, assetName } = txnParams;
+  const { from, assetName, note } = txnParams;
   const suggestedParams = await algod.getTransactionParams().do();
 
   const txn = algosdk.makeAssetCreateTxnWithSuggestedParamsFromObject({
@@ -18,7 +19,9 @@ const createAsset = async (
     total: 1,
     decimals: 0,
     defaultFrozen: true,
+    note,
     manager: from,
+    clawback: from,
     unitName: 'SBT',
     assetName,
     suggestedParams,

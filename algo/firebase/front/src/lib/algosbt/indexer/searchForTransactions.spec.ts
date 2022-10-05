@@ -1,16 +1,19 @@
 import { expect } from 'chai';
 
 import { test1Account } from '../account/accounts';
-
+import { testNetAlgod } from '../algod/algods';
 import createAsset from '../transactions/createAsset';
 import destroyAsset from '../transactions/destroyAsset';
-import { testNetAlgod } from './algods';
-import getCreatedAsset from './getCreatedAsset';
+import { testNetAlgoIndexer } from './indexers';
 
-describe('generateAccount', () => {
+import searchForTransactions from './searchForTransactions';
+
+describe('searchForTransactions', () => {
   it('should work', async () => {
+    const note = new TextEncoder().encode('Hello');
     const txnParams = {
       from: test1Account.addr,
+      note,
       assetName: 'AAA',
     };
 
@@ -23,14 +26,11 @@ describe('generateAccount', () => {
     try {
       console.log('Asset Index:', assetIndex);
 
-      const asset = await getCreatedAsset(
-        testNetAlgod,
-        test1Account.addr,
-        assetIndex
-      );
+      const txns = await searchForTransactions(testNetAlgoIndexer, assetIndex);
 
-      expect(asset?.index).to.not.be.null;
-      expect(asset?.params).to.not.be.null;
+      expect(txns).to.not.be.undefined;
+      expect(txns.transactions.length).to.eq(1);
+      expect(Buffer.from(txns.transactions[0].note, 'base64')).to.eql(note);
     } finally {
       await destroyAsset(
         testNetAlgod,
