@@ -1,15 +1,15 @@
 import { test1Account } from '../account/accounts';
 import { testNetAlgod } from '../algod/algods';
 import splitIntoChunks from '../utils/splitIntoChunks';
-import searchForTransactions from '../indexer/searchForTransactions';
 
 import createAsset from './createAsset';
 import destroyAsset from './destroyAsset';
 import saveBatchNotes from './saveBatchNotes';
 import { testNetAlgoIndexer } from '../indexer/indexers';
 import { expect } from 'chai';
+import loadMessage from './loadMessage';
 
-describe('saveBatchNotes', () => {
+describe('loadMessage', () => {
   it('should work', async () => {
     const txnParams = {
       from: test1Account.addr,
@@ -40,9 +40,7 @@ describe('saveBatchNotes', () => {
         test1Account.sk
       );
 
-      const txns = await searchForTransactions(testNetAlgoIndexer, assetIndex);
-
-      expect(txns.length).to.eq(17);
+      expect(await loadMessage(testNetAlgoIndexer, assetIndex)).to.eql(message);
     } finally {
       await destroyAsset(
         testNetAlgod,

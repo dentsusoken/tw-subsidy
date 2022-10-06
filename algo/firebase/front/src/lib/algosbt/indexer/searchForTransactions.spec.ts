@@ -28,9 +28,8 @@ describe('searchForTransactions', () => {
 
       const txns = await searchForTransactions(testNetAlgoIndexer, assetIndex);
 
-      expect(txns).to.not.be.undefined;
-      expect(txns.transactions.length).to.eq(1);
-      expect(Buffer.from(txns.transactions[0].note, 'base64')).to.eql(note);
+      expect(txns.length).to.eq(1);
+      expect(Buffer.from(txns[0].note, 'base64')).to.eql(note);
     } finally {
       await destroyAsset(
         testNetAlgod,

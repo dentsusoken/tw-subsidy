@@ -12,7 +12,7 @@
     "test": "TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\"}' yarn ts-mocha --timeout 60000 --paths **/*.spec.ts",
     "test:watch": "yarn test --watch --watch-files '**/*.ts'",
     "ts-node": "TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\"}' ts-node -r tsconfig-paths/register --transpile-only",
-    "destroyAsset": "yarn ts-node src/lib/algosbt/asset/destroyAsset.ts"
+    "destroyAsset": "yarn ts-node src/lib/algosbt/transactions/destroyAsset.ts"
   },
   "dependencies": {
     "aes-js": "^3.1.2",
