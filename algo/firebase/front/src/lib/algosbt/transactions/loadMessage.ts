@@ -1,36 +1,26 @@
 import algosdk from 'algosdk';
 
-import makeNoteTxn from './makeNoteTxn';
-import sendWaitTxn from '../algod/sendWaitTxn';
+import searchForTransactions from '../indexer/searchForTransactions';
 
-type TxnParams = {
-  from: string;
-  assetIndex: number;
-  notes: Uint8Array[];
-};
-
-const saveBatchNotes = async (
-  algod: algosdk.Algodv2,
-  { from, assetIndex, notes }: TxnParams,
-  secretKey: Uint8Array
-) => {
-  const suggestedParams = await algod.getTransactionParams().do();
-  const txns: algosdk.Transaction[] = [];
-
-  notes.forEach((note) => {
-    const txn = makeNoteTxn({ from, assetIndex, note, suggestedParams });
-    txns.push(txn);
-  });
-
-  algosdk.assignGroupID(txns);
-
-  const signedTxns: Uint8Array[] = [];
+const loadMessage = async (indexer: algosdk.Indexer, assetIndex: number) => {
+  const txns = await searchForTransactions(indexer, assetIndex);
+  const buffers: Buffer[] = [];
 
   txns.forEach((txn) => {
-    signedTxns.push(txn.signTxn(secretKey));
+    if (
+      txn['tx-type'] === 'axfer' &&
+      txn.note &&
+      txn.group &&
+      txn['asset-transfer-transaction']
+    ) {
+      const axferTxn = txn['asset-transfer-transaction'];
+
+      if (axferTxn.amount === 0 && axferTxn.sender === axferTxn.receiver) {
+        buffers.push(Buffer.from(txn.note, 'base64'));
+      }
+    }
   });
 
-  await sendWaitTxn(algod, signedTxns);
+  return Uint8Array.from(Buffer.concat(buffers));
 };
-
-export default saveBatchNotes;
+export default loadMessage;

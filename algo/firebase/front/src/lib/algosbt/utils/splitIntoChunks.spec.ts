@@ -4,7 +4,7 @@ import splitIntoChunks from './splitIntoChunks';
 
 describe('splitIntoChunks', () => {
   it('should work', () => {
-    const arr = new Uint8Array(Array.from(Array(32).keys()));
+    const arr = new Uint8Array(Array(32).keys());
     const ret = splitIntoChunks(arr, 1);
 
     expect(ret.length).to.eq(2);
@@ -43,5 +43,13 @@ describe('splitIntoChunks', () => {
     expect(ret[1][13]).to.eql(new Uint8Array([29]));
     expect(ret[1][14]).to.eql(new Uint8Array([30]));
     expect(ret[1][15]).to.eql(new Uint8Array([31]));
+
+    const ret2 = splitIntoChunks(arr);
+    //console.log(JSON.stringify(ret, undefined, 2));
+    //console.log(JSON.stringify(arr, undefined, 2));
+
+    expect(ret2.length).to.eq(1);
+    expect(ret2[0].length).to.eq(1);
+    expect(ret2[0][0]).to.eql(arr);
   });
 });

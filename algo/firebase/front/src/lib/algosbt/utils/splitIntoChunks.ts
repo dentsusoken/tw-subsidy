@@ -1,18 +1,21 @@
+const BATCH_SIZE = 16;
+
+export const DEFAULT_CHUNK_LENGTH = 1024;
+
 const splitIntoChunks = (
-  arr: Uint8Array,
-  chunkLength: number = 1024,
-  batchSize: number = 16
+  message: Uint8Array,
+  chunkLength: number = DEFAULT_CHUNK_LENGTH
 ) => {
   const chunks: Uint8Array[] = [];
 
-  for (let i = 0; i < arr.length; i += chunkLength) {
-    chunks.push(arr.slice(i, i + chunkLength));
+  for (let i = 0; i < message.length; i += chunkLength) {
+    chunks.push(message.slice(i, i + chunkLength));
   }
 
   const batches: Uint8Array[][] = [];
 
-  for (let i = 0; i < chunks.length; i += batchSize) {
-    batches.push(chunks.slice(i, i + batchSize));
+  for (let i = 0; i < chunks.length; i += BATCH_SIZE) {
+    batches.push(chunks.slice(i, i + BATCH_SIZE));
   }
 
   return batches;
