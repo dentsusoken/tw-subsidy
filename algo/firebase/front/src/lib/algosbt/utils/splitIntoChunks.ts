@@ -1,6 +1,6 @@
 const BATCH_SIZE = 16;
 
-export const DEFAULT_CHUNK_LENGTH = 1024;
+export const DEFAULT_CHUNK_LENGTH = 1023;
 
 const splitIntoChunks = (
   message: Uint8Array,

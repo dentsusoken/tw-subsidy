@@ -2,13 +2,13 @@ import { expect } from 'chai';
 
 import { test1Account } from '../account/accounts';
 import { testNetAlgod } from '../algod/algods';
-import signSendWaitTxn from '../algod/signSendWaitTxn';
+import getCreatedAsset from '../algod/getCreatedAsset';
 
 import createAsset from './createAsset';
 import destroyAsset from './destroyAsset';
-import makeNoteTxn from './makeNoteTxn';
+import removeClawback from './removeCrawback';
 
-describe('makeNoteTxn', () => {
+describe('removeClawback', () => {
   it('should work', async () => {
     const txnParams = {
       from: test1Account.addr,
@@ -24,19 +24,27 @@ describe('makeNoteTxn', () => {
     try {
       console.log('Asset Index:', assetIndex);
 
-      const suggestedParams = await testNetAlgod.getTransactionParams().do();
-      const note = new Uint8Array(new Array(10).keys());
+      const asset = await getCreatedAsset(
+        testNetAlgod,
+        test1Account.addr,
+        assetIndex
+      );
 
-      const txn = makeNoteTxn({
-        from: test1Account.addr,
-        assetIndex,
-        note,
-        suggestedParams,
-      });
+      expect(asset?.params.clawback).to.not.be.undefined;
 
-      expect(txn).to.be.not.undefined;
+      await removeClawback(
+        testNetAlgod,
+        { from: test1Account.addr, assetIndex },
+        test1Account.sk
+      );
 
-      await signSendWaitTxn(testNetAlgod, txn, test1Account.sk);
+      const asset2 = await getCreatedAsset(
+        testNetAlgod,
+        test1Account.addr,
+        assetIndex
+      );
+
+      expect(asset2?.params.clawback).to.be.undefined;
     } finally {
       await destroyAsset(
         testNetAlgod,
