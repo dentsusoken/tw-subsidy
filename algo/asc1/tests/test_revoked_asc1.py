@@ -1,6 +1,7 @@
 from typing import Iterator
 
 from algosdk.v2client.algod import AlgodClient
+from algosdk.error import AlgodHTTPError
 
 import pytest
 
@@ -11,7 +12,7 @@ from algosdk_helper import (
     compile_smart_contract,
     call_app,
 )
-from accounts import test1_private_key
+from accounts import test1_private_key, test2_private_key
 
 from revoked_asc1 import (
     approval_program,
@@ -47,3 +48,16 @@ def test_revoked_asc1(algod: AlgodClient, app_index: int) -> None:
     call_app(algod, test1_private_key, app_index, app_args)
     state = read_global_state(algod, app_index)
     assert state["revoked"] == 1
+
+
+def test_check_set_revoked_sender(
+    algod: AlgodClient,
+    app_index: int,
+) -> None:
+    assert algod
+    assert app_index
+
+    with pytest.raises(AlgodHTTPError) as e:
+        app_args = ["set_revoked", 1]
+        call_app(algod, test2_private_key, app_index, app_args)
+    print(e)

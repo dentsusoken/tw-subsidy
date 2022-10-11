@@ -96,6 +96,10 @@ def call_app(
     sender = address_from_private_key(private_key)
     sp = algod.suggested_params()
 
+    print("Sender:", sender)
+    print("Application Index:", app_index)
+    print("Application Args:", app_args)
+
     txn = ApplicationNoOpTxn(
         sender,
         sp,
@@ -107,21 +111,17 @@ def call_app(
 
     sign_send_wait_transaction(algod, txn, private_key)
 
-    print("Sender:", sender)
-    print("Application Index:", app_index)
-    print("Application Args:", app_args)
-
 
 def delete_app(algod: AlgodClient, private_key: str, app_index: int) -> None:
     print("delete_app()")
     sender = address_from_private_key(private_key)
     sp = algod.suggested_params()
 
-    txn = ApplicationDeleteTxn(sender, sp, index=app_index)
-    sign_send_wait_transaction(algod, txn, private_key)
-
     print("Sender:", sender)
     print("Application Index:", app_index)
+
+    txn = ApplicationDeleteTxn(sender, sp, index=app_index)
+    sign_send_wait_transaction(algod, txn, private_key)
 
 
 def format_b64bytes(val: bytes) -> str | bytes:
