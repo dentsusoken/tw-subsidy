@@ -2,8 +2,8 @@ import { expect } from 'chai';
 
 import { test1Account } from '../account/accounts';
 import { testNetAlgod } from '../algod/algods';
-import signSendWaitTxn from '../algod/signSendWaitTxn';
 
+import signSendWaitTxn from './signSendWaitTxn';
 import createAsset from './createAsset';
 import destroyAsset from './destroyAsset';
 import makeNoteTxn from './makeNoteTxn';

@@ -1,8 +1,9 @@
 import algosdk from 'algosdk';
 
 import { test1Account } from '../account/accounts';
-import signSendWaitTxn from '../algod/signSendWaitTxn';
 import { testNetAlgod } from '../algod/algods';
+
+import signSendWaitTxn from './signSendWaitTxn';
 
 const destroyAsset = async (
   algod: algosdk.Algodv2,

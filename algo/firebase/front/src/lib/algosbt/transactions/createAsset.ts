@@ -1,6 +1,6 @@
 import * as algosdk from 'algosdk';
 
-import signSendWaitTxn from '../algod/signSendWaitTxn';
+import signSendWaitTxn from './signSendWaitTxn';
 
 const createAsset = async (
   algod: algosdk.Algodv2,

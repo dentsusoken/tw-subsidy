@@ -4,7 +4,7 @@ import algosdk from 'algosdk';
 
 import { test1Account } from '../account/accounts';
 
-import { testNetAlgod } from './algods';
+import { testNetAlgod } from '../algod/algods';
 import signSendWaitTxn from './signSendWaitTxn';
 
 describe('signSendWaitTxn', () => {

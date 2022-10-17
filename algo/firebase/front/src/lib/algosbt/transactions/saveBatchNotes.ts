@@ -1,7 +1,7 @@
 import algosdk from 'algosdk';
 
 import makeNoteTxn from './makeNoteTxn';
-import sendWaitTxn from '../algod/sendWaitTxn';
+import sendWaitTxn from './sendWaitTxn';
 
 type TxnParams = {
   from: string;
