@@ -9,7 +9,7 @@ import clearTeal from '../teal/revokedClear.teal';
 import createApp, { TxnParams } from './createApp';
 import deleteApp from './deleteApp';
 
-describe('createpp', () => {
+describe('createApp', () => {
   it('should work', async () => {
     const approvalProgram = await compile(algod, approvalTeal);
     const clearProgram = await compile(algod, clearTeal);
