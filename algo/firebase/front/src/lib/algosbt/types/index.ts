@@ -9,9 +9,14 @@ export type SBTRequest<T> = {
   signature: Uint8Array;
 };
 
-export type SBT<T> = {
+export type SBTMessage<T> = {
   holderAddress: string;
+  appIndex: number;
+  content: T;
+};
+
+export type SBT<T> = {
   issuerAddress: string;
-  message: T;
+  message: SBTMessage<T>;
   signature: Uint8Array;
 };

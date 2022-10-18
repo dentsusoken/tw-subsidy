@@ -1,9 +1,17 @@
-import { generateAccount, decodeAddress, encodeObj } from 'algosdk';
+import {
+  generateAccount,
+  decodeAddress,
+  encodeObj,
+  decodeObj,
+  Algodv2,
+} from 'algosdk';
 
-import { EncAccount, SBTRequest, SBT } from './types';
+import { EncAccount, SBTRequest, SBT, SBTMessage } from './types';
 import { encryptByPassword, decryptByPassword } from './utils/cryptUtils';
 import { addressFromSecretKey } from './utils/algosdkUtils';
 import { sign, verify } from './utils/naclUtils';
+import createRevokedApp from './transactions/createRevokedApp';
+import getGlobalState from './algod/getGlobalState';
 
 export const createEncAccount = (password: string): EncAccount => {
   const account = generateAccount();
@@ -30,7 +38,7 @@ export const createSBTRequest = <T>(
   const encodedMessage = encodeObj(message);
   const signature = sign(encodedMessage, secretKey);
 
-  return { holderAddress, message, signature };
+  return { holderAddress, message: decodeObj(encodedMessage), signature };
 };
 
 export const verifySBTRequest = (req: SBTRequest<unknown>) => {
@@ -40,21 +48,46 @@ export const verifySBTRequest = (req: SBTRequest<unknown>) => {
   return verify(encodedMessage, req.signature, publicKey);
 };
 
-export const createSBT = <T>(
-  holderAddress: string,
-  issuerAddress: string,
-  message: T,
+export type SBTParams<T> = {
+  issuerAddress: string;
+  holderAddress: string;
+  content: T;
+};
+
+export const createSBT = async <T>(
+  algod: Algodv2,
+  { issuerAddress, holderAddress, content }: SBTParams<T>,
   secretKey: Uint8Array
-): SBT<T> => {
+) => {
+  const appIndex = await createRevokedApp(
+    algod,
+    { from: issuerAddress },
+    secretKey
+  );
+  const message: SBTMessage<T> = {
+    holderAddress,
+    appIndex,
+    content: decodeObj(encodeObj(content)),
+  };
   const encodedMessage = encodeObj(message);
   const signature = sign(encodedMessage, secretKey);
 
-  return { holderAddress, issuerAddress, message, signature };
+  return { issuerAddress, message, signature } as SBT<T>;
 };
 
-export const verifySBT = (sbt: SBT<unknown>) => {
-  const { publicKey } = decodeAddress(sbt.issuerAddress);
-  const encodedMessage = encodeObj(sbt.message);
+export const verifySBT = async (algod: Algodv2, sbt: SBT<unknown>) => {
+  try {
+    const { publicKey } = decodeAddress(sbt.issuerAddress);
+    const encodedMessage = encodeObj(sbt.message);
 
-  return verify(encodedMessage, sbt.signature, publicKey);
+    if (verify(encodedMessage, sbt.signature, publicKey)) {
+      const appIndex = sbt.message.appIndex;
+
+      const state = await getGlobalState(algod, appIndex);
+
+      return state.revoked === 0;
+    }
+  } catch (ignore) {}
+
+  return false;
 };

@@ -1,5 +1,10 @@
 import { expect } from 'chai';
 
+import { decryptByPassword, encryptByPassword } from './utils/cryptUtils';
+import { addressFromSecretKey } from './utils/algosdkUtils';
+import { testNetAlgod as algod } from './algod/algods';
+import { test1Account } from './account/accounts';
+
 import {
   createEncAccount,
   restoreEncAccount,
@@ -8,8 +13,7 @@ import {
   createSBT,
   verifySBT,
 } from '.';
-import { decryptByPassword } from './utils/cryptUtils';
-import { addressFromSecretKey } from './utils/algosdkUtils';
+import deleteApp from './transactions/deleteApp';
 
 describe('algosbt', () => {
   it('createEncAccount should work', () => {
@@ -47,7 +51,7 @@ describe('algosbt', () => {
     const req = createSBTRequest(encAccount.address, message, secretKey);
 
     expect(req.holderAddress).to.eq(encAccount.address);
-    expect(req.message).to.eq(message);
+    expect(req.message).to.eql(message);
     expect(req.signature).to.not.be.empty;
   });
 
@@ -64,56 +68,81 @@ describe('algosbt', () => {
     expect(verifySBTRequest(req)).to.be.true;
   });
 
-  it('createSBT should work', () => {
+  it('createSBT should work', async () => {
     const holderPassword = 'abcdefgh';
     const issuerPassword = '12345678';
 
     const holderEncAccount = createEncAccount(holderPassword);
-    const issuerEncAccount = createEncAccount(issuerPassword);
 
-    const secretKey = decryptByPassword(
-      issuerEncAccount.encSecretKey,
+    const issuerEncSecretKey = encryptByPassword(
+      test1Account.sk,
       issuerPassword
     );
-    const message = {
+    const issuerEncAccount = restoreEncAccount(
+      issuerEncSecretKey,
+      issuerPassword
+    );
+
+    const secretKey = test1Account.sk;
+
+    const issuerAddress = issuerEncAccount.address;
+    const holderAddress = holderEncAccount.address;
+    const content = {
       name: 'Yasuo',
     };
 
-    const sbt = createSBT(
-      holderEncAccount.address,
-      issuerEncAccount.address,
-      message,
+    const sbt = await createSBT(
+      algod,
+      { issuerAddress, holderAddress, content },
+      secretKey
+    );
+    await deleteApp(
+      algod,
+      { from: issuerAddress, appIndex: sbt.message.appIndex },
       secretKey
     );
 
-    expect(sbt.holderAddress).to.eq(holderEncAccount.address);
     expect(sbt.issuerAddress).to.eq(issuerEncAccount.address);
-    expect(sbt.message).to.eq(message);
+    expect(sbt.message.holderAddress).to.eq(holderEncAccount.address);
+    expect(sbt.message.content).to.eql(content);
     expect(sbt.signature).to.not.be.empty;
   });
 
-  it('createSBT should work', () => {
+  it('verifySBT should work', async () => {
     const holderPassword = 'abcdefgh';
     const issuerPassword = '12345678';
 
     const holderEncAccount = createEncAccount(holderPassword);
-    const issuerEncAccount = createEncAccount(issuerPassword);
-
-    const secretKey = decryptByPassword(
-      issuerEncAccount.encSecretKey,
+    const issuerEncSecretKey = encryptByPassword(
+      test1Account.sk,
       issuerPassword
     );
-    const message = {
+    const issuerEncAccount = restoreEncAccount(
+      issuerEncSecretKey,
+      issuerPassword
+    );
+
+    const secretKey = test1Account.sk;
+    const issuerAddress = issuerEncAccount.address;
+    const holderAddress = holderEncAccount.address;
+    const content = {
       name: 'Yasuo',
     };
 
-    const sbt = createSBT(
-      holderEncAccount.address,
-      issuerEncAccount.address,
-      message,
+    const sbt = await createSBT(
+      algod,
+      { issuerAddress, holderAddress, content },
       secretKey
     );
 
-    expect(verifySBT(sbt)).to.be.true;
+    try {
+      expect(await verifySBT(algod, sbt)).to.be.true;
+    } finally {
+      await deleteApp(
+        algod,
+        { from: issuerAddress, appIndex: sbt.message.appIndex },
+        secretKey
+      );
+    }
   });
 });
