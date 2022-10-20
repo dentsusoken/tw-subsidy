@@ -1,9 +1,18 @@
 import { expect } from 'chai';
 
-import { decryptByPassword, encryptByPassword } from './utils/cryptUtils';
+import {
+  decryptByPassword,
+  decryptBySecretKey,
+  encryptByPassword,
+} from './utils/cryptUtils';
 import { addressFromSecretKey } from './utils/algosdkUtils';
 import { testNetAlgod as algod } from './algod/algods';
-import { test1Account } from './account/accounts';
+import { testNetAlgoIndexer as indexer } from './indexer/indexers';
+import { test1Account, test2Account } from './account/accounts';
+import deleteApp from './transactions/deleteApp';
+import destoryAsset from './transactions/destroyAsset';
+import setRevoked from './transactions/setRevoked';
+import loadMessage from './transactions/loadMessage';
 
 import {
   createEncAccount,
@@ -12,8 +21,10 @@ import {
   verifySBTRequest,
   createSBT,
   verifySBT,
+  saveSBT,
+  loadSBT,
 } from '.';
-import deleteApp from './transactions/deleteApp';
+import { decodeObj } from 'algosdk';
 
 describe('algosbt', () => {
   it('createEncAccount should work', () => {
@@ -137,11 +148,112 @@ describe('algosbt', () => {
 
     try {
       expect(await verifySBT(algod, sbt)).to.be.true;
+
+      await setRevoked(
+        algod,
+        { from: issuerAddress, appIndex: sbt.message.appIndex, value: 1 },
+        secretKey
+      );
+
+      expect(await verifySBT(algod, sbt)).to.be.false;
     } finally {
       await deleteApp(
         algod,
         { from: issuerAddress, appIndex: sbt.message.appIndex },
         secretKey
+      );
+    }
+  });
+
+  it('saveSBT should work', async () => {
+    const issuerAddress = test1Account.addr;
+    const holderAddress = test2Account.addr;
+
+    const issuerSecretKey = test1Account.sk;
+    const holderSecretKey = test2Account.sk;
+
+    const content = {
+      name: 'Yasuo',
+    };
+
+    const sbt = await createSBT(
+      algod,
+      { issuerAddress, holderAddress, content },
+      issuerSecretKey
+    );
+    const appIndex = sbt.message.appIndex;
+    console.log('Application Index:', appIndex);
+
+    try {
+      const assetIndex = await saveSBT(
+        algod,
+        { sbt, assetName: 'test' },
+        holderSecretKey
+      );
+      console.log('Asset Index:', assetIndex);
+
+      try {
+        const encryptSbt = await loadMessage(indexer, assetIndex);
+        const encodedSbt = decryptBySecretKey(encryptSbt, holderSecretKey);
+
+        expect(decodeObj(encodedSbt)).to.eql(sbt);
+      } finally {
+        await destoryAsset(
+          algod,
+          { from: holderAddress, assetIndex },
+          holderSecretKey
+        );
+      }
+    } finally {
+      await deleteApp(
+        algod,
+        { from: issuerAddress, appIndex },
+        issuerSecretKey
+      );
+    }
+  });
+
+  it('loadSBT should work', async () => {
+    const issuerAddress = test1Account.addr;
+    const holderAddress = test2Account.addr;
+
+    const issuerSecretKey = test1Account.sk;
+    const holderSecretKey = test2Account.sk;
+
+    const content = {
+      name: 'Yasuo',
+    };
+
+    const sbt = await createSBT(
+      algod,
+      { issuerAddress, holderAddress, content },
+      issuerSecretKey
+    );
+    const appIndex = sbt.message.appIndex;
+    console.log('Application Index:', appIndex);
+
+    try {
+      const assetIndex = await saveSBT(
+        algod,
+        { sbt, assetName: 'test' },
+        holderSecretKey
+      );
+      console.log('Asset Index:', assetIndex);
+
+      try {
+        expect(await loadSBT(indexer, assetIndex, holderSecretKey)).to.eql(sbt);
+      } finally {
+        await destoryAsset(
+          algod,
+          { from: holderAddress, assetIndex },
+          holderSecretKey
+        );
+      }
+    } finally {
+      await deleteApp(
+        algod,
+        { from: issuerAddress, appIndex },
+        issuerSecretKey
       );
     }
   });
