@@ -6,189 +6,300 @@ import {
   encryptByPassword,
 } from './utils/cryptUtils';
 import { addressFromSecretKey } from './utils/algosdkUtils';
+import { addressFromDid } from './utils/didUtils';
 import { testNetAlgod as algod } from './algod/algods';
 import { testNetAlgoIndexer as indexer } from './indexer/indexers';
-import { test1Account, test2Account } from './account/accounts';
 import deleteApp from './transactions/deleteApp';
 import destoryAsset from './transactions/destroyAsset';
 import setRevoked from './transactions/setRevoked';
 import loadMessage from './transactions/loadMessage';
+import { holderAccount, issuerAccount } from '../algo/account/accounts';
 
 import {
-  createEncAccount,
-  restoreEncAccount,
-  createSBTRequest,
-  verifySBTRequest,
-  createSBT,
-  verifySBT,
-  saveSBT,
-  loadSBT,
+  createDidAccount,
+  restoreDidAccount,
+  createVCRequest,
+  verifyVCRequest,
+  createVC,
+  verifyVC,
+  saveVC,
+  loadVC,
+  revokeVC,
 } from '.';
 import { decodeObj } from 'algosdk';
 
 describe('algosbt', () => {
-  it('createEncAccount should work', () => {
+  it('createDidAccount should work', () => {
     const password = 'abcdefgh';
-    const encAccount = createEncAccount(password);
+    const didAccount = createDidAccount(password);
 
-    expect(encAccount.address).to.not.be.empty;
-    expect(encAccount.encSecretKey).to.not.be.empty;
+    expect(didAccount.did).to.not.be.empty;
+    expect(didAccount.encSecretKey).to.not.be.empty;
 
-    const secretKey = decryptByPassword(encAccount.encSecretKey, password);
+    const secretKey = decryptByPassword(didAccount.encSecretKey, password);
 
-    expect(addressFromSecretKey(secretKey)).to.eq(encAccount.address);
-  });
-
-  it('restoreEncAccount should work', () => {
-    const password = 'abcdefgh';
-    const encAccount = createEncAccount(password);
-
-    expect(encAccount.address).to.not.be.empty;
-    expect(encAccount.encSecretKey).to.not.be.empty;
-
-    expect(restoreEncAccount(encAccount.encSecretKey, password)).to.eql(
-      encAccount
+    expect(addressFromSecretKey(secretKey)).to.eq(
+      addressFromDid(didAccount.did)
     );
   });
 
-  it('createSBTRequest should work', () => {
+  it('restoreDidAccount should work', () => {
     const password = 'abcdefgh';
-    const encAccount = createEncAccount(password);
-    const secretKey = decryptByPassword(encAccount.encSecretKey, password);
+    const didAccount = createDidAccount(password);
+
+    expect(didAccount.did).to.not.be.empty;
+    expect(didAccount.encSecretKey).to.not.be.empty;
+
+    expect(restoreDidAccount(didAccount.encSecretKey, password)).to.eql(
+      didAccount
+    );
+  });
+
+  it('createVCRequest should work', () => {
+    const password = 'abcdefgh';
+    const didAccount = createDidAccount(password);
     const message = {
       name: 'Yasuo',
     };
 
-    const req = createSBTRequest(encAccount.address, message, secretKey);
+    const req = createVCRequest(didAccount, message, password);
 
-    expect(req.holderAddress).to.eq(encAccount.address);
+    expect(req.holderDid).to.eq(didAccount.did);
     expect(req.message).to.eql(message);
     expect(req.signature).to.not.be.empty;
   });
 
-  it('verifySBTRequest should work', () => {
+  it('verifyVCRequest should work', () => {
     const password = 'abcdefgh';
-    const encAccount = createEncAccount(password);
-    const secretKey = decryptByPassword(encAccount.encSecretKey, password);
+    const didAccount = createDidAccount(password);
     const message = {
       name: 'Yasuo',
     };
 
-    const req = createSBTRequest(encAccount.address, message, secretKey);
+    const req = createVCRequest(didAccount, message, password);
 
-    expect(verifySBTRequest(req)).to.be.true;
+    expect(verifyVCRequest(req)).to.be.true;
   });
 
-  it('createSBT should work', async () => {
+  it('createVC should work', async () => {
     const holderPassword = 'abcdefgh';
     const issuerPassword = '12345678';
 
-    const holderEncAccount = createEncAccount(holderPassword);
+    const holderSecretKey = holderAccount.sk;
+    const issuerSecretKey = issuerAccount.sk;
 
+    const holderEncSecretKey = encryptByPassword(
+      holderSecretKey,
+      holderPassword
+    );
     const issuerEncSecretKey = encryptByPassword(
-      test1Account.sk,
+      issuerSecretKey,
       issuerPassword
     );
-    const issuerEncAccount = restoreEncAccount(
+
+    const holderDidAccount = restoreDidAccount(
+      holderEncSecretKey,
+      holderPassword
+    );
+    const issuerDidAccount = restoreDidAccount(
       issuerEncSecretKey,
       issuerPassword
     );
 
-    const secretKey = test1Account.sk;
+    const holderDid = holderDidAccount.did;
 
-    const issuerAddress = issuerEncAccount.address;
-    const holderAddress = holderEncAccount.address;
     const content = {
       name: 'Yasuo',
     };
 
-    const sbt = await createSBT(
+    const vc = await createVC(
       algod,
-      { issuerAddress, holderAddress, content },
-      secretKey
+      issuerDidAccount,
+      { holderDid, content },
+      issuerPassword
     );
+    const appIndex = vc.message.appIndex;
+    console.log('Application Index:', appIndex);
+
     await deleteApp(
       algod,
-      { from: issuerAddress, appIndex: sbt.message.appIndex },
-      secretKey
+      {
+        from: addressFromDid(issuerDidAccount.did),
+        appIndex,
+      },
+      issuerSecretKey
     );
 
-    expect(sbt.issuerAddress).to.eq(issuerEncAccount.address);
-    expect(sbt.message.holderAddress).to.eq(holderEncAccount.address);
-    expect(sbt.message.content).to.eql(content);
-    expect(sbt.signature).to.not.be.empty;
+    expect(vc.issuerDid).to.eq(issuerDidAccount.did);
+    expect(vc.message.holderDid).to.eq(holderDidAccount.did);
+    expect(vc.message.content).to.eql(content);
+    expect(vc.signature).to.not.be.empty;
   });
 
-  it('verifySBT should work', async () => {
+  it('verifyVC should work', async () => {
     const holderPassword = 'abcdefgh';
     const issuerPassword = '12345678';
 
-    const holderEncAccount = createEncAccount(holderPassword);
+    const holderSecretKey = holderAccount.sk;
+    const issuerSecretKey = issuerAccount.sk;
+
+    const holderEncSecretKey = encryptByPassword(
+      holderSecretKey,
+      holderPassword
+    );
     const issuerEncSecretKey = encryptByPassword(
-      test1Account.sk,
+      issuerSecretKey,
       issuerPassword
     );
-    const issuerEncAccount = restoreEncAccount(
+
+    const holderDidAccount = restoreDidAccount(
+      holderEncSecretKey,
+      holderPassword
+    );
+    const issuerDidAccount = restoreDidAccount(
       issuerEncSecretKey,
       issuerPassword
     );
 
-    const secretKey = test1Account.sk;
-    const issuerAddress = issuerEncAccount.address;
-    const holderAddress = holderEncAccount.address;
+    const holderDid = holderDidAccount.did;
+
     const content = {
       name: 'Yasuo',
     };
 
-    const sbt = await createSBT(
+    const vc = await createVC(
       algod,
-      { issuerAddress, holderAddress, content },
-      secretKey
+      issuerDidAccount,
+      { holderDid, content },
+      issuerPassword
     );
+    const from = addressFromDid(issuerDidAccount.did);
+    const appIndex = vc.message.appIndex;
+    console.log('Application Index:', appIndex);
 
     try {
-      expect(await verifySBT(algod, sbt)).to.be.true;
+      expect(await verifyVC(algod, vc)).to.be.true;
 
-      await setRevoked(
-        algod,
-        { from: issuerAddress, appIndex: sbt.message.appIndex, value: 1 },
-        secretKey
-      );
+      await setRevoked(algod, { from, appIndex, value: 1 }, issuerSecretKey);
 
-      expect(await verifySBT(algod, sbt)).to.be.false;
+      expect(await verifyVC(algod, vc)).to.be.false;
     } finally {
       await deleteApp(
         algod,
-        { from: issuerAddress, appIndex: sbt.message.appIndex },
-        secretKey
+        {
+          from,
+          appIndex,
+        },
+        issuerSecretKey
       );
     }
   });
 
-  it('saveSBT should work', async () => {
-    const issuerAddress = test1Account.addr;
-    const holderAddress = test2Account.addr;
+  it('revokeVC should work', async () => {
+    const holderPassword = 'abcdefgh';
+    const issuerPassword = '12345678';
 
-    const issuerSecretKey = test1Account.sk;
-    const holderSecretKey = test2Account.sk;
+    const holderSecretKey = holderAccount.sk;
+    const issuerSecretKey = issuerAccount.sk;
+
+    const holderEncSecretKey = encryptByPassword(
+      holderSecretKey,
+      holderPassword
+    );
+    const issuerEncSecretKey = encryptByPassword(
+      issuerSecretKey,
+      issuerPassword
+    );
+
+    const holderDidAccount = restoreDidAccount(
+      holderEncSecretKey,
+      holderPassword
+    );
+    const issuerDidAccount = restoreDidAccount(
+      issuerEncSecretKey,
+      issuerPassword
+    );
+
+    const holderDid = holderDidAccount.did;
 
     const content = {
       name: 'Yasuo',
     };
 
-    const sbt = await createSBT(
+    const vc = await createVC(
       algod,
-      { issuerAddress, holderAddress, content },
-      issuerSecretKey
+      issuerDidAccount,
+      { holderDid, content },
+      issuerPassword
     );
-    const appIndex = sbt.message.appIndex;
+
+    const appIndex = vc.message.appIndex;
     console.log('Application Index:', appIndex);
 
     try {
-      const assetIndex = await saveSBT(
+      expect(await verifyVC(algod, vc)).to.be.true;
+
+      await revokeVC(algod, issuerDidAccount, vc, issuerPassword);
+
+      expect(await verifyVC(algod, vc)).to.be.false;
+    } finally {
+      await deleteApp(
         algod,
-        { sbt, assetName: 'test' },
-        holderSecretKey
+        {
+          from: issuerAccount.addr,
+          appIndex,
+        },
+        issuerSecretKey
+      );
+    }
+  });
+
+  it('saveVC should work', async () => {
+    const holderPassword = 'abcdefgh';
+    const issuerPassword = '12345678';
+
+    const holderSecretKey = holderAccount.sk;
+    const issuerSecretKey = issuerAccount.sk;
+
+    const holderEncSecretKey = encryptByPassword(
+      holderSecretKey,
+      holderPassword
+    );
+    const issuerEncSecretKey = encryptByPassword(
+      issuerSecretKey,
+      issuerPassword
+    );
+
+    const holderDidAccount = restoreDidAccount(
+      holderEncSecretKey,
+      holderPassword
+    );
+    const issuerDidAccount = restoreDidAccount(
+      issuerEncSecretKey,
+      issuerPassword
+    );
+
+    const holderDid = holderDidAccount.did;
+
+    const content = {
+      name: 'Yasuo',
+    };
+
+    const vc = await createVC(
+      algod,
+      issuerDidAccount,
+      { holderDid, content },
+      issuerPassword
+    );
+    const appIndex = vc.message.appIndex;
+    console.log('Application Index:', appIndex);
+
+    try {
+      const assetIndex = await saveVC(
+        algod,
+        holderDidAccount,
+        { vc, assetName: 'test' },
+        holderPassword
       );
       console.log('Asset Index:', assetIndex);
 
@@ -196,63 +307,87 @@ describe('algosbt', () => {
         const encryptSbt = await loadMessage(indexer, assetIndex);
         const encodedSbt = decryptBySecretKey(encryptSbt, holderSecretKey);
 
-        expect(decodeObj(encodedSbt)).to.eql(sbt);
+        expect(decodeObj(encodedSbt)).to.eql(vc);
       } finally {
         await destoryAsset(
           algod,
-          { from: holderAddress, assetIndex },
+          { from: holderAccount.addr, assetIndex },
           holderSecretKey
         );
       }
     } finally {
       await deleteApp(
         algod,
-        { from: issuerAddress, appIndex },
+        { from: issuerAccount.addr, appIndex },
         issuerSecretKey
       );
     }
   });
 
-  it('loadSBT should work', async () => {
-    const issuerAddress = test1Account.addr;
-    const holderAddress = test2Account.addr;
+  it('loadVC should work', async () => {
+    const holderPassword = 'abcdefgh';
+    const issuerPassword = '12345678';
 
-    const issuerSecretKey = test1Account.sk;
-    const holderSecretKey = test2Account.sk;
+    const holderSecretKey = holderAccount.sk;
+    const issuerSecretKey = issuerAccount.sk;
+
+    const holderEncSecretKey = encryptByPassword(
+      holderSecretKey,
+      holderPassword
+    );
+    const issuerEncSecretKey = encryptByPassword(
+      issuerSecretKey,
+      issuerPassword
+    );
+
+    const holderDidAccount = restoreDidAccount(
+      holderEncSecretKey,
+      holderPassword
+    );
+    const issuerDidAccount = restoreDidAccount(
+      issuerEncSecretKey,
+      issuerPassword
+    );
+
+    const holderDid = holderDidAccount.did;
 
     const content = {
       name: 'Yasuo',
     };
 
-    const sbt = await createSBT(
+    const vc = await createVC(
       algod,
-      { issuerAddress, holderAddress, content },
-      issuerSecretKey
+      issuerDidAccount,
+      { holderDid, content },
+      issuerPassword
     );
-    const appIndex = sbt.message.appIndex;
+    const appIndex = vc.message.appIndex;
     console.log('Application Index:', appIndex);
 
     try {
-      const assetIndex = await saveSBT(
+      const assetIndex = await saveVC(
         algod,
-        { sbt, assetName: 'test' },
-        holderSecretKey
+        holderDidAccount,
+        { vc, assetName: 'test' },
+        holderPassword
       );
       console.log('Asset Index:', assetIndex);
 
       try {
-        expect(await loadSBT(indexer, assetIndex, holderSecretKey)).to.eql(sbt);
+        expect(
+          await loadVC(indexer, holderDidAccount, assetIndex, holderPassword)
+        ).to.eql(vc);
       } finally {
         await destoryAsset(
           algod,
-          { from: holderAddress, assetIndex },
+          { from: holderAccount.addr, assetIndex },
           holderSecretKey
         );
       }
     } finally {
       await deleteApp(
         algod,
-        { from: issuerAddress, appIndex },
+        { from: issuerAccount.addr, appIndex },
         issuerSecretKey
       );
     }

@@ -1,22 +1,22 @@
-export type EncAccount = {
-  address: string;
+export type DidAccount = {
+  did: string;
   encSecretKey: Uint8Array;
 };
 
-export type SBTRequest<T> = {
-  holderAddress: string;
+export type VCRequest<T> = {
+  holderDid: string;
   message: T;
   signature: Uint8Array;
 };
 
-export type SBTMessage<T> = {
-  holderAddress: string;
+export type VCMessage<T> = {
+  holderDid: string;
   appIndex: number;
   content: T;
 };
 
-export type SBT<T> = {
-  issuerAddress: string;
-  message: SBTMessage<T>;
+export type VC<T> = {
+  issuerDid: string;
+  message: VCMessage<T>;
   signature: Uint8Array;
 };

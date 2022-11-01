@@ -7,7 +7,7 @@ import {
   Algodv2,
 } from 'algosdk';
 
-import { EncAccount, SBTRequest, SBT, SBTMessage } from './types';
+import { DidAccount, VCRequest, VC, VCMessage } from './types';
 import {
   encryptByPassword,
   decryptByPassword,
@@ -19,79 +19,89 @@ import { sign, verify } from './utils/naclUtils';
 import createRevokedApp from './transactions/createRevokedApp';
 import createAsset from './transactions/createAsset';
 import saveMessage from './transactions/saveMessage';
+import setRevoked from './transactions/setRevoked';
 import getGlobalState from './algod/getGlobalState';
 import removeClawback from './transactions/removeCrawback';
 import loadMessage from './transactions/loadMessage';
+import * as didUtils from './utils/didUtils';
 
-export const createEncAccount = (password: string): EncAccount => {
+export const createDidAccount = (password: string): DidAccount => {
   const account = generateAccount();
   const encSecretKey = encryptByPassword(account.sk, password);
+  const did = didUtils.didFromAddress(account.addr);
 
-  return { address: account.addr, encSecretKey };
+  return { did, encSecretKey };
 };
 
-export const restoreEncAccount = (
+export const restoreDidAccount = (
   encSecretKey: Uint8Array,
   password: string
-): EncAccount => {
+): DidAccount => {
   const secretKey = decryptByPassword(encSecretKey, password);
   const address = addressFromSecretKey(secretKey);
+  const did = didUtils.didFromAddress(address);
 
-  return { address, encSecretKey };
+  return { did, encSecretKey };
 };
 
-export const createSBTRequest = <T>(
-  holderAddress: string,
+export const createVCRequest = <T>(
+  holderDidAccount: DidAccount,
   message: T,
-  secretKey: Uint8Array
-): SBTRequest<T> => {
+  password: string
+): VCRequest<T> => {
   const encodedMessage = encodeObj(message);
+  const secretKey = decryptByPassword(holderDidAccount.encSecretKey, password);
   const signature = sign(encodedMessage, secretKey);
 
-  return { holderAddress, message: decodeObj(encodedMessage), signature };
+  return {
+    holderDid: holderDidAccount.did,
+    message: decodeObj(encodedMessage),
+    signature,
+  };
 };
 
-export const verifySBTRequest = (req: SBTRequest<unknown>) => {
-  const { publicKey } = decodeAddress(req.holderAddress);
+export const verifyVCRequest = (req: VCRequest<unknown>) => {
+  const address = didUtils.addressFromDid(req.holderDid);
+  const { publicKey } = decodeAddress(address);
   const encodedMessage = encodeObj(req.message);
 
   return verify(encodedMessage, req.signature, publicKey);
 };
 
-export type SBTParams<T> = {
-  issuerAddress: string;
-  holderAddress: string;
+export type CreateVCParams<T> = {
+  holderDid: string;
   content: T;
 };
 
-export const createSBT = async <T>(
+export const createVC = async <T>(
   algod: Algodv2,
-  { issuerAddress, holderAddress, content }: SBTParams<T>,
-  secretKey: Uint8Array
+  issuerDidAccount: DidAccount,
+  { holderDid, content }: CreateVCParams<T>,
+  password: string
 ) => {
-  const appIndex = await createRevokedApp(
-    algod,
-    { from: issuerAddress },
-    secretKey
-  );
-  const message: SBTMessage<T> = {
-    holderAddress,
+  const secretKey = decryptByPassword(issuerDidAccount.encSecretKey, password);
+  const from = addressFromSecretKey(secretKey);
+  const appIndex = await createRevokedApp(algod, { from }, secretKey);
+  const message: VCMessage<T> = {
+    holderDid,
     appIndex,
     content: decodeObj(encodeObj(content)),
   };
   const encodedMessage = encodeObj(message);
   const signature = sign(encodedMessage, secretKey);
+  const vc: VC<T> = { issuerDid: issuerDidAccount.did, message, signature };
 
-  return { issuerAddress, message, signature } as SBT<T>;
+  return vc;
 };
 
-export const verifySBT = async (algod: Algodv2, sbt: SBT<unknown>) => {
+export const verifyVC = async (algod: Algodv2, vc: VC<unknown>) => {
   try {
-    const { publicKey } = decodeAddress(sbt.issuerAddress);
-    const encodedMessage = encodeObj(sbt.message);
+    const address = didUtils.addressFromDid(vc.issuerDid);
+    const { publicKey } = decodeAddress(address);
+    const encodedMessage = encodeObj(vc.message);
 
-    if (verify(encodedMessage, sbt.signature, publicKey)) {
-      const appIndex = sbt.message.appIndex;
+    if (verify(encodedMessage, vc.signature, publicKey)) {
+      const appIndex = vc.message.appIndex;
 
       const state = await getGlobalState(algod, appIndex);
 
@@ -102,22 +112,41 @@ export const verifySBT = async (algod: Algodv2, sbt: SBT<unknown>) => {
   return false;
 };
 
-export type SaveSBTParams<T = any> = {
-  sbt: SBT<T>;
+export const revokeVC = async (
+  algod: Algodv2,
+  issuerDidAccount: DidAccount,
+  vc: VC<unknown>,
+  password: string,
+  value = 1
+) => {
+  const from = didUtils.addressFromDid(issuerDidAccount.did);
+  const appIndex = vc.message.appIndex;
+  const issuerSecretKey = decryptByPassword(
+    issuerDidAccount.encSecretKey,
+    password
+  );
+
+  await setRevoked(algod, { from, appIndex, value }, issuerSecretKey);
+};
+
+export type SaveVCParams<T = any> = {
+  vc: VC<T>;
   assetName: string;
 };
 
-export const saveSBT = async <T = any>(
+export const saveVC = async <T = any>(
   algod: Algodv2,
-  { sbt, assetName }: SaveSBTParams<T>,
-  secretKey: Uint8Array
+  holderDidAccount: DidAccount,
+  { vc, assetName }: SaveVCParams<T>,
+  password: string
 ) => {
   if (Buffer.from(assetName).length > 32) {
     throw new Error(`Max size of assetName is 32 bytes`);
   }
 
-  const from = sbt.message.holderAddress;
-  const message = encryptBySecretKey(encodeObj(sbt), secretKey);
+  const secretKey = decryptByPassword(holderDidAccount.encSecretKey, password);
+  const from = didUtils.addressFromDid(holderDidAccount.did);
+  const message = encryptBySecretKey(encodeObj(vc), secretKey);
 
   const assetIndex = await createAsset(algod, { from, assetName }, secretKey);
   await saveMessage(algod, { from, message, assetIndex }, secretKey);
@@ -126,13 +155,16 @@ export const saveSBT = async <T = any>(
   return assetIndex;
 };
 
-export const loadSBT = async <T = any>(
+export const loadVC = async <T = any>(
   indexer: algosdk.Indexer,
+  holderDidAccount: DidAccount,
   assetIndex: number,
-  secretKey: Uint8Array
+  password: string
 ) => {
-  const encryptSbt = await loadMessage(indexer, assetIndex);
-  const encodedSbt = decryptBySecretKey(encryptSbt, secretKey);
+  const secretKey = decryptByPassword(holderDidAccount.encSecretKey, password);
+  const encryptVC = await loadMessage(indexer, assetIndex);
+  const encodedVC = decryptBySecretKey(encryptVC, secretKey);
+  const vc: VC<T> = decodeObj(encodedVC);
 
-  return decodeObj(encodedSbt) as SBT<T>;
+  return vc;
 };

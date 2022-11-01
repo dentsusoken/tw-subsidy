@@ -7,7 +7,7 @@ import destroyAsset from '../transactions/destroyAsset';
 import { testNetAlgod } from './algods';
 import getCreatedAsset from './getCreatedAsset';
 
-describe('generateAccount', () => {
+describe('getCreatedAsset', () => {
   it('should work', async () => {
     const txnParams = {
       from: test1Account.addr,
