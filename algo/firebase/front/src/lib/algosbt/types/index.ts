@@ -1,5 +1,6 @@
 export type DidAccount = {
   did: string;
+  address: string;
   encSecretKey: Uint8Array;
 };
 

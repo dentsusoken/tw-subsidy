@@ -28,9 +28,10 @@ import * as didUtils from './utils/didUtils';
 export const createDidAccount = (password: string): DidAccount => {
   const account = generateAccount();
   const encSecretKey = encryptByPassword(account.sk, password);
-  const did = didUtils.didFromAddress(account.addr);
+  const address = account.addr;
+  const did = didUtils.didFromAddress(address);
 
-  return { did, encSecretKey };
+  return { did, address, encSecretKey };
 };
 
 export const restoreDidAccount = (
@@ -41,7 +42,7 @@ export const restoreDidAccount = (
   const address = addressFromSecretKey(secretKey);
   const did = didUtils.didFromAddress(address);
 
-  return { did, encSecretKey };
+  return { did, address, encSecretKey };
 };
 
 export const createVCRequest = <T>(
