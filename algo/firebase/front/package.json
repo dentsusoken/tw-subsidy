@@ -26,6 +26,7 @@
     "react-dom": "18.2.0",
     "react-error-boundary": "^3.1.4",
     "recoil": "^0.7.5",
+    "recoil-persist": "^4.2.0",
     "tweetnacl": "^1.0.3"
   },
   "devDependencies": {

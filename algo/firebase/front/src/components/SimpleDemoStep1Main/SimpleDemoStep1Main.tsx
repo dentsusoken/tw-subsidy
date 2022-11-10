@@ -4,10 +4,10 @@ import {
   holderDidAccount,
   issuerDidAccount,
 } from '@/lib/algo/account/accounts';
-import useSimpleDemoStep1MainHook from './SimpleDemoStep1Main.hook';
+import useSimpleDemoStep1Main from './useSimpleDemoStep1Main';
 
 const SimpleDemoStep1Main = () => {
-  const { vm } = useSimpleDemoStep1MainHook();
+  const { vm, onVCRequestClickHandler, vcRequest } = useSimpleDemoStep1Main();
 
   return (
     <div>
@@ -21,7 +21,16 @@ const SimpleDemoStep1Main = () => {
       <DidInfo name="Issuer" didAccount={issuerDidAccount} />
 
       <div className="pt-2">依頼内容</div>
-      <textarea value={vm} rows={14} cols={50}></textarea>
+      <textarea value={vm} rows={14} cols={50} readOnly={true}></textarea>
+      <div>
+        <button
+          onClick={onVCRequestClickHandler}
+          className="inline-block w-20 border-2 border-blue-500 hover:bg-blue-400 hover:text-white rounded-full text-center mr-4"
+        >
+          依頼
+        </button>
+        {vcRequest && <span className="text-blue-500">Done</span>}
+      </div>
     </div>
   );
 };

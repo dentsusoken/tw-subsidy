@@ -1,8 +1,11 @@
 import BackButton from '../BackButton';
 
 import StepStatus from './StepStatus';
+import useSimpleDemoMain from './useSimpleDemoMain';
 
 const SimpleDemoMain = () => {
+  const { step1Done } = useSimpleDemoMain();
+
   return (
     <div>
       <div className="py-2">
@@ -26,7 +29,7 @@ const SimpleDemoMain = () => {
           <a href="./simple-demo-step1">Step 1</a>
         </div>
         <div className="w-20 text-center">
-          <StepStatus done={false} />
+          <StepStatus done={step1Done} />
         </div>
       </div>
     </div>

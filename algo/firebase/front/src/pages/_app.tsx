@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { AppProps } from 'next/app';
 import { RecoilRoot } from 'recoil';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -18,7 +19,9 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
           </Head>
 
           <main className="pl-2 pt-2">
-            <Component {...pageProps} />
+            <Suspense fallback={<div>Loading...</div>}>
+              <Component {...pageProps} />
+            </Suspense>
           </main>
         </div>
       </ErrorBoundary>

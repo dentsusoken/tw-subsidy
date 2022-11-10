@@ -9,12 +9,12 @@ import chainState from '@/lib/states/chainState';
 import formatBigint from '@/lib/utils/formatBigint';
 import { DidAccount } from '@/lib/algosbt/types';
 
-export type UseDidInfoHookParams = {
+export type UseDidInfoParams = {
   name: string;
   didAccount: DidAccount;
 };
 
-const useDidInfoHook = ({ name, didAccount }: UseDidInfoHookParams) => {
+const useDidInfo = ({ name, didAccount }: UseDidInfoParams) => {
   const chainType = useRecoilValue(chainState);
   const [balance, setBalance] = useState('');
   const errorHandler = useErrorHandler();
@@ -38,4 +38,4 @@ const useDidInfoHook = ({ name, didAccount }: UseDidInfoHookParams) => {
   };
 };
 
-export default useDidInfoHook;
+export default useDidInfo;

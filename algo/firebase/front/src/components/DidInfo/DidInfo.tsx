@@ -1,9 +1,9 @@
-import useDidInfoHook from './DidInfo.hook';
+import useDidInfo from './useDidInfo';
 
-import { UseDidInfoHookParams } from './DidInfo.hook';
+import { UseDidInfoParams } from './useDidInfo';
 
-const Header = (params: UseDidInfoHookParams) => {
-  const { name, did, balance } = useDidInfoHook(params);
+const Header = (params: UseDidInfoParams) => {
+  const { name, did, balance } = useDidInfo(params);
   return (
     <div>
       <div className="flex">
