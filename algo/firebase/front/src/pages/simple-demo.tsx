@@ -1,13 +1,9 @@
 import type { NextPage } from 'next';
 
-import Header from '@/components/Header';
+import SimpleDemoMain from '@/components/SimpleDemoMain';
 
-const Home: NextPage = () => {
-  return (
-    <div>
-      <Header />
-    </div>
-  );
+const SimpleDemo: NextPage = () => {
+  return <SimpleDemoMain />;
 };
 
-export default Home;
+export default SimpleDemo;

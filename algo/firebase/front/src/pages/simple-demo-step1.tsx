@@ -1,11 +1,9 @@
 import type { NextPage } from 'next';
 
-const Home: NextPage = () => {
-  return (
-    <div>
-      <div>HolderがIssuerに住民票（VC）</div>
-    </div>
-  );
+import SimpleDemoStep1Main from '@/components/SimpleDemoStep1Main';
+
+const SimpleDemoStep1: NextPage = () => {
+  return <SimpleDemoStep1Main />;
 };
 
-export default Home;
+export default SimpleDemoStep1;

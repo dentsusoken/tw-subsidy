@@ -4,20 +4,22 @@ export type DidAccount = {
   encSecretKey: Uint8Array;
 };
 
-export type VCRequest<T> = {
-  holderDid: string;
-  message: T;
+export type Message<T> = {
+  senderDid: string;
+  receiverDid: string;
+  content: T;
+};
+
+export type VerifiableMessage<T> = {
+  message: Message<T>;
   signature: Uint8Array;
 };
 
-export type VCMessage<T> = {
-  holderDid: string;
+export type VerifiableCredentialContent<T> = {
   appIndex: number;
   content: T;
 };
 
-export type VC<T> = {
-  issuerDid: string;
-  message: VCMessage<T>;
-  signature: Uint8Array;
-};
+export type VerifiableCredential<T> = VerifiableMessage<
+  VerifiableCredentialContent<T>
+>;

@@ -1,32 +1,21 @@
 import { expect } from 'chai';
 
-import {
-  decryptByPassword,
-  decryptBySecretKey,
-  encryptByPassword,
-} from './utils/cryptUtils';
+import { decryptByPassword, encryptByPassword } from './utils/cryptUtils';
 import { addressFromSecretKey } from './utils/algosdkUtils';
 import { addressFromDid } from './utils/didUtils';
 import { testNetAlgod as algod } from './algod/algods';
-import { testNetAlgoIndexer as indexer } from './indexer/indexers';
 import deleteApp from './transactions/deleteApp';
-import destoryAsset from './transactions/destroyAsset';
-import setRevoked from './transactions/setRevoked';
-import loadMessage from './transactions/loadMessage';
 import { holderAccount, issuerAccount } from '../algo/account/accounts';
 
 import {
   createDidAccount,
   restoreDidAccount,
-  createVCRequest,
-  verifyVCRequest,
-  createVC,
-  verifyVC,
-  saveVC,
-  loadVC,
-  revokeVC,
+  createVerifiableMessage,
+  verifyVerifiableMessage,
+  createVerifiableCredential,
+  revokeVerifiableCredential,
+  verifyVerifiableCredential,
 } from '.';
-import { decodeObj } from 'algosdk';
 
 describe('algosbt', () => {
   it('createDidAccount should work', () => {
@@ -55,33 +44,52 @@ describe('algosbt', () => {
     );
   });
 
-  it('createVCRequest should work', () => {
-    const password = 'abcdefgh';
-    const didAccount = createDidAccount(password);
-    const message = {
+  it('createVerifiableMessage should work', () => {
+    const holderPassword = 'abcdefgh';
+    const issuerPassword = '12345678';
+
+    const holderDidAccount = createDidAccount(holderPassword);
+    const issuerDidAccount = createDidAccount(issuerPassword);
+
+    const content = {
       name: 'Yasuo',
     };
 
-    const req = createVCRequest(didAccount, message, password);
+    const vm = createVerifiableMessage(
+      holderDidAccount,
+      issuerDidAccount.did,
+      content,
+      holderPassword
+    );
 
-    expect(req.holderDid).to.eq(didAccount.did);
-    expect(req.message).to.eql(message);
-    expect(req.signature).to.not.be.empty;
+    expect(vm.message.senderDid).to.eq(holderDidAccount.did);
+    expect(vm.message.receiverDid).to.eq(issuerDidAccount.did);
+    expect(vm.message.content).to.eql(content);
+    expect(vm.signature).to.not.be.empty;
   });
 
-  it('verifyVCRequest should work', () => {
-    const password = 'abcdefgh';
-    const didAccount = createDidAccount(password);
-    const message = {
+  it('verifyVerifiableMessage should work', () => {
+    const holderPassword = 'abcdefgh';
+    const issuerPassword = '12345678';
+
+    const holderDidAccount = createDidAccount(holderPassword);
+    const issuerDidAccount = createDidAccount(issuerPassword);
+
+    const content = {
       name: 'Yasuo',
     };
 
-    const req = createVCRequest(didAccount, message, password);
+    const vm = createVerifiableMessage(
+      holderDidAccount,
+      issuerDidAccount.did,
+      content,
+      holderPassword
+    );
 
-    expect(verifyVCRequest(req)).to.be.true;
+    expect(verifyVerifiableMessage(vm)).to.be.true;
   });
 
-  it('createVC should work', async () => {
+  it('createVerifiableCredential should work', async () => {
     const holderPassword = 'abcdefgh';
     const issuerPassword = '12345678';
 
@@ -112,13 +120,14 @@ describe('algosbt', () => {
       name: 'Yasuo',
     };
 
-    const vc = await createVC(
+    const vc = await createVerifiableCredential(
       algod,
       issuerDidAccount,
-      { holderDid, content },
+      holderDid,
+      content,
       issuerPassword
     );
-    const appIndex = vc.message.appIndex;
+    const appIndex = vc.message.content.appIndex;
     console.log('Application Index:', appIndex);
 
     await deleteApp(
@@ -130,13 +139,13 @@ describe('algosbt', () => {
       issuerSecretKey
     );
 
-    expect(vc.issuerDid).to.eq(issuerDidAccount.did);
-    expect(vc.message.holderDid).to.eq(holderDidAccount.did);
-    expect(vc.message.content).to.eql(content);
+    expect(vc.message.senderDid).to.eq(issuerDidAccount.did);
+    expect(vc.message.receiverDid).to.eq(holderDidAccount.did);
+    expect(vc.message.content.content).to.eql(content);
     expect(vc.signature).to.not.be.empty;
   });
 
-  it('verifyVC should work', async () => {
+  it('verifyVerifiableCredential & revokeVerifiableCredential should work', async () => {
     const holderPassword = 'abcdefgh';
     const issuerPassword = '12345678';
 
@@ -167,227 +176,34 @@ describe('algosbt', () => {
       name: 'Yasuo',
     };
 
-    const vc = await createVC(
+    const vc = await createVerifiableCredential(
       algod,
       issuerDidAccount,
-      { holderDid, content },
+      holderDid,
+      content,
       issuerPassword
     );
-    const from = addressFromDid(issuerDidAccount.did);
-    const appIndex = vc.message.appIndex;
+    const appIndex = vc.message.content.appIndex;
     console.log('Application Index:', appIndex);
 
     try {
-      expect(await verifyVC(algod, vc)).to.be.true;
+      expect(await verifyVerifiableCredential(algod, vc)).to.be.true;
 
-      await setRevoked(algod, { from, appIndex, value: 1 }, issuerSecretKey);
+      await revokeVerifiableCredential(
+        algod,
+        issuerDidAccount,
+        vc,
+        issuerPassword
+      );
 
-      expect(await verifyVC(algod, vc)).to.be.false;
+      expect(await verifyVerifiableCredential(algod, vc)).to.be.false;
     } finally {
       await deleteApp(
         algod,
         {
-          from,
+          from: addressFromDid(issuerDidAccount.did),
           appIndex,
         },
-        issuerSecretKey
-      );
-    }
-  });
-
-  it('revokeVC should work', async () => {
-    const holderPassword = 'abcdefgh';
-    const issuerPassword = '12345678';
-
-    const holderSecretKey = holderAccount.sk;
-    const issuerSecretKey = issuerAccount.sk;
-
-    const holderEncSecretKey = encryptByPassword(
-      holderSecretKey,
-      holderPassword
-    );
-    const issuerEncSecretKey = encryptByPassword(
-      issuerSecretKey,
-      issuerPassword
-    );
-
-    const holderDidAccount = restoreDidAccount(
-      holderEncSecretKey,
-      holderPassword
-    );
-    const issuerDidAccount = restoreDidAccount(
-      issuerEncSecretKey,
-      issuerPassword
-    );
-
-    const holderDid = holderDidAccount.did;
-
-    const content = {
-      name: 'Yasuo',
-    };
-
-    const vc = await createVC(
-      algod,
-      issuerDidAccount,
-      { holderDid, content },
-      issuerPassword
-    );
-
-    const appIndex = vc.message.appIndex;
-    console.log('Application Index:', appIndex);
-
-    try {
-      expect(await verifyVC(algod, vc)).to.be.true;
-
-      await revokeVC(algod, issuerDidAccount, vc, issuerPassword);
-
-      expect(await verifyVC(algod, vc)).to.be.false;
-    } finally {
-      await deleteApp(
-        algod,
-        {
-          from: issuerAccount.addr,
-          appIndex,
-        },
-        issuerSecretKey
-      );
-    }
-  });
-
-  it('saveVC should work', async () => {
-    const holderPassword = 'abcdefgh';
-    const issuerPassword = '12345678';
-
-    const holderSecretKey = holderAccount.sk;
-    const issuerSecretKey = issuerAccount.sk;
-
-    const holderEncSecretKey = encryptByPassword(
-      holderSecretKey,
-      holderPassword
-    );
-    const issuerEncSecretKey = encryptByPassword(
-      issuerSecretKey,
-      issuerPassword
-    );
-
-    const holderDidAccount = restoreDidAccount(
-      holderEncSecretKey,
-      holderPassword
-    );
-    const issuerDidAccount = restoreDidAccount(
-      issuerEncSecretKey,
-      issuerPassword
-    );
-
-    const holderDid = holderDidAccount.did;
-
-    const content = {
-      name: 'Yasuo',
-    };
-
-    const vc = await createVC(
-      algod,
-      issuerDidAccount,
-      { holderDid, content },
-      issuerPassword
-    );
-    const appIndex = vc.message.appIndex;
-    console.log('Application Index:', appIndex);
-
-    try {
-      const assetIndex = await saveVC(
-        algod,
-        holderDidAccount,
-        { vc, assetName: 'test' },
-        holderPassword
-      );
-      console.log('Asset Index:', assetIndex);
-
-      try {
-        const encryptSbt = await loadMessage(indexer, assetIndex);
-        const encodedSbt = decryptBySecretKey(encryptSbt, holderSecretKey);
-
-        expect(decodeObj(encodedSbt)).to.eql(vc);
-      } finally {
-        await destoryAsset(
-          algod,
-          { from: holderAccount.addr, assetIndex },
-          holderSecretKey
-        );
-      }
-    } finally {
-      await deleteApp(
-        algod,
-        { from: issuerAccount.addr, appIndex },
-        issuerSecretKey
-      );
-    }
-  });
-
-  it('loadVC should work', async () => {
-    const holderPassword = 'abcdefgh';
-    const issuerPassword = '12345678';
-
-    const holderSecretKey = holderAccount.sk;
-    const issuerSecretKey = issuerAccount.sk;
-
-    const holderEncSecretKey = encryptByPassword(
-      holderSecretKey,
-      holderPassword
-    );
-    const issuerEncSecretKey = encryptByPassword(
-      issuerSecretKey,
-      issuerPassword
-    );
-
-    const holderDidAccount = restoreDidAccount(
-      holderEncSecretKey,
-      holderPassword
-    );
-    const issuerDidAccount = restoreDidAccount(
-      issuerEncSecretKey,
-      issuerPassword
-    );
-
-    const holderDid = holderDidAccount.did;
-
-    const content = {
-      name: 'Yasuo',
-    };
-
-    const vc = await createVC(
-      algod,
-      issuerDidAccount,
-      { holderDid, content },
-      issuerPassword
-    );
-    const appIndex = vc.message.appIndex;
-    console.log('Application Index:', appIndex);
-
-    try {
-      const assetIndex = await saveVC(
-        algod,
-        holderDidAccount,
-        { vc, assetName: 'test' },
-        holderPassword
-      );
-      console.log('Asset Index:', assetIndex);
-
-      try {
-        expect(
-          await loadVC(indexer, holderDidAccount, assetIndex, holderPassword)
-        ).to.eql(vc);
-      } finally {
-        await destoryAsset(
-          algod,
-          { from: holderAccount.addr, assetIndex },
-          holderSecretKey
-        );
-      }
-    } finally {
-      await deleteApp(
-        algod,
-        { from: issuerAccount.addr, appIndex },
         issuerSecretKey
       );
     }
