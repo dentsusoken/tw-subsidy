@@ -54,7 +54,9 @@ export const createVerifiableMessage = <T>(
   };
   const encodedMessage = encodeObj(message);
   const secretKey = decryptByPassword(senderDidAccount.encSecretKey, password);
-  const signature = sign(encodedMessage, secretKey);
+  const signature = Buffer.from(sign(encodedMessage, secretKey)).toString(
+    'base64'
+  );
 
   const vm: VerifiableMessage<T> = {
     message: decodeObj(encodedMessage),
@@ -68,8 +70,9 @@ export const verifyVerifiableMessage = (vm: VerifiableMessage<unknown>) => {
   const address = didUtils.addressFromDid(vm.message.senderDid);
   const { publicKey } = decodeAddress(address);
   const encodedMessage = encodeObj(vm.message);
+  const signature = Uint8Array.from(Buffer.from(vm.signature, 'base64'));
 
-  return verify(encodedMessage, vm.signature, publicKey);
+  return verify(encodedMessage, signature, publicKey);
 };
 
 export type CreateVCParams<T> = {

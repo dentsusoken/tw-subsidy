@@ -12,7 +12,7 @@ export type Message<T> = {
 
 export type VerifiableMessage<T> = {
   message: Message<T>;
-  signature: Uint8Array;
+  signature: string;
 };
 
 export type VerifiableCredentialContent<T> = {

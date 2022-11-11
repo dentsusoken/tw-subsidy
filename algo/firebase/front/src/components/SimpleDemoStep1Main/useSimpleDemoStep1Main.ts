@@ -12,7 +12,7 @@ import {
   issuerDidAccount,
   holderPw,
 } from '@/lib/algo/account/accounts';
-import { shortenDid } from '@/lib/algosbt/utils/didUtils';
+import shortenVerifiableMessage from '@/lib/utils/shortenVerifiableMessage';
 import certificateOfResidenceVCRequestState from '@/lib/states/certificateOfResidenceVCRequestState';
 
 const createCertificateOfResidenceVCRequest = () => {
@@ -40,12 +40,9 @@ const useSimpleDemoStep1Main = () => {
     setVCRequest(vcRequestGlobal);
   }, [vcRequest, vcRequestGlobal]);
 
-  const vm = createCertificateOfResidenceVCRequest();
-  const vmForDisplay = JSON.parse(JSON.stringify(vm));
-
-  vmForDisplay.message.senderDid = shortenDid(vm.message.senderDid);
-  vmForDisplay.message.receiverDid = shortenDid(vm.message.receiverDid);
-  vmForDisplay.signature = Buffer.from(vm.signature).toString('base64');
+  const vmForDisplay = shortenVerifiableMessage(
+    createCertificateOfResidenceVCRequest()
+  );
 
   const onVCRequestClickHandler = () => {
     const vm = createCertificateOfResidenceVCRequest();

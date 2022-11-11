@@ -5,6 +5,8 @@
   },
   "hosting": {
     "public": "front/out",
+    "cleanUrls": true,
+    "trailingSlash": false,
     "ignore": [
       "firebase.json",
       "**/.*",

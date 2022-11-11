@@ -4,10 +4,12 @@ import {
   holderDidAccount,
   issuerDidAccount,
 } from '@/lib/algo/account/accounts';
-import useSimpleDemoStep1Main from './useSimpleDemoStep1Main';
+import useSimpleDemoStep2Main from './useSimpleDemoStep2Main';
 
-const SimpleDemoStep1Main = () => {
-  const { vm, onVCRequestClickHandler, vcRequest } = useSimpleDemoStep1Main();
+const SimpleDemoStep2Main = () => {
+  const { vm, onVCRequestVerifiedClickHandler, vcRequestVerified } =
+    useSimpleDemoStep2Main();
+  console.log('vm:', vm);
 
   return (
     <div>
@@ -15,24 +17,24 @@ const SimpleDemoStep1Main = () => {
         <BackButton url="./simple-demo" />
       </div>
       <p className="border-dashed border-2 p-1 mb-2">
-        HolderがIssuerに住民票の発行（issue）を依頼します。
+        IssuerがHolderの住民票の発行依頼を検証します。
       </p>
       <DidInfo name="Holder" didAccount={holderDidAccount} />
       <DidInfo name="Issuer" didAccount={issuerDidAccount} />
 
-      <div className="pt-2">依頼内容</div>
+      <div className="pt-2">住民票の発行依頼内容</div>
       <textarea value={vm} rows={14} cols={50} readOnly={true}></textarea>
       <div>
         <button
-          onClick={onVCRequestClickHandler}
+          onClick={onVCRequestVerifiedClickHandler}
           className="inline-block w-20 border-2 border-blue-500 hover:bg-blue-400 hover:text-white rounded-full text-center mr-4"
         >
-          依頼
+          検証
         </button>
-        {vcRequest && <span className="text-blue-500">Done</span>}
+        {vcRequestVerified && <span className="text-blue-500">Done</span>}
       </div>
     </div>
   );
 };
 
-export default SimpleDemoStep1Main;
+export default SimpleDemoStep2Main;
