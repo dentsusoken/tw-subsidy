@@ -14,7 +14,7 @@ const SimpleDemoStep1Main = () => {
       <div className="py-2">
         <BackButton url="./simple-demo" />
       </div>
-      <p className="border-dashed border-2 p-1 mb-2">
+      <p className="w-fit border-dashed border-2 p-1 mb-2">
         HolderがIssuerに住民票の発行（issue）を依頼します。
       </p>
       <DidInfo name="Holder" didAccount={holderDidAccount} />

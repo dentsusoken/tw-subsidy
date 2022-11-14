@@ -11,7 +11,7 @@ const SimpleDemoMain = () => {
       <div className="py-2">
         <BackButton url="." />
       </div>
-      <p className="border-dashed border-2 p-1">
+      <p className="w-fit border-dashed border-2 p-1">
         Step 1から順番に実行しましょう。
         <br />
         各ステップを完了すると
