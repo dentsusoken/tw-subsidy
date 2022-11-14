@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
 
 import certificateOfResidenceVCRequestState from '@/lib/states/certificateOfResidenceVCRequestState';
 import certificateOfResidenceVCRequestVerifiedState from '@/lib/states/certificateOfResidenceVCRequestVerifiedState';
@@ -10,7 +10,7 @@ const useSimpleDemoMain = () => {
   const [vcRequestGlobal, setVCRequestGlobal] = useRecoilState(
     certificateOfResidenceVCRequestState
   );
-  const setVCRequestVerifiedGlobal = useSetRecoilState(
+  const [vcRequestVerifiedGlobal, setVCRequestVerifiedGlobal] = useRecoilState(
     certificateOfResidenceVCRequestVerifiedState
   );
 
@@ -23,7 +23,11 @@ const useSimpleDemoMain = () => {
     setVCRequestVerifiedGlobal(false);
   };
 
-  return { step1Done: vcRequest !== undefined, onClearClickHandler };
+  return {
+    step1Done: vcRequest !== undefined,
+    step2Done: !!vcRequestVerifiedGlobal,
+    onClearClickHandler,
+  };
 };
 
 export default useSimpleDemoMain;

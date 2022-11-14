@@ -4,7 +4,7 @@ import StepStatus from './StepStatus';
 import useSimpleDemoMain from './useSimpleDemoMain';
 
 const SimpleDemoMain = () => {
-  const { step1Done, onClearClickHandler } = useSimpleDemoMain();
+  const { step1Done, step2Done, onClearClickHandler } = useSimpleDemoMain();
 
   return (
     <div>
@@ -40,7 +40,7 @@ const SimpleDemoMain = () => {
             <a href="./simple-demo-step2">Step 2</a>
           </div>
           <div className="w-20 text-center">
-            <StepStatus done={false} />
+            <StepStatus done={step2Done} />
           </div>
         </div>
       )}
