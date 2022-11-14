@@ -4,7 +4,8 @@ import StepStatus from './StepStatus';
 import useSimpleDemoMain from './useSimpleDemoMain';
 
 const SimpleDemoMain = () => {
-  const { step1Done, step2Done, onClearClickHandler } = useSimpleDemoMain();
+  const { step1Done, step2Done, step3Done, onClearClickHandler } =
+    useSimpleDemoMain();
 
   return (
     <div>
@@ -41,6 +42,16 @@ const SimpleDemoMain = () => {
           </div>
           <div className="w-20 text-center">
             <StepStatus done={step2Done} />
+          </div>
+        </div>
+      )}
+      {step2Done && (
+        <div className="mt-4 flex">
+          <div className="w-20 border-2 border-blue-500 rounded-full text-center hover:bg-blue-400 hover:text-white">
+            <a href="./simple-demo-step3">Step 3</a>
+          </div>
+          <div className="w-20 text-center">
+            <StepStatus done={step3Done} />
           </div>
         </div>
       )}

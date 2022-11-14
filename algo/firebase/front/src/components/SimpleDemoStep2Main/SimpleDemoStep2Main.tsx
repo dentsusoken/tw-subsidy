@@ -23,7 +23,7 @@ const SimpleDemoStep2Main = () => {
       <DidInfo name="Issuer" didAccount={issuerDidAccount} />
 
       <div className="pt-2">住民票の発行依頼内容</div>
-      <textarea value={vm} rows={14} cols={50} readOnly={true}></textarea>
+      <textarea value={vm} rows={12} cols={50} readOnly={true}></textarea>
       <div>
         <button
           onClick={onVCRequestVerifiedClickHandler}
