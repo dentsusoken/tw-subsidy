@@ -9,6 +9,7 @@ import chainState from '@/lib/states/chainState';
 import corVCRequestState from '@/lib/states/corVCRequestState';
 import corVCState from '@/lib/states/corVCState';
 import corVPRequestState from '@/lib/states/corVPRequestState';
+import corVPState from '@/lib/states/corVPState';
 
 import { issuerAccount } from '@/lib/algo/account/accounts';
 
@@ -27,6 +28,7 @@ const useMain = () => {
   const [vcGlobal, setVCGlobal] = useRecoilState(corVCState);
   const [vpRequestGlobal, setVPRequestGlobal] =
     useRecoilState(corVPRequestState);
+  const [vpGlobal, setVPGlobal] = useRecoilState(corVPState);
   const [chainType] = useRecoilState(chainState);
 
   const errorHandler = useErrorHandler();
@@ -35,12 +37,14 @@ const useMain = () => {
     setVCRequested(!!vcRequestGlobal);
     setVCIssued(!!vcGlobal);
     setVPRequested(!!vpRequestGlobal);
-  }, [vcRequestGlobal, vcGlobal, vpRequestGlobal]);
+    setVPSubmitted(!!vpGlobal);
+  }, [vcRequestGlobal, vcGlobal, vpRequestGlobal, vpGlobal]);
 
   const onClearClickHandler = () => {
     setVCRequestGlobal(undefined);
     setVCGlobal(undefined);
     setVPRequestGlobal(undefined);
+    setVPGlobal(undefined);
 
     if (clearing) {
       return;

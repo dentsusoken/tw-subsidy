@@ -72,7 +72,7 @@ const Main = () => {
       <div className="mt-4 flex">
         {vpRequested && !vpSubmitted ? (
           <div className="w-56 border-2 border-blue-500 rounded-full text-center hover:bg-blue-400 hover:text-white">
-            <a>住民票VPの提出</a>
+            <a href="./simple-demo-vpsubmit">住民票VPの提出</a>
           </div>
         ) : (
           <div className="w-56 text-center">住民票VPの提出</div>

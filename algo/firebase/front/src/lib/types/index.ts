@@ -24,8 +24,14 @@ export type CORVPRequestContent = {
   purpose: string;
 };
 
+export type CORVPContent = {
+  credentials: VerifiableCredential[];
+};
+
 export type CORVCRequest = VerifiableMessage<CORVCRequestContent>;
 
 export type CORVC = VerifiableCredential<CORVCContent>;
 
 export type CORVPRequest = VerifiableMessage<CORVPRequestContent>;
+
+export type CORVP = VerifiableMessage<CORVPContent>;
