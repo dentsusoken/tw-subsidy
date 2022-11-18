@@ -1,14 +1,13 @@
-import DidInfo from '../DidInfo';
-import BackButton from '../BackButton';
+import DidInfo from '@/components/DidInfo';
+import BackButton from '@/components/BackButton';
 import {
   holderDidAccount,
   verifierDidAccount,
 } from '@/lib/algo/account/accounts';
-import useSimpleDemoStep4Main from './useSimpleDemoStep4Main';
+import useVPRequestMain from './useVPRequestMain';
 
-const SimpleDemoStep4Main = () => {
-  const { vm, onVPRequestClickHandler, vpRequested } = useSimpleDemoStep4Main();
-  console.log('vm:', vm);
+const VPRequestMain = () => {
+  const { vm, vpRequested, onVPRequestClickHandler } = useVPRequestMain();
 
   return (
     <div>
@@ -36,4 +35,4 @@ const SimpleDemoStep4Main = () => {
   );
 };
 
-export default SimpleDemoStep4Main;
+export default VPRequestMain;

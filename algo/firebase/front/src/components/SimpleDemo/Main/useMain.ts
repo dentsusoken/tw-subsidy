@@ -8,12 +8,13 @@ import { getAlgod } from '@/lib/algo/algod/algods';
 import chainState from '@/lib/states/chainState';
 import corVCRequestState from '@/lib/states/corVCRequestState';
 import corVCState from '@/lib/states/corVCState';
+import corVPRequestState from '@/lib/states/corVPRequestState';
 
 import { issuerAccount } from '@/lib/algo/account/accounts';
 
 import deleteAllApps from '@/lib/algo/api/deleteAllApps';
 
-const useSimpleDemoMain = () => {
+const useMain = () => {
   const [vcRequested, setVCRequested] = useState(false);
   const [vcIssued, setVCIssued] = useState(false);
   const [vpRequested, setVPRequested] = useState(false);
@@ -24,6 +25,8 @@ const useSimpleDemoMain = () => {
   const [vcRequestGlobal, setVCRequestGlobal] =
     useRecoilState(corVCRequestState);
   const [vcGlobal, setVCGlobal] = useRecoilState(corVCState);
+  const [vpRequestGlobal, setVPRequestGlobal] =
+    useRecoilState(corVPRequestState);
   const [chainType] = useRecoilState(chainState);
 
   const errorHandler = useErrorHandler();
@@ -31,11 +34,13 @@ const useSimpleDemoMain = () => {
   useEffect(() => {
     setVCRequested(!!vcRequestGlobal);
     setVCIssued(!!vcGlobal);
-  }, [vcRequestGlobal, vcGlobal]);
+    setVPRequested(!!vpRequestGlobal);
+  }, [vcRequestGlobal, vcGlobal, vpRequestGlobal]);
 
   const onClearClickHandler = () => {
     setVCRequestGlobal(undefined);
     setVCGlobal(undefined);
+    setVPRequestGlobal(undefined);
 
     if (clearing) {
       return;
@@ -66,4 +71,4 @@ const useSimpleDemoMain = () => {
   };
 };
 
-export default useSimpleDemoMain;
+export default useMain;

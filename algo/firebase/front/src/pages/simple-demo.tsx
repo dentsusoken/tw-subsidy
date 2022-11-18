@@ -1,9 +1,9 @@
 import type { NextPage } from 'next';
 
-import SimpleDemoMain from '@/components/SimpleDemoMain';
+import Main from '@/components/SimpleDemo/Main';
 
 const SimpleDemo: NextPage = () => {
-  return <SimpleDemoMain />;
+  return <Main />;
 };
 
 export default SimpleDemo;

@@ -3,7 +3,7 @@ import { useRecoilState } from 'recoil';
 
 import { useErrorHandler } from 'react-error-boundary';
 
-import certificateOfResidenceVPRequestState from '@/lib/states/certificateOfResidenceVPRequestState';
+import corVPRequestState from '@/lib/states/corVPRequestState';
 
 import shortenVerifiableMessage from '@/lib/utils/shortenVerifiableMessage';
 import { createVerifiableMessage } from '@/lib/algosbt';
@@ -26,26 +26,26 @@ const createVPRequestMessage = () => {
   );
 };
 
-const useSimpleDemoStep4Main = () => {
+const useVPRequestMain = () => {
   const [vpRequested, setVPRequested] = useState(false);
   const [vm, setVM] = useState('');
-  const [vpRequestGlobal, setVPRequestGlobal] = useRecoilState(
-    certificateOfResidenceVPRequestState
-  );
+  const [vpRequestGlobal, setVPRequestGlobal] =
+    useRecoilState(corVPRequestState);
   const errorHandler = useErrorHandler();
 
   useEffect(() => {
     try {
       setVPRequested(!!vpRequestGlobal);
 
-      const vm = createVPRequestMessage();
-      const vmForDisplay = shortenVerifiableMessage(vm);
+      if (!vm) {
+        const vmForDisplay = shortenVerifiableMessage(createVPRequestMessage());
 
-      setVM(JSON.stringify(vmForDisplay, undefined, 2));
+        setVM(JSON.stringify(vmForDisplay, undefined, 2));
+      }
     } catch (e) {
       errorHandler(e);
     }
-  }, [vpRequestGlobal, errorHandler]);
+  }, [vpRequestGlobal, vm, errorHandler]);
 
   const onVPRequestClickHandler = () => {
     try {
@@ -65,4 +65,4 @@ const useSimpleDemoStep4Main = () => {
   };
 };
 
-export default useSimpleDemoStep4Main;
+export default useVPRequestMain;

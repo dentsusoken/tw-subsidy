@@ -1,9 +1,9 @@
-import BackButton from '../BackButton';
+import BackButton from '@/components/BackButton';
 
 import StepStatus from './StepStatus';
-import useSimpleDemoMain from './useSimpleDemoMain';
+import useSimpleDemoMain from './useMain';
 
-const SimpleDemoMain = () => {
+const Main = () => {
   const {
     vcRequested,
     vcIssued,
@@ -59,7 +59,7 @@ const SimpleDemoMain = () => {
       <div className="mt-4 flex">
         {vcIssued && !vpRequested ? (
           <div className="w-56 border-2 border-blue-500 rounded-full text-center hover:bg-blue-400 hover:text-white">
-            <a href="./simple-demo-step4">住民票VPの提出依頼</a>
+            <a href="./simple-demo-vprequest">住民票VPの提出依頼</a>
           </div>
         ) : (
           <div className="w-56 text-center">住民票VPの提出依頼</div>
@@ -108,4 +108,4 @@ const SimpleDemoMain = () => {
   );
 };
 
-export default SimpleDemoMain;
+export default Main;
