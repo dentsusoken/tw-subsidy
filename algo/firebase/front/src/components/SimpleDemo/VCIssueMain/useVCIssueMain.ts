@@ -5,8 +5,8 @@ import { useErrorHandler } from 'react-error-boundary';
 import { getAlgod } from '@/lib/algo/algod/algods';
 
 import chainState from '@/lib/states/chainState';
-import certificateOfResidenceVCState from '@/lib/states/certificateOfResidenceVCState';
-import certificateOfResidenceVCRequestState from '@/lib/states/certificateOfResidenceVCRequestState';
+import corVCState from '@/lib/states/corVCState';
+import corVCRequestState from '@/lib/states/corVCRequestState';
 import shortenVerifiableMessage from '@/lib/utils/shortenVerifiableMessage';
 import {
   createVerifiableCredential,
@@ -34,12 +34,11 @@ const useSimpleDemoStep3Main = () => {
   const [vcIssued, setVCIssued] = useState(false);
   const [vcIssuing, setVCIssuing] = useState(false);
   const [vm, setVM] = useState('');
+  const [issueTimestamp, setIssueTimestamp] = useState(0);
 
   const [chainType] = useRecoilState(chainState);
-  const [vcRequestGlobal] = useRecoilState(
-    certificateOfResidenceVCRequestState
-  );
-  const [vcGlobal, setVCGlobal] = useRecoilState(certificateOfResidenceVCState);
+  const [vcRequestGlobal] = useRecoilState(corVCRequestState);
+  const [vcGlobal, setVCGlobal] = useRecoilState(corVCState);
   const errorHandler = useErrorHandler();
 
   useEffect(() => {
@@ -49,7 +48,8 @@ const useSimpleDemoStep3Main = () => {
       if (vcIssuing && !!vcGlobal) {
         setVCIssuing(false);
       }
-      if (vcRequestGlobal) {
+
+      if (vcRequestGlobal && !vm) {
         const content = createVCContent(vcRequestGlobal.message.content);
         const vm = createVerifiableMessage(
           issuerDidAccount,
@@ -64,7 +64,7 @@ const useSimpleDemoStep3Main = () => {
     } catch (e) {
       errorHandler(e);
     }
-  }, [vcGlobal, vcRequestGlobal, vcIssuing, errorHandler]);
+  }, [vcGlobal, vcRequestGlobal, vcIssuing, vm, errorHandler]);
 
   const onVCIssueClickHandler = () => {
     if (!vcGlobal && vcRequestGlobal) {
@@ -82,6 +82,7 @@ const useSimpleDemoStep3Main = () => {
         );
 
         setVCGlobal(vc);
+        setIssueTimestamp(new Date().getTime());
       };
 
       func().catch(errorHandler);
@@ -93,6 +94,7 @@ const useSimpleDemoStep3Main = () => {
     onVCIssueClickHandler,
     vcIssued,
     vcIssuing,
+    issueTimestamp,
   };
 };
 

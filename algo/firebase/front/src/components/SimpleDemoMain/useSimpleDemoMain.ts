@@ -1,39 +1,67 @@
 import { useState, useEffect } from 'react';
 import { useRecoilState } from 'recoil';
+import { useErrorHandler } from 'react-error-boundary';
 
-import certificateOfResidenceVCRequestState from '@/lib/states/certificateOfResidenceVCRequestState';
-import certificateOfResidenceVCRequestVerifiedState from '@/lib/states/certificateOfResidenceVCRequestVerifiedState';
-import certificateOfResidenceVCState from '@/lib/states/certificateOfResidenceVCState';
+import { getIndexer } from '@/lib/algo/indexer/indexers';
+import { getAlgod } from '@/lib/algo/algod/algods';
+
+import chainState from '@/lib/states/chainState';
+import corVCRequestState from '@/lib/states/corVCRequestState';
+import corVCState from '@/lib/states/corVCState';
+
+import { issuerAccount } from '@/lib/algo/account/accounts';
+
+import deleteAllApps from '@/lib/algo/api/deleteAllApps';
 
 const useSimpleDemoMain = () => {
-  const [step1Done, setSetp1Done] = useState(false);
-  const [step2Done, setSetp2Done] = useState(false);
-  const [step3Done, setSetp3Done] = useState(false);
+  const [vcRequested, setVCRequested] = useState(false);
+  const [vcIssued, setVCIssued] = useState(false);
+  const [vpRequested, setVPRequested] = useState(false);
+  const [vpSubmitted, setVPSubmitted] = useState(false);
+  const [vpVerified, setVPVerified] = useState(false);
+  const [clearing, setClearing] = useState(false);
 
-  const [vcRequestGlobal, setVCRequestGlobal] = useRecoilState(
-    certificateOfResidenceVCRequestState
-  );
-  const [vcRequestVerifiedGlobal, setVCRequestVerifiedGlobal] = useRecoilState(
-    certificateOfResidenceVCRequestVerifiedState
-  );
-  const [vcGlobal, setVCGlobal] = useRecoilState(certificateOfResidenceVCState);
+  const [vcRequestGlobal, setVCRequestGlobal] =
+    useRecoilState(corVCRequestState);
+  const [vcGlobal, setVCGlobal] = useRecoilState(corVCState);
+  const [chainType] = useRecoilState(chainState);
+
+  const errorHandler = useErrorHandler();
 
   useEffect(() => {
-    setSetp1Done(!!vcRequestGlobal);
-    setSetp2Done(vcRequestVerifiedGlobal);
-    setSetp3Done(!!vcGlobal);
-  }, [vcRequestGlobal, vcRequestVerifiedGlobal, vcGlobal]);
+    setVCRequested(!!vcRequestGlobal);
+    setVCIssued(!!vcGlobal);
+  }, [vcRequestGlobal, vcGlobal]);
 
   const onClearClickHandler = () => {
     setVCRequestGlobal(undefined);
-    setVCRequestVerifiedGlobal(false);
     setVCGlobal(undefined);
+
+    if (clearing) {
+      return;
+    }
+
+    const func = async () => {
+      setClearing(true);
+
+      const indexer = getIndexer(chainType);
+      const algod = getAlgod(chainType);
+
+      await deleteAllApps(indexer, algod, issuerAccount.addr, issuerAccount.sk);
+
+      setClearing(false);
+    };
+
+    func().catch(errorHandler);
   };
 
   return {
-    step1Done,
-    step2Done,
-    step3Done,
+    vcRequested,
+    vcIssued,
+    vpRequested,
+    vpSubmitted,
+    vpVerified,
+    clearing,
     onClearClickHandler,
   };
 };

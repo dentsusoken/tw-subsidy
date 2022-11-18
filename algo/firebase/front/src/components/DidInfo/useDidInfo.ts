@@ -12,9 +12,10 @@ import { DidAccount } from '@/lib/algosbt/types';
 export type UseDidInfoParams = {
   name: string;
   didAccount: DidAccount;
+  timestamp?: number;
 };
 
-const useDidInfo = ({ name, didAccount }: UseDidInfoParams) => {
+const useDidInfo = ({ name, didAccount, timestamp }: UseDidInfoParams) => {
   const chainType = useRecoilValue(chainState);
   const [balance, setBalance] = useState('');
   const errorHandler = useErrorHandler();
@@ -29,7 +30,7 @@ const useDidInfo = ({ name, didAccount }: UseDidInfoParams) => {
     };
 
     func().catch(errorHandler);
-  }, [didAccount, errorHandler, chainType]);
+  }, [didAccount, errorHandler, chainType, timestamp]);
 
   return {
     name,

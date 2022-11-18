@@ -12,7 +12,8 @@
     "tests": "yarn test --paths **/*.spec.ts",
     "tests:watch": "yarn tests --watch --watch-files '**/*.ts'",
     "ts-node": "TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\"}' ts-node -r tsconfig-paths/register --transpile-only",
-    "destroyAsset": "yarn ts-node src/lib/algosbt/transactions/destroyAsset.ts"
+    "destroyAsset": "yarn ts-node src/lib/algosbt/transactions/destroyAsset.ts",
+    "deleteAllApps": "yarn ts-node src/cui/deleteAllApps.ts"
   },
   "dependencies": {
     "aes-js": "^3.1.2",

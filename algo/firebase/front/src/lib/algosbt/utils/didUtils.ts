@@ -26,5 +26,5 @@ export const addressFromDid = (did: string) => {
 export const shortenDid = (did: string) => {
   const pieces = splitDid(did);
 
-  return `${pieces[0]}...${pieces[1].slice(-6)}`;
+  return `${pieces[0]}${pieces[1].slice(0, 3)}...${pieces[1].slice(-3)}`;
 };

@@ -1,10 +1,8 @@
 import { atom } from 'recoil';
-import { CertificateOfResidenceVCRequest } from '@/lib/types';
+import { CORVCRequest } from '@/lib/types';
 import persistAtom from './persistAtom';
 
-const certificateOfResidenceVCRequestState = atom<
-  CertificateOfResidenceVCRequest | undefined
->({
+const certificateOfResidenceVCRequestState = atom<CORVCRequest | undefined>({
   key: 'CertificateOfResidenceVCRequestState',
   default: undefined,
   effects_UNSTABLE: [persistAtom],

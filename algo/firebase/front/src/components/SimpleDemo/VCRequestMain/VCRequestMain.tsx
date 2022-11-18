@@ -1,13 +1,13 @@
-import DidInfo from '../DidInfo';
-import BackButton from '../BackButton';
+import DidInfo from '@/components/DidInfo';
+import BackButton from '@/components/BackButton';
 import {
   holderDidAccount,
   issuerDidAccount,
 } from '@/lib/algo/account/accounts';
-import useSimpleDemoStep1Main from './useSimpleDemoStep1Main';
+import useVCRequestMain from './useVCRequestMain';
 
-const SimpleDemoStep1Main = () => {
-  const { vm, onVCRequestClickHandler, vcRequest } = useSimpleDemoStep1Main();
+const VCRequestMain = () => {
+  const { vm, onVCRequestClickHandler, vcRequested } = useVCRequestMain();
 
   return (
     <div>
@@ -29,10 +29,10 @@ const SimpleDemoStep1Main = () => {
         >
           依頼
         </button>
-        {vcRequest && <span className="text-blue-500">Done</span>}
+        {vcRequested && <span className="text-blue-500">Done</span>}
       </div>
     </div>
   );
 };
 
-export default SimpleDemoStep1Main;
+export default VCRequestMain;

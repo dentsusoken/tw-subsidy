@@ -8,28 +8,24 @@ export enum ChainType {
   TestNet = 'TestNet',
 }
 
-export type CertificateOfResidenceVCRequestContent = {
+export type CORVCRequestContent = {
   purpose: string;
   address: string;
   name: string;
 };
 
-export type CertificateOfResidenceVCContent = {
+export type CORVCContent = {
   issueDate: string;
   address: string;
   name: string;
 };
 
-export type CertificateOfResidenceVCRequest =
-  VerifiableMessage<CertificateOfResidenceVCRequestContent>;
+export type CORVPRequestContent = {
+  purpose: string;
+};
 
-export type CertificateOfResidenceVC =
-  VerifiableCredential<CertificateOfResidenceVCContent>;
+export type CORVCRequest = VerifiableMessage<CORVCRequestContent>;
 
-export type Unpromise<T extends Promise<unknown>> = T extends Promise<infer U>
-  ? U
-  : never;
+export type CORVC = VerifiableCredential<CORVCContent>;
 
-export type Unarray<T extends Array<unknown>> = T extends Array<infer U>
-  ? U
-  : never;
+export type CORVPRequest = VerifiableMessage<CORVPRequestContent>;

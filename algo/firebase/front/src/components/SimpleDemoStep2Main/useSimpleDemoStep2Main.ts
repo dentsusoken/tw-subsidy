@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 
+import { useErrorHandler } from 'react-error-boundary';
+
 import certificateOfResidenceVCRequestVerifiedState from '@/lib/states/certificateOfResidenceVCRequestVerifiedState';
 import certificateOfResidenceVCRequestState from '@/lib/states/certificateOfResidenceVCRequestState';
 import shortenVerifiableMessage from '@/lib/utils/shortenVerifiableMessage';
@@ -15,20 +17,34 @@ const useSimpleDemoStep2Main = () => {
   const [vcRequestGlobal] = useRecoilState(
     certificateOfResidenceVCRequestState
   );
+  const errorHandler = useErrorHandler();
 
   useEffect(() => {
-    setVCRequestVerified(vcRequestVerifiedGlobal);
+    try {
+      setVCRequestVerified(vcRequestVerifiedGlobal);
 
-    if (vcRequestGlobal) {
-      const vmForDisplay = shortenVerifiableMessage(vcRequestGlobal);
+      if (vcRequestGlobal) {
+        const vmForDisplay = shortenVerifiableMessage(vcRequestGlobal);
 
-      setVM(JSON.stringify(vmForDisplay, undefined, 2));
+        setVM(JSON.stringify(vmForDisplay, undefined, 2));
+      }
+    } catch (e) {
+      errorHandler(e);
     }
-  }, [vcRequestVerified, vcRequestVerifiedGlobal, vcRequestGlobal]);
+  }, [
+    vcRequestVerified,
+    vcRequestVerifiedGlobal,
+    vcRequestGlobal,
+    errorHandler,
+  ]);
 
   const onVCRequestVerifiedClickHandler = () => {
-    if (vcRequestGlobal) {
-      setVCRequestVerifiedGlobal(verifyVerifiableMessage(vcRequestGlobal));
+    try {
+      if (vcRequestGlobal) {
+        setVCRequestVerifiedGlobal(verifyVerifiableMessage(vcRequestGlobal));
+      }
+    } catch (e) {
+      errorHandler(e);
     }
   };
 
