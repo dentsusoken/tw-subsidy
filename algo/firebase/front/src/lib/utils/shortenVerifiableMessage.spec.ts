@@ -20,8 +20,8 @@ describe('shotrenVerifiableMessage', () => {
     };
     expect(shotrenVerifiableMessage(vm)).to.eql({
       message: {
-        senderDid: 'did:pkh:algo:...uvwxyz',
-        receiverDid: 'did:pkh:algo:...vwxyza',
+        senderDid: 'did:pkh:algo:abc...xyz',
+        receiverDid: 'did:pkh:algo:bcd...yza',
         content: {
           name: 'Hoge',
         },

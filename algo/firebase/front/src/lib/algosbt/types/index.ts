@@ -20,6 +20,13 @@ export type VerifiableCredentialContent<T = any> = {
   content: T;
 };
 
+export type VerifiablePresentationContent = {
+  credentials: VerifiableCredential[];
+};
+
 export type VerifiableCredential<T = any> = VerifiableMessage<
   VerifiableCredentialContent<T>
 >;
+
+export type VerifiablePresentation =
+  VerifiableMessage<VerifiablePresentationContent>;

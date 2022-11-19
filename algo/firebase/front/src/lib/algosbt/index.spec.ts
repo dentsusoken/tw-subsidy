@@ -5,7 +5,11 @@ import { addressFromSecretKey } from './utils/algosdkUtils';
 import { addressFromDid } from './utils/didUtils';
 import { testNetAlgod as algod } from './algod/algods';
 import deleteApp from './transactions/deleteApp';
-import { holderAccount, issuerAccount } from '../algo/account/accounts';
+import {
+  holderAccount,
+  issuerAccount,
+  verifierDidAccount,
+} from '../algo/account/accounts';
 
 import {
   createDidAccount,
@@ -15,6 +19,8 @@ import {
   createVerifiableCredential,
   revokeVerifiableCredential,
   verifyVerifiableCredential,
+  createVerifiablePresentation,
+  verifyVerifiablePresentation,
 } from '.';
 
 describe('algosbt', () => {
@@ -197,6 +203,133 @@ describe('algosbt', () => {
       );
 
       expect(await verifyVerifiableCredential(algod, vc)).to.be.false;
+    } finally {
+      await deleteApp(
+        algod,
+        {
+          from: addressFromDid(issuerDidAccount.did),
+          appIndex,
+        },
+        issuerSecretKey
+      );
+    }
+  });
+
+  it('createVerifiablePresentation should work', async () => {
+    const holderPassword = 'abcdefgh';
+    const issuerPassword = '12345678';
+
+    const holderSecretKey = holderAccount.sk;
+    const issuerSecretKey = issuerAccount.sk;
+
+    const holderEncSecretKey = encryptByPassword(
+      holderSecretKey,
+      holderPassword
+    );
+    const issuerEncSecretKey = encryptByPassword(
+      issuerSecretKey,
+      issuerPassword
+    );
+
+    const holderDidAccount = restoreDidAccount(
+      holderEncSecretKey,
+      holderPassword
+    );
+    const issuerDidAccount = restoreDidAccount(
+      issuerEncSecretKey,
+      issuerPassword
+    );
+
+    const holderDid = holderDidAccount.did;
+
+    const content = {
+      name: 'Yasuo',
+    };
+
+    const vc = await createVerifiableCredential(
+      algod,
+      issuerDidAccount,
+      holderDid,
+      content,
+      issuerPassword
+    );
+    const appIndex = vc.message.content.appIndex;
+    console.log('Application Index:', appIndex);
+
+    try {
+      const vp = await createVerifiablePresentation(
+        holderDidAccount,
+        verifierDidAccount.did,
+        [vc],
+        holderPassword
+      );
+
+      expect(vp.message.senderDid).to.eq(holderDidAccount.did);
+      expect(vp.message.receiverDid).to.eq(verifierDidAccount.did);
+      expect(vp.message.content.credentials).to.eql([vc]);
+      expect(vp.signature).to.not.be.empty;
+    } finally {
+      await deleteApp(
+        algod,
+        {
+          from: addressFromDid(issuerDidAccount.did),
+          appIndex,
+        },
+        issuerSecretKey
+      );
+    }
+  });
+
+  it('verifyVerifiablePresentation should work', async () => {
+    const holderPassword = 'abcdefgh';
+    const issuerPassword = '12345678';
+
+    const holderSecretKey = holderAccount.sk;
+    const issuerSecretKey = issuerAccount.sk;
+
+    const holderEncSecretKey = encryptByPassword(
+      holderSecretKey,
+      holderPassword
+    );
+    const issuerEncSecretKey = encryptByPassword(
+      issuerSecretKey,
+      issuerPassword
+    );
+
+    const holderDidAccount = restoreDidAccount(
+      holderEncSecretKey,
+      holderPassword
+    );
+    const issuerDidAccount = restoreDidAccount(
+      issuerEncSecretKey,
+      issuerPassword
+    );
+
+    const holderDid = holderDidAccount.did;
+
+    const content = {
+      name: 'Yasuo',
+    };
+
+    const vc = await createVerifiableCredential(
+      algod,
+      issuerDidAccount,
+      holderDid,
+      content,
+      issuerPassword
+    );
+    const appIndex = vc.message.content.appIndex;
+    console.log('Application Index:', appIndex);
+
+    try {
+      const vp = await createVerifiablePresentation(
+        holderDidAccount,
+        verifierDidAccount.did,
+        [vc],
+        holderPassword
+      );
+
+      expect(await verifyVerifiablePresentation(algod, vp)).to.be.true;
     } finally {
       await deleteApp(
         algod,

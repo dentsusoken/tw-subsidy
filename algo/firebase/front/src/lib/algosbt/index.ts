@@ -11,6 +11,8 @@ import {
   VerifiableMessage,
   VerifiableCredential,
   VerifiableCredentialContent,
+  VerifiablePresentation,
+  VerifiablePresentationContent,
   Message,
 } from './types';
 import { encryptByPassword, decryptByPassword } from './utils/cryptUtils';
@@ -137,4 +139,39 @@ export const revokeVerifiableCredential = async (
   );
 
   await setRevoked(algod, { from, appIndex, value }, issuerSecretKey);
+};
+
+export const createVerifiablePresentation = async (
+  holderDidAccount: DidAccount,
+  verifierDid: string,
+  credentials: VerifiableCredential[],
+  password: string
+) => {
+  const vpContent: VerifiablePresentationContent = {
+    credentials,
+  };
+
+  return createVerifiableMessage(
+    holderDidAccount,
+    verifierDid,
+    vpContent,
+    password
+  );
+};
+
+export const verifyVerifiablePresentation = async (
+  algod: Algodv2,
+  vp: VerifiablePresentation
+) => {
+  try {
+    if (!verifyVerifiableMessage(vp)) {
+      return false;
+    }
+
+    return vp.message.content.credentials.every((vc) =>
+      verifyVerifiableCredential(algod, vc)
+    );
+  } catch (ignore) {}
+
+  return false;
 };
