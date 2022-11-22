@@ -25,7 +25,9 @@ import * as didUtils from './utils/didUtils';
 
 export const createDidAccount = (password: string): DidAccount => {
   const account = generateAccount();
-  const encSecretKey = encryptByPassword(account.sk, password);
+  const encSecretKey = Buffer.from(
+    encryptByPassword(account.sk, password)
+  ).toString('base64');
   const address = account.addr;
   const did = didUtils.didFromAddress(address);
 
@@ -33,10 +35,13 @@ export const createDidAccount = (password: string): DidAccount => {
 };
 
 export const restoreDidAccount = (
-  encSecretKey: Uint8Array,
+  encSecretKey: string,
   password: string
 ): DidAccount => {
-  const secretKey = decryptByPassword(encSecretKey, password);
+  const secretKey = decryptByPassword(
+    Buffer.from(encSecretKey, 'base64'),
+    password
+  );
   const address = addressFromSecretKey(secretKey);
   const did = didUtils.didFromAddress(address);
 
@@ -55,7 +60,10 @@ export const createVerifiableMessage = <T>(
     content,
   };
   const encodedMessage = encodeObj(message);
-  const secretKey = decryptByPassword(senderDidAccount.encSecretKey, password);
+  const secretKey = decryptByPassword(
+    Buffer.from(senderDidAccount.encSecretKey, 'base64'),
+    password
+  );
   const signature = Buffer.from(sign(encodedMessage, secretKey)).toString(
     'base64'
   );
@@ -89,7 +97,10 @@ export const createVerifiableCredential = async <T>(
   content: T,
   password: string
 ) => {
-  const secretKey = decryptByPassword(issuerDidAccount.encSecretKey, password);
+  const secretKey = decryptByPassword(
+    Buffer.from(issuerDidAccount.encSecretKey, 'base64'),
+    password
+  );
   const from = addressFromSecretKey(secretKey);
   const appIndex = await createRevokedApp(algod, { from }, secretKey);
   const vcContent: VerifiableCredentialContent<T> = {
@@ -134,7 +145,7 @@ export const revokeVerifiableCredential = async (
   const from = didUtils.addressFromDid(issuerDidAccount.did);
   const appIndex = vc.message.content.appIndex;
   const issuerSecretKey = decryptByPassword(
-    issuerDidAccount.encSecretKey,
+    Buffer.from(issuerDidAccount.encSecretKey, 'base64'),
     password
   );
 

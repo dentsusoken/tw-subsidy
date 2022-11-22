@@ -3,6 +3,7 @@ import BackButton from '@/components/BackButton';
 import {
   holderDidAccount,
   verifierDidAccount,
+  issuerDidAccount,
 } from '@/lib/algo/account/accounts';
 import useVPSubmitMain from './useVPSubmitMain';
 
@@ -14,11 +15,12 @@ const VPSubmitMain = () => {
       <div className="py-2">
         <BackButton url="./simple-demo" />
       </div>
-      <p className="w-fit border-dashed border-2 p-1 mb-2">
-        HolderがVerifierに住民票VPを提出します。
+      <p className="w-fit border-dashed border-4 p-4 mb-2">
+        申請者が申請先に住民票VPを提出します。
       </p>
-      <DidInfo name="Holder" didAccount={holderDidAccount} />
-      <DidInfo name="Verifier" didAccount={verifierDidAccount} />
+      <DidInfo name="申請者" didAccount={holderDidAccount} />
+      <DidInfo name="申請先" didAccount={verifierDidAccount} />
+      <DidInfo name="証明者" didAccount={issuerDidAccount} />
 
       <div className="pt-2">住民票VPの内容</div>
       <textarea value={vm} rows={26} cols={50} readOnly={true}></textarea>

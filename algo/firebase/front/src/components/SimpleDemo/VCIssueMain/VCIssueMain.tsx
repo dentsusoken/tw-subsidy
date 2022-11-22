@@ -15,15 +15,15 @@ const VCIssueMain = () => {
       <div className="py-2">
         <BackButton url="./simple-demo" />
       </div>
-      <p className="w-fit border-dashed border-2 p-1 mb-2">
-        IssuerがHolderの住民票VCを発行します。
+      <p className="w-fit border-dashed border-4 p-4 mb-2">
+        証明者が申請者の住民票VCを発行します。
       </p>
       <DidInfo
-        name="Issuer"
+        name="証明者"
         didAccount={issuerDidAccount}
         timestamp={issueTimestamp}
       />
-      <DidInfo name="Holder" didAccount={holderDidAccount} />
+      <DidInfo name="申請者" didAccount={holderDidAccount} />
 
       <div className="pt-2">住民票VCの内容</div>
       <textarea value={vm} rows={12} cols={50} readOnly={true}></textarea>

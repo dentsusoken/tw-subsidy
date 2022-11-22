@@ -19,7 +19,7 @@ const Main = () => {
       <div className="py-2">
         <BackButton url="." />
       </div>
-      <p className="w-fit border-dashed border-2 p-1">
+      <p className="w-fit border-dashed border-4 p-4">
         上から順番に実行しましょう。
         <br />
         各ステップを完了すると
@@ -38,6 +38,7 @@ const Main = () => {
         ) : (
           <div className="w-56 text-center">住民票VCの発行依頼</div>
         )}
+        <div className="w-40 text-center">申請者 -&gt; 証明者</div>
         <div className="w-20 text-center">
           <StepStatus done={vcRequested} />
         </div>
@@ -51,6 +52,7 @@ const Main = () => {
         ) : (
           <div className="w-56 text-center">住民票VCの発行</div>
         )}
+        <div className="w-40 text-center">証明者 -&gt; 申請者</div>
         <div className="w-20 text-center">
           <StepStatus done={vcIssued} />
         </div>
@@ -64,6 +66,7 @@ const Main = () => {
         ) : (
           <div className="w-56 text-center">住民票VPの提出依頼</div>
         )}
+        <div className="w-40 text-center">申請先 -&gt; 申請者</div>
         <div className="w-20 text-center">
           <StepStatus done={vpRequested} />
         </div>
@@ -77,6 +80,7 @@ const Main = () => {
         ) : (
           <div className="w-56 text-center">住民票VPの提出</div>
         )}
+        <div className="w-40 text-center">申請者 -&gt; 申請先</div>
         <div className="w-20 text-center">
           <StepStatus done={vpSubmitted} />
         </div>
@@ -90,6 +94,7 @@ const Main = () => {
         ) : (
           <div className="w-56 text-center">住民票VPの検証</div>
         )}
+        <div className="w-40 text-center">申請先</div>
         <div className="w-20 text-center">
           <StepStatus done={vpVerified} />
         </div>

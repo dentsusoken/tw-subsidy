@@ -14,11 +14,11 @@ const VCRequestMain = () => {
       <div className="py-2">
         <BackButton url="./simple-demo" />
       </div>
-      <p className="w-fit border-dashed border-2 p-1 mb-2">
-        HolderがIssuerに住民票の発行（issue）を依頼します。
+      <p className="w-fit border-dashed border-4 p-4 mb-2">
+        申請者が証明者に住民票の発行を依頼します。
       </p>
-      <DidInfo name="Holder" didAccount={holderDidAccount} />
-      <DidInfo name="Issuer" didAccount={issuerDidAccount} />
+      <DidInfo name="申請者" didAccount={holderDidAccount} />
+      <DidInfo name="証明者" didAccount={issuerDidAccount} />
 
       <div className="pt-2">依頼内容</div>
       <textarea value={vm} rows={12} cols={50} readOnly={true}></textarea>

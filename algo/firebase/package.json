@@ -4,6 +4,8 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "firebase": "^9.9.4"
+    "firebase": "^9.9.4",
+    "firebase-tools": "^11.16.1",
+    "global": "^4.4.0"
   }
 }

@@ -1,7 +1,7 @@
 export type DidAccount = {
   did: string;
   address: string;
-  encSecretKey: Uint8Array;
+  encSecretKey: string;
 };
 
 export type Message<T = any> = {

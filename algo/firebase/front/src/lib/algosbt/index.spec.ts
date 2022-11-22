@@ -29,21 +29,20 @@ describe('algosbt', () => {
     const didAccount = createDidAccount(password);
 
     expect(didAccount.did).to.not.be.empty;
+    expect(didAccount.address).to.not.be.empty;
     expect(didAccount.encSecretKey).to.not.be.empty;
 
-    const secretKey = decryptByPassword(didAccount.encSecretKey, password);
-
-    expect(addressFromSecretKey(secretKey)).to.eq(
-      addressFromDid(didAccount.did)
+    const secretKey = decryptByPassword(
+      Buffer.from(didAccount.encSecretKey, 'base64'),
+      password
     );
+
+    expect(addressFromSecretKey(secretKey)).to.eq(didAccount.address);
   });
 
   it('restoreDidAccount should work', () => {
     const password = 'abcdefgh';
     const didAccount = createDidAccount(password);
-
-    expect(didAccount.did).to.not.be.empty;
-    expect(didAccount.encSecretKey).to.not.be.empty;
 
     expect(restoreDidAccount(didAccount.encSecretKey, password)).to.eql(
       didAccount
@@ -102,14 +101,12 @@ describe('algosbt', () => {
     const holderSecretKey = holderAccount.sk;
     const issuerSecretKey = issuerAccount.sk;
 
-    const holderEncSecretKey = encryptByPassword(
-      holderSecretKey,
-      holderPassword
-    );
-    const issuerEncSecretKey = encryptByPassword(
-      issuerSecretKey,
-      issuerPassword
-    );
+    const holderEncSecretKey = Buffer.from(
+      encryptByPassword(holderSecretKey, holderPassword)
+    ).toString('base64');
+    const issuerEncSecretKey = Buffer.from(
+      encryptByPassword(issuerSecretKey, issuerPassword)
+    ).toString('base64');
 
     const holderDidAccount = restoreDidAccount(
       holderEncSecretKey,
@@ -158,14 +155,12 @@ describe('algosbt', () => {
     const holderSecretKey = holderAccount.sk;
     const issuerSecretKey = issuerAccount.sk;
 
-    const holderEncSecretKey = encryptByPassword(
-      holderSecretKey,
-      holderPassword
-    );
-    const issuerEncSecretKey = encryptByPassword(
-      issuerSecretKey,
-      issuerPassword
-    );
+    const holderEncSecretKey = Buffer.from(
+      encryptByPassword(holderSecretKey, holderPassword)
+    ).toString('base64');
+    const issuerEncSecretKey = Buffer.from(
+      encryptByPassword(issuerSecretKey, issuerPassword)
+    ).toString('base64');
 
     const holderDidAccount = restoreDidAccount(
       holderEncSecretKey,
@@ -222,14 +217,12 @@ describe('algosbt', () => {
     const holderSecretKey = holderAccount.sk;
     const issuerSecretKey = issuerAccount.sk;
 
-    const holderEncSecretKey = encryptByPassword(
-      holderSecretKey,
-      holderPassword
-    );
-    const issuerEncSecretKey = encryptByPassword(
-      issuerSecretKey,
-      issuerPassword
-    );
+    const holderEncSecretKey = Buffer.from(
+      encryptByPassword(holderSecretKey, holderPassword)
+    ).toString('base64');
+    const issuerEncSecretKey = Buffer.from(
+      encryptByPassword(issuerSecretKey, issuerPassword)
+    ).toString('base64');
 
     const holderDidAccount = restoreDidAccount(
       holderEncSecretKey,
@@ -287,14 +280,12 @@ describe('algosbt', () => {
     const holderSecretKey = holderAccount.sk;
     const issuerSecretKey = issuerAccount.sk;
 
-    const holderEncSecretKey = encryptByPassword(
-      holderSecretKey,
-      holderPassword
-    );
-    const issuerEncSecretKey = encryptByPassword(
-      issuerSecretKey,
-      issuerPassword
-    );
+    const holderEncSecretKey = Buffer.from(
+      encryptByPassword(holderSecretKey, holderPassword)
+    ).toString('base64');
+    const issuerEncSecretKey = Buffer.from(
+      encryptByPassword(issuerSecretKey, issuerPassword)
+    ).toString('base64');
 
     const holderDidAccount = restoreDidAccount(
       holderEncSecretKey,

@@ -19,18 +19,15 @@ export const holderAccount = algosdk.mnemonicToSecretKey(holderMnemonic);
 export const issuerAccount = algosdk.mnemonicToSecretKey(issuerMnemonic);
 export const verifierAccount = algosdk.mnemonicToSecretKey(verifierMnemonic);
 
-export const holderEncSk = cryptUtils.encryptByPassword(
-  holderAccount.sk,
-  holderPw
-);
-export const issuerEncSk = cryptUtils.encryptByPassword(
-  issuerAccount.sk,
-  issuerPw
-);
-export const verifierEncSk = cryptUtils.encryptByPassword(
-  verifierAccount.sk,
-  verifierPw
-);
+export const holderEncSk = Buffer.from(
+  cryptUtils.encryptByPassword(holderAccount.sk, holderPw)
+).toString('base64');
+export const issuerEncSk = Buffer.from(
+  cryptUtils.encryptByPassword(issuerAccount.sk, issuerPw)
+).toString('base64');
+export const verifierEncSk = Buffer.from(
+  cryptUtils.encryptByPassword(verifierAccount.sk, verifierPw)
+).toString('base64');
 
 export const holderDidAccount = restoreDidAccount(holderEncSk, holderPw);
 export const issuerDidAccount = restoreDidAccount(issuerEncSk, issuerPw);
