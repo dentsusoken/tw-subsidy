@@ -1,13 +1,16 @@
 import DidInfo from '@/components/DidInfo';
 import BackButton from '@/components/BackButton';
-import {
-  holderDidAccount,
-  verifierDidAccount,
-} from '@/lib/algo/account/accounts';
+
 import useVPRequestMain from './useVPRequestMain';
 
 const VPRequestMain = () => {
-  const { vm, vpRequested, onVPRequestClickHandler } = useVPRequestMain();
+  const {
+    vm,
+    vpRequested,
+    holderDidAccount,
+    verifierDidAccount,
+    onVPRequestClickHandler,
+  } = useVPRequestMain();
 
   return (
     <div>

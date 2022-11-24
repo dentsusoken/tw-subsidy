@@ -6,15 +6,17 @@ import { useErrorHandler } from 'react-error-boundary';
 import { createVerifiableMessage } from '@/lib/algosbt';
 import { CORVCRequestContent } from '@/lib/types';
 
-import {
-  holderDidAccount,
-  issuerDidAccount,
-  holderPw,
-} from '@/lib/algo/account/accounts';
+import { holderPw } from '@/lib/algo/account/accounts';
 import corVCRequestState from '@/lib/states/corVCRequestState';
+import holderDidAccountState from '@/lib/states/holderDidAccountState';
+import issuerDidAccountState from '@/lib/states/issuerDidAccountState';
 import shotrenVerifiableMessage from '@/lib/utils/shortenVerifiableMessage';
+import { DidAccount } from '@/lib/algosbt/types';
 
-const createCORVCRequestMessage = () => {
+const createCORVCRequestMessage = (
+  holderDidAccount: DidAccount,
+  issuerDid: string
+) => {
   const content: CORVCRequestContent = {
     purpose: '住民票の発行依頼',
     address: '東京都港区',
@@ -23,7 +25,7 @@ const createCORVCRequestMessage = () => {
 
   return createVerifiableMessage(
     holderDidAccount,
-    issuerDidAccount.did,
+    issuerDid,
     content,
     holderPw
   );
@@ -32,28 +34,51 @@ const createCORVCRequestMessage = () => {
 const useVCRequestMain = () => {
   const [vm, setVM] = useState('');
   const [vcRequested, setVCRequested] = useState(false);
+  const [holderDidAccount, setHolderDidAccount] = useState<DidAccount>();
+  const [issuerDidAccount, setIssuerDidAccount] = useState<DidAccount>();
   const [vcRequestGlobal, setVCRequestGlobal] =
     useRecoilState(corVCRequestState);
+  const [holderDidAccountGlobal] = useRecoilState(holderDidAccountState);
+  const [issuerDidAccountGlobal] = useRecoilState(issuerDidAccountState);
 
   const errorHandler = useErrorHandler();
 
   useEffect(() => {
     try {
       setVCRequested(!!vcRequestGlobal);
+      setHolderDidAccount(holderDidAccountGlobal);
+      setIssuerDidAccount(issuerDidAccountGlobal);
 
-      const vm = createCORVCRequestMessage();
-      const vmForDisplay = shotrenVerifiableMessage(vm);
+      if (holderDidAccountGlobal && issuerDidAccountGlobal) {
+        const vm = createCORVCRequestMessage(
+          holderDidAccountGlobal,
+          issuerDidAccountGlobal.did
+        );
+        const vmForDisplay = shotrenVerifiableMessage(vm);
 
-      setVM(JSON.stringify(vmForDisplay, undefined, 2));
+        setVM(JSON.stringify(vmForDisplay, undefined, 2));
+      }
     } catch (e) {
       errorHandler(e);
     }
-  }, [vcRequestGlobal, errorHandler]);
+  }, [
+    vcRequestGlobal,
+    holderDidAccountGlobal,
+    issuerDidAccountGlobal,
+    errorHandler,
+  ]);
 
   const onVCRequestClickHandler = () => {
     try {
-      if (!vcRequestGlobal) {
-        const vm = createCORVCRequestMessage();
+      if (
+        !vcRequestGlobal &&
+        holderDidAccountGlobal &&
+        issuerDidAccountGlobal
+      ) {
+        const vm = createCORVCRequestMessage(
+          holderDidAccountGlobal,
+          issuerDidAccountGlobal.did
+        );
 
         setVCRequestGlobal(vm);
       }
@@ -64,8 +89,10 @@ const useVCRequestMain = () => {
 
   return {
     vm,
-    onVCRequestClickHandler,
     vcRequested,
+    holderDidAccount,
+    issuerDidAccount,
+    onVCRequestClickHandler,
   };
 };
 

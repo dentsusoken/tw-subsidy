@@ -1,14 +1,17 @@
 import DidInfo from '@/components/DidInfo';
 import BackButton from '@/components/BackButton';
-import {
-  holderDidAccount,
-  verifierDidAccount,
-  issuerDidAccount,
-} from '@/lib/algo/account/accounts';
+
 import useVPSubmitMain from './useVPSubmitMain';
 
 const VPSubmitMain = () => {
-  const { vm, vpSubmitted, onVPSubmitClickHandler } = useVPSubmitMain();
+  const {
+    vm,
+    vpSubmitted,
+    holderDidAccount,
+    verifierDidAccount,
+    issuerDidAccount,
+    onVPSubmitClickHandler,
+  } = useVPSubmitMain();
 
   return (
     <div>

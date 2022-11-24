@@ -1,13 +1,15 @@
 import DidInfo from '@/components/DidInfo';
 import BackButton from '@/components/BackButton';
-import {
-  holderDidAccount,
-  issuerDidAccount,
-} from '@/lib/algo/account/accounts';
 import useVCRequestMain from './useVCRequestMain';
 
 const VCRequestMain = () => {
-  const { vm, onVCRequestClickHandler, vcRequested } = useVCRequestMain();
+  const {
+    vm,
+    onVCRequestClickHandler,
+    vcRequested,
+    holderDidAccount,
+    issuerDidAccount,
+  } = useVCRequestMain();
 
   return (
     <div>

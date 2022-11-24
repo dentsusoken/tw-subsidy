@@ -5,17 +5,16 @@ import { useErrorHandler } from 'react-error-boundary';
 
 import corVCState from '@/lib/states/corVCState';
 import corVPState from '@/lib/states/corVPState';
+import holderDidAccountState from '@/lib/states/holderDidAccountState';
+import verifierDidAccountState from '@/lib/states/verifierDidAccountState';
+import issuerDidAccountState from '@/lib/states/issuerDidAccountState';
 
 import { CORVPContent } from '@/lib/types';
 
 import shortenVerifiableMessage from '@/lib/utils/shortenVerifiableMessage';
 import { createVerifiableMessage } from '@/lib/algosbt';
-import {
-  holderDidAccount,
-  verifierDidAccount,
-  holderPw,
-} from '@/lib/algo/account/accounts';
-import { VerifiableCredential } from '@/lib/algosbt/types';
+import { holderPw } from '@/lib/algo/account/accounts';
+import { VerifiableCredential, DidAccount } from '@/lib/algosbt/types';
 
 const createVPContent = (vc: VerifiableCredential) => {
   const content: CORVPContent = {
@@ -24,10 +23,14 @@ const createVPContent = (vc: VerifiableCredential) => {
 
   return content;
 };
-const createVPMessage = (content: CORVPContent) => {
+const createVPMessage = (
+  content: CORVPContent,
+  holderDidAccount: DidAccount,
+  verifierDid: string
+) => {
   return createVerifiableMessage(
     holderDidAccount,
-    verifierDidAccount.did,
+    verifierDid,
     content,
     holderPw
   );
@@ -36,31 +39,69 @@ const createVPMessage = (content: CORVPContent) => {
 const useVPSubmitMain = () => {
   const [vpSubmitted, setVPSubmitted] = useState(false);
   const [vm, setVM] = useState('');
+  const [holderDidAccount, setHolderDidAccount] = useState<DidAccount>();
+  const [verifierDidAccount, setVerifierDidAccount] = useState<DidAccount>();
+  const [issuerDidAccount, setIssuerDidAccount] = useState<DidAccount>();
+
   const [vcGlobal] = useRecoilState(corVCState);
   const [vpGlobal, setVPGlobal] = useRecoilState(corVPState);
+  const [holderDidAccountGlobal] = useRecoilState(holderDidAccountState);
+  const [verifierDidAccountGlobal] = useRecoilState(verifierDidAccountState);
+  const [issuerDidAccountGlobal] = useRecoilState(issuerDidAccountState);
 
   const errorHandler = useErrorHandler();
 
   useEffect(() => {
     try {
       setVPSubmitted(!!vpGlobal);
+      setHolderDidAccount(holderDidAccountGlobal);
+      setVerifierDidAccount(verifierDidAccountGlobal);
+      setIssuerDidAccount(issuerDidAccountGlobal);
 
-      if (!vm && vcGlobal) {
+      if (
+        !vm &&
+        vcGlobal &&
+        holderDidAccountGlobal &&
+        verifierDidAccountGlobal
+      ) {
         const content = createVPContent(shortenVerifiableMessage(vcGlobal));
-        const vmForDisplay = shortenVerifiableMessage(createVPMessage(content));
+        const vmForDisplay = shortenVerifiableMessage(
+          createVPMessage(
+            content,
+            holderDidAccountGlobal,
+            verifierDidAccountGlobal.did
+          )
+        );
 
         setVM(JSON.stringify(vmForDisplay, undefined, 2));
       }
     } catch (e) {
       errorHandler(e);
     }
-  }, [vcGlobal, vpGlobal, vm, errorHandler]);
+  }, [
+    vcGlobal,
+    vpGlobal,
+    vm,
+    holderDidAccountGlobal,
+    verifierDidAccountGlobal,
+    issuerDidAccountGlobal,
+    errorHandler,
+  ]);
 
   const onVPSubmitClickHandler = () => {
     try {
-      if (!vpGlobal && vcGlobal) {
+      if (
+        !vpGlobal &&
+        vcGlobal &&
+        holderDidAccountGlobal &&
+        verifierDidAccountGlobal
+      ) {
         const content = createVPContent(vcGlobal);
-        const vm = createVPMessage(content);
+        const vm = createVPMessage(
+          content,
+          holderDidAccountGlobal,
+          verifierDidAccountGlobal.did
+        );
         setVPGlobal(vm);
       }
     } catch (e) {
@@ -72,6 +113,9 @@ const useVPSubmitMain = () => {
     vm,
     onVPSubmitClickHandler,
     vpSubmitted,
+    holderDidAccount,
+    verifierDidAccount,
+    issuerDidAccount,
   };
 };
 

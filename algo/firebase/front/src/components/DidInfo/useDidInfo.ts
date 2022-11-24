@@ -11,7 +11,7 @@ import { DidAccount } from '@/lib/algosbt/types';
 
 export type UseDidInfoParams = {
   name: string;
-  didAccount: DidAccount;
+  didAccount?: DidAccount;
   timestamp?: number;
 };
 
@@ -21,6 +21,10 @@ const useDidInfo = ({ name, didAccount, timestamp }: UseDidInfoParams) => {
   const errorHandler = useErrorHandler();
 
   useEffect(() => {
+    if (!didAccount) {
+      return;
+    }
+
     const func = async () => {
       const algod = getAlgod(chainType);
 
@@ -34,7 +38,7 @@ const useDidInfo = ({ name, didAccount, timestamp }: UseDidInfoParams) => {
 
   return {
     name,
-    did: didUtils.shortenDid(didAccount.did),
+    did: didAccount ? didUtils.shortenDid(didAccount.did) : '',
     balance,
   };
 };

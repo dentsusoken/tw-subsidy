@@ -1,14 +1,17 @@
 import DidInfo from '@/components/DidInfo';
 import BackButton from '@/components/BackButton';
-import {
-  holderDidAccount,
-  verifierDidAccount,
-  issuerDidAccount,
-} from '@/lib/algo/account/accounts';
+
 import useVPVerifyMain from './useVPVerifyMain';
 
 const VPSubmitMain = () => {
-  const { vm, vpVerified, onVPVerifyClickHandler } = useVPVerifyMain();
+  const {
+    vm,
+    vpVerified,
+    holderDidAccount,
+    verifierDidAccount,
+    issuerDidAccount,
+    onVPVerifyClickHandler,
+  } = useVPVerifyMain();
 
   return (
     <div>

@@ -1,14 +1,18 @@
 import DidInfo from '@/components/DidInfo';
 import BackButton from '@/components/BackButton';
-import {
-  holderDidAccount,
-  issuerDidAccount,
-} from '@/lib/algo/account/accounts';
+
 import useVCIssueMain from './useVCIssueMain';
 
 const VCIssueMain = () => {
-  const { vm, onVCIssueClickHandler, vcIssued, vcIssuing, issueTimestamp } =
-    useVCIssueMain();
+  const {
+    vm,
+    onVCIssueClickHandler,
+    vcIssued,
+    vcIssuing,
+    issuerDidAccount,
+    holderDidAccount,
+    issueTimestamp,
+  } = useVCIssueMain();
   console.log(issueTimestamp);
   return (
     <div>
