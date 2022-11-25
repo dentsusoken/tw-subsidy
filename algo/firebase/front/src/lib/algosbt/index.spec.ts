@@ -5,11 +5,7 @@ import { addressFromSecretKey } from './utils/algosdkUtils';
 import { addressFromDid } from './utils/didUtils';
 import { testNetAlgod as algod } from './algod/algods';
 import deleteApp from './transactions/deleteApp';
-import {
-  holderAccount,
-  issuerAccount,
-  verifierDidAccount,
-} from '../algo/account/accounts';
+import { test1Account, test2Account, test3Account } from './account/accounts';
 
 import {
   createDidAccount,
@@ -98,8 +94,8 @@ describe('algosbt', () => {
     const holderPassword = 'abcdefgh';
     const issuerPassword = '12345678';
 
-    const holderSecretKey = holderAccount.sk;
-    const issuerSecretKey = issuerAccount.sk;
+    const holderSecretKey = test1Account.sk;
+    const issuerSecretKey = test2Account.sk;
 
     const holderEncSecretKey = Buffer.from(
       encryptByPassword(holderSecretKey, holderPassword)
@@ -152,8 +148,8 @@ describe('algosbt', () => {
     const holderPassword = 'abcdefgh';
     const issuerPassword = '12345678';
 
-    const holderSecretKey = holderAccount.sk;
-    const issuerSecretKey = issuerAccount.sk;
+    const holderSecretKey = test1Account.sk;
+    const issuerSecretKey = test2Account.sk;
 
     const holderEncSecretKey = Buffer.from(
       encryptByPassword(holderSecretKey, holderPassword)
@@ -213,15 +209,20 @@ describe('algosbt', () => {
   it('createVerifiablePresentation should work', async () => {
     const holderPassword = 'abcdefgh';
     const issuerPassword = '12345678';
+    const verifierPassword = '81234567';
 
-    const holderSecretKey = holderAccount.sk;
-    const issuerSecretKey = issuerAccount.sk;
+    const holderSecretKey = test1Account.sk;
+    const issuerSecretKey = test2Account.sk;
+    const verifierSecretKey = test3Account.sk;
 
     const holderEncSecretKey = Buffer.from(
       encryptByPassword(holderSecretKey, holderPassword)
     ).toString('base64');
     const issuerEncSecretKey = Buffer.from(
       encryptByPassword(issuerSecretKey, issuerPassword)
+    ).toString('base64');
+    const verifierEncSecretKey = Buffer.from(
+      encryptByPassword(verifierSecretKey, verifierPassword)
     ).toString('base64');
 
     const holderDidAccount = restoreDidAccount(
@@ -231,6 +232,10 @@ describe('algosbt', () => {
     const issuerDidAccount = restoreDidAccount(
       issuerEncSecretKey,
       issuerPassword
+    );
+    const verifierDidAccount = restoreDidAccount(
+      verifierEncSecretKey,
+      verifierPassword
     );
 
     const holderDid = holderDidAccount.did;
@@ -276,15 +281,20 @@ describe('algosbt', () => {
   it('verifyVerifiablePresentation should work', async () => {
     const holderPassword = 'abcdefgh';
     const issuerPassword = '12345678';
+    const verifierPassword = '81234567';
 
-    const holderSecretKey = holderAccount.sk;
-    const issuerSecretKey = issuerAccount.sk;
+    const holderSecretKey = test1Account.sk;
+    const issuerSecretKey = test2Account.sk;
+    const verifierSecretKey = test3Account.sk;
 
     const holderEncSecretKey = Buffer.from(
       encryptByPassword(holderSecretKey, holderPassword)
     ).toString('base64');
     const issuerEncSecretKey = Buffer.from(
       encryptByPassword(issuerSecretKey, issuerPassword)
+    ).toString('base64');
+    const verifierEncSecretKey = Buffer.from(
+      encryptByPassword(verifierSecretKey, verifierPassword)
     ).toString('base64');
 
     const holderDidAccount = restoreDidAccount(
@@ -294,6 +304,10 @@ describe('algosbt', () => {
     const issuerDidAccount = restoreDidAccount(
       issuerEncSecretKey,
       issuerPassword
+    );
+    const verifierDidAccount = restoreDidAccount(
+      verifierEncSecretKey,
+      verifierPassword
     );
 
     const holderDid = holderDidAccount.did;

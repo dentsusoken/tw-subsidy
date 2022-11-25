@@ -1,6 +1,6 @@
 import algosdk, { Algodv2 } from 'algosdk';
 
-const getAlgoBlance = async (algod: Algodv2, address: string) => {
+const getAlgoBalance = async (algod: Algodv2, address: string) => {
   const accountInfo = await algod
     .accountInformation(address)
     .setIntDecoding(algosdk.IntDecoding.BIGINT)
@@ -9,4 +9,4 @@ const getAlgoBlance = async (algod: Algodv2, address: string) => {
   return accountInfo.amount as bigint;
 };
 
-export default getAlgoBlance;
+export default getAlgoBalance;

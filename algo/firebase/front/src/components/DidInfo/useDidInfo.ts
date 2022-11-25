@@ -3,7 +3,7 @@ import { useRecoilValue } from 'recoil';
 import { useErrorHandler } from 'react-error-boundary';
 
 import { getAlgod } from '@/lib/algo/algod/algods';
-import getAlgoBlance from '@/lib/algo/api/getAlgoBlance';
+import getAlgoBlance from '@/lib/algo/api/getAlgoBalance';
 import * as didUtils from '@/lib/algosbt/utils/didUtils';
 import chainState from '@/lib/states/chainState';
 import formatBigint from '@/lib/utils/formatBigint';
