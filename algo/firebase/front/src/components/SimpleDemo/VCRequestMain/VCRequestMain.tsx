@@ -17,7 +17,7 @@ const VCRequestMain = () => {
         <BackButton url="./simple-demo" />
       </div>
       <p className="w-fit border-dashed border-4 p-4 mb-2">
-        申請者が証明者に住民票の発行を依頼します。
+        申請者が証明者に住民票VCの発行を依頼します。
       </p>
       <DidInfo name="申請者" didAccount={holderDidAccount} />
       <DidInfo name="証明者" didAccount={issuerDidAccount} />

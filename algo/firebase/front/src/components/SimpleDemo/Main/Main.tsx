@@ -8,7 +8,6 @@ const Main = () => {
     accountsPrepared,
     vcRequested,
     vcIssued,
-    vpRequested,
     vpSubmitted,
     vpVerified,
     onClearClickHandler,
@@ -37,7 +36,7 @@ const Main = () => {
       <div className="mt-4 flex">
         {!clearing ? (
           <div className="w-56 border-2 border-blue-500 rounded-full text-center hover:bg-blue-400 hover:text-white">
-            <a href="./simple-demo-accounts">DID作成</a>
+            <a href="./simple-demo-accounts">DIDの作成</a>
           </div>
         ) : (
           <div className="w-56 text-center">DID作成</div>
@@ -77,21 +76,7 @@ const Main = () => {
       </div>
 
       <div className="mt-4 flex">
-        {vcIssued && !vpRequested ? (
-          <div className="w-56 border-2 border-blue-500 rounded-full text-center hover:bg-blue-400 hover:text-white">
-            <a href="./simple-demo-vprequest">住民票VPの提出依頼</a>
-          </div>
-        ) : (
-          <div className="w-56 text-center">住民票VPの提出依頼</div>
-        )}
-        <div className="w-56 text-center">申請先 -&gt; 申請者</div>
-        <div className="w-20 text-center">
-          <StepStatus done={vpRequested} />
-        </div>
-      </div>
-
-      <div className="mt-4 flex">
-        {vpRequested && !vpSubmitted ? (
+        {vcIssued && !vpSubmitted ? (
           <div className="w-56 border-2 border-blue-500 rounded-full text-center hover:bg-blue-400 hover:text-white">
             <a href="./simple-demo-vpsubmit">住民票VPの提出</a>
           </div>

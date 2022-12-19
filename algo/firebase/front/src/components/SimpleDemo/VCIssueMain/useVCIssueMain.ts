@@ -14,7 +14,7 @@ import issuerDidAccountState from '@/lib/states/issuerDidAccountState';
 import shortenVerifiableMessage from '@/lib/utils/shortenVerifiableMessage';
 import {
   createVerifiableCredential,
-  createVerifiableMessage,
+  verifyVerifiableMessage,
 } from '@/lib/algosbt';
 import { CORVCContent, CORVCRequestContent } from '@/lib/types';
 
@@ -31,9 +31,15 @@ const createVCContent = (vcRequestContent: CORVCRequestContent) => {
 };
 
 const useVCIssueMain = () => {
+  const [vcRequestVerified, setVCRequestVerified] = useState(false);
   const [vcIssued, setVCIssued] = useState(false);
   const [vcIssuing, setVCIssuing] = useState(false);
-  const [vm, setVM] = useState('');
+  const [vcRequestForDisplay, setVCRequestForDisplay] = useState('');
+  const [vcContent, setVCContent] = useState<CORVCContent>();
+  const [vcBeforeIssuingForDisplay, setVCBeforeIssuingForDisplay] =
+    useState('');
+  const [vcAfterIssuingForDisplay, setVCAfterIssuingForDisplay] = useState('');
+
   const [issueTimestamp, setIssueTimestamp] = useState(0);
   const [holderDidAccount, setHolderDidAccount] = useState<DidAccount>();
   const [issuerDidAccount, setIssuerDidAccount] = useState<DidAccount>();
@@ -56,22 +62,14 @@ const useVCIssueMain = () => {
         setVCIssuing(false);
       }
 
-      if (
-        vcRequestGlobal &&
-        !vm &&
-        issuerDidAccountGlobal &&
-        holderDidAccountGlobal
-      ) {
-        const content = createVCContent(vcRequestGlobal.message.content);
-        const vm = createVerifiableMessage(
-          issuerDidAccountGlobal,
-          holderDidAccountGlobal.did,
-          content,
-          issuerPw
+      if (vcRequestGlobal && !vcRequestForDisplay) {
+        setVCRequestForDisplay(
+          JSON.stringify(
+            shortenVerifiableMessage(vcRequestGlobal),
+            undefined,
+            2
+          )
         );
-        const vmForDisplay = shortenVerifiableMessage(vm);
-
-        setVM(JSON.stringify(vmForDisplay, undefined, 2));
       }
     } catch (e) {
       errorHandler(e);
@@ -80,48 +78,74 @@ const useVCIssueMain = () => {
     vcGlobal,
     vcRequestGlobal,
     vcIssuing,
-    vm,
+    vcRequestForDisplay,
     issuerDidAccountGlobal,
     holderDidAccountGlobal,
     errorHandler,
   ]);
 
-  const onVCIssueClickHandler = () => {
-    if (
-      !vcGlobal &&
-      vcRequestGlobal &&
-      issuerDidAccountGlobal &&
-      holderDidAccountGlobal
-    ) {
-      setVCIssuing(true);
+  const onVerifyVCRequestHandler = () => {
+    try {
+      if (vcRequestGlobal) {
+        const verified = verifyVerifiableMessage(vcRequestGlobal);
 
-      const func = async () => {
-        const content = createVCContent(vcRequestGlobal.message.content);
+        setVCRequestVerified(verified);
+
+        if (verified) {
+          const content = createVCContent(vcRequestGlobal.message.content);
+
+          setVCContent(content);
+          setVCBeforeIssuingForDisplay(JSON.stringify(content, null, 2));
+        }
+      }
+    } catch (e) {
+      errorHandler(e);
+    }
+  };
+
+  const onIssueVCHandler = async () => {
+    try {
+      if (
+        vcRequestGlobal &&
+        !vcGlobal &&
+        vcContent &&
+        issuerDidAccountGlobal &&
+        holderDidAccountGlobal
+      ) {
+        setVCIssuing(true);
+
         const algod = getAlgod(chainType);
         const vc = await createVerifiableCredential(
           algod,
           issuerDidAccountGlobal,
           holderDidAccountGlobal.did,
-          content,
+          vcContent,
           issuerPw
         );
 
         setVCGlobal(vc);
         setIssueTimestamp(new Date().getTime());
-      };
-
-      func().catch(errorHandler);
+        setVCAfterIssuingForDisplay(
+          JSON.stringify(shortenVerifiableMessage(vc), null, 2)
+        );
+      }
+    } catch (e) {
+      errorHandler(e);
     }
   };
 
   return {
-    vm,
-    onVCIssueClickHandler,
+    vcRequestForDisplay,
+    vcRequestVerified,
+    vcBeforeIssuingForDisplay,
+    vcAfterIssuingForDisplay,
     vcIssued,
     vcIssuing,
     issuerDidAccount,
     holderDidAccount,
     issueTimestamp,
+    onVerifyVCRequestHandler,
+    onIssueVCHandler,
   };
 };
 

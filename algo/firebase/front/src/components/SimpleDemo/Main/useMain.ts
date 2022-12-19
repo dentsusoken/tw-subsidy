@@ -9,7 +9,6 @@ import chainState from '@/lib/states/chainState';
 import accountsPreparedState from '@/lib/states/accountsPreparedState';
 import corVCRequestState from '@/lib/states/corVCRequestState';
 import corVCState from '@/lib/states/corVCState';
-import corVPRequestState from '@/lib/states/corVPRequestState';
 import corVPState from '@/lib/states/corVPState';
 import corVPVerifiedState from '@/lib/states/corVPVerifiedState';
 import issuerDidAccountState from '@/lib/states/issuerDidAccountState';
@@ -23,7 +22,6 @@ const useMain = () => {
   const [accountsPrepared, setAccountsPrepared] = useState(false);
   const [vcRequested, setVCRequested] = useState(false);
   const [vcIssued, setVCIssued] = useState(false);
-  const [vpRequested, setVPRequested] = useState(false);
   const [vpSubmitted, setVPSubmitted] = useState(false);
   const [vpVerified, setVPVerified] = useState(false);
   const [clearing, setClearing] = useState(false);
@@ -32,8 +30,6 @@ const useMain = () => {
   const [vcRequestGlobal, setVCRequestGlobal] =
     useRecoilState(corVCRequestState);
   const [vcGlobal, setVCGlobal] = useRecoilState(corVCState);
-  const [vpRequestGlobal, setVPRequestGlobal] =
-    useRecoilState(corVPRequestState);
   const [vpGlobal, setVPGlobal] = useRecoilState(corVPState);
   const [vpVerifiedGlobal, setVPVerifiedGlobal] =
     useRecoilState(corVPVerifiedState);
@@ -46,14 +42,12 @@ const useMain = () => {
     setAccountsPrepared(accountsPreparedGlobal);
     setVCRequested(!!vcRequestGlobal);
     setVCIssued(!!vcGlobal);
-    setVPRequested(!!vpRequestGlobal);
     setVPSubmitted(!!vpGlobal);
     setVPVerified(vpVerifiedGlobal);
   }, [
     accountsPreparedGlobal,
     vcRequestGlobal,
     vcGlobal,
-    vpRequestGlobal,
     vpGlobal,
     vpVerifiedGlobal,
   ]);
@@ -61,7 +55,6 @@ const useMain = () => {
   const onClearClickHandler = () => {
     setVCRequestGlobal(undefined);
     setVCGlobal(undefined);
-    setVPRequestGlobal(undefined);
     setVPGlobal(undefined);
     setVPVerifiedGlobal(false);
 
@@ -96,7 +89,6 @@ const useMain = () => {
     accountsPrepared,
     vcRequested,
     vcIssued,
-    vpRequested,
     vpSubmitted,
     vpVerified,
     clearing,
