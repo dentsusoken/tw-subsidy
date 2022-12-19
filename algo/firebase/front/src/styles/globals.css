@@ -1,3 +1,217 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* 入力フォームパーツ */
+.input-form-label {
+  @apply block text-input-form-label w-full mb-4 font-sans;
+}
+.input-form-label-required {
+  @apply text-color-required font-sans;
+}
+.input-form-text-box {
+  @apply py-2 px-2.5 border border-solid border-color-input-text-line rounded-lg bg-color-background w-full mb-[21px] text-input-form-text font-sans;
+}
+.input-form-text-box-half {
+  @apply py-2 px-2.5 border border-solid border-color-input-text-line rounded-lg bg-color-background w-2/4 mb-[21px] text-input-form-text font-sans;
+}
+.input-form-text-box-confirm {
+  @apply leading-none py-2.5 px-2.5 min-h-[40px] border border-solid border-color-confirm rounded-lg bg-color-confirm w-full mb-[21px] text-input-form-text font-sans;
+}
+.input-form-text-box-confirm-half {
+  @apply leading-none py-2.5 px-2.5 min-h-[40px] border border-solid border-color-confirm rounded-lg bg-color-confirm w-2/4 mb-[21px] text-input-form-text font-sans;
+}
+.input-form-button-white {
+  @apply inline-block text-center py-4 px-7 rounded-lg border border-solid border-color-gray text-button-text font-bold font-sans;
+}
+.input-form-button-green {
+  @apply inline-block text-center py-4 px-7 rounded-lg border border-solid border-color-key bg-color-key text-color-white text-button-text font-bold font-sans;
+}
+.input-form-button-gray {
+  @apply inline-block text-center py-4 px-7 rounded-lg border border-solid border-color-menu-button bg-color-menu-button text-color-white text-button-text font-bold font-sans;
+}
+.input-form-button-blue {
+  @apply inline-block text-center py-4 px-7 rounded-lg border border-solid border-color-blue bg-color-blue text-color-white text-button-text font-bold font-sans;
+}
+.input-form-button-small {
+  @apply inline-block text-center py-2 px-4 rounded-lg border border-solid border-color-gray text-button-text font-bold font-sans;
+}
+
+/* --------------------------------------------- */
+/* DEMO MENU */
+.demomenu-step-list {
+  width: 228px;
+  margin: 70px auto 0;
+}
+.numbering {
+  counter-reset: number;
+}
+.numbering li {
+  padding: 26px 0 0 42px;
+  position: relative;
+}
+.numbering li::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 53px;
+  height: 53px;
+  border-radius: 50%;
+  background-color: #55cac3;
+  color: #fff;
+  text-align: center;
+  font-size: 13px;
+  font-weight: bold;
+  line-height: 53px;
+  counter-increment: number;
+  content: 'STEP' counter(number);
+  z-index: 1;
+}
+.numbering li:not(:last-child)::after {
+  display: block;
+  margin: 18px auto -10px;
+  content: '';
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 26px 33.5px 0 33.5px;
+  border-color: #d9d9d9 transparent transparent transparent;
+}
+.numbering li a,
+.numbering li p {
+  display: block;
+  font-size: 15px;
+  text-align: center;
+  padding: 1em 0;
+  width: 100%;
+  border: 1px solid #cfcfcf;
+  border-radius: 8px;
+}
+/* --------------------------------------------- */
+
+/* --------------------------------------------- */
+/* ステップ(入力->確認->完了) */
+.step {
+  padding: 25px 57px 54px;
+}
+ul.step-list {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  z-index: 1;
+}
+ul.step-list::before {
+  content: '';
+  position: absolute;
+  height: 1px;
+  width: calc(100% - 1em);
+  left: 0.5em;
+  bottom: 7px;
+  border-bottom: 1px dotted #dcdcdc;
+  z-index: 0;
+}
+ul.step-list li {
+  font-size: 11px;
+  font-weight: bold;
+  color: #cfcfcf;
+  position: relative;
+  z-index: 1;
+}
+ul.step-list li::after {
+  display: block;
+  content: '';
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  border: 1px solid #cfcfcf;
+  background-color: #dcdcdc;
+  margin: 0.5em auto 0;
+  position: relative;
+  z-index: 1;
+}
+ul.step-list li.active {
+  color: #55cac3;
+}
+ul.step-list li.active::after {
+  border-color: #55cac3;
+  background-color: #55cac3;
+}
+ul.step-list li.active + li::after,
+ul.step-list li.active + li + li::after {
+  background-color: #fff;
+}
+ul.step-list li:not(:first-child).active::before {
+  content: '';
+  position: absolute;
+  bottom: 7px;
+  right: 1em;
+  width: calc(50vw - 57px - 1.5em);
+  height: 1px;
+  background-color: #cfcfcf;
+  z-index: 0;
+}
+ul.step-list li:last-child.active::before {
+  width: calc(100vw - 57px - 57px - 1.5em);
+}
+ul.step-list li:nth-child(1) {
+  z-index: 3;
+}
+ul.step-list li:nth-child(2) {
+  z-index: 2;
+}
+ul.step-list li:nth-child(3) {
+  z-index: 1;
+}
+/* --------------------------------------------- */
+
+/* --------------------------------------------- */
+/* 固定ヘッダー */
+header.sticky {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+}
+/* --------------------------------------------- */
+
+/* --------------------------------------------- */
+/* 一覧(検索エリア) */
+.main-search {
+  padding: 24px 17px 20px;
+  font-size: 13px;
+  color: #868686;
+  display: flex;
+}
+.main-search svg {
+  display: inline-block;
+  vertical-align: middle;
+  width: 19px;
+  margin-right: 12px;
+}
+.main-search input {
+  border: none;
+  width: calc(100% - 19px);
+  margin: 0;
+}
+/* --------------------------------------------- */
+
+/* --------------------------------------------- */
+/* 一覧(テーブル) */
+table.searce-list {
+  width: 100%;
+}
+table.searce-list tr {
+  border-bottom: 1px solid #dcdcdc;
+}
+table.searce-list td {
+  font-size: 14px;
+  vertical-align: middle;
+  padding: 1.5em 0.25em;
+}
+table.searce-list td:first-child {
+  padding-left: 1.25em;
+}
+table.searce-list td:last-child {
+  padding-right: 1.25em;
+}
+/* --------------------------------------------- */

@@ -18,11 +18,14 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
             <link rel="icon" href="/favicon.ico" />
           </Head>
 
-          <main className="pl-2 pt-2">
+          <Suspense fallback={<div>Loading...</div>}>
+            <Component {...pageProps} />
+          </Suspense>
+          {/* <main className="pl-2 pt-2">
             <Suspense fallback={<div>Loading...</div>}>
               <Component {...pageProps} />
             </Suspense>
-          </main>
+          </main> */}
         </div>
       </ErrorBoundary>
     </RecoilRoot>
