@@ -11,19 +11,19 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
     <RecoilRoot>
       <ErrorBoundary FallbackComponent={ErrorFallback} onError={console.error}>
-        <div>
+        {/* <div> */}
           <Head>
             <title>Trusted Web Subsidy</title>
             <meta name="description" content="Trusted Web Subsidy" />
             <link rel="icon" href="/favicon.ico" />
           </Head>
 
-          <main className="pl-2 pt-2">
+          {/* <main className="pl-2 pt-2"> */}
             <Suspense fallback={<div>Loading...</div>}>
               <Component {...pageProps} />
             </Suspense>
-          </main>
-        </div>
+          {/* </main>
+        </div> */}
       </ErrorBoundary>
     </RecoilRoot>
   );

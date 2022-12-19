@@ -1,3 +1,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url(http://fonts.googleapis.com/earlyaccess/notosansjp.css);
+
+* {
+    font-family: 'Noto Sans JP';
+}
+
+/* #__next {
+    @apply h-screen
+} */
