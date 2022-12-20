@@ -1,9 +1,11 @@
+import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { useRecoilState } from 'recoil';
 
 import Header from '@/components/Header';
 import { ResidentInputFormType } from '@/lib/types/mockApp/inputForm';
+import { years, months } from '@/lib/types/mockApp/setDate';
 import { residentInputState } from '@/lib/states/mockApp';
 
 const ResidentInputMain = () => {
@@ -11,7 +13,24 @@ const ResidentInputMain = () => {
 
   const [input, setInput] = useRecoilState(residentInputState);
 
-  const { register, handleSubmit } = useForm<ResidentInputFormType>({
+  const [addressRegistYear, setAddressRegistYear] = useState(
+    new Date().getFullYear().toString() + '年'
+  );
+  const [addressRegistMonth, setAddressRegistMonth] = useState('1月');
+
+  const selectAddressRegistYear = (e: any) => {
+    setAddressRegistYear(e.target.value);
+  };
+
+  const selectAddressRegistMonth = (e: any) => {
+    setAddressRegistMonth(e.target.value);
+  };
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ResidentInputFormType>({
     defaultValues: {
       fullName: input.fullName,
       fullNameFurigana: input.fullNameFurigana,
@@ -28,7 +47,7 @@ const ResidentInputMain = () => {
         fullName: data.fullName,
         fullNameFurigana: data.fullNameFurigana,
         address: data.address,
-        addressRegistDate: data.addressRegistDate,
+        addressRegistDate: addressRegistYear + addressRegistMonth,
         permanentAddress: data.permanentAddress,
       },
     }));
@@ -51,45 +70,100 @@ const ResidentInputMain = () => {
           <form onSubmit={onSubmit}>
             <div className="input-form-label">
               氏名<span className="input-form-label-required">（必須）</span>
+              <span className="text-error-message text-color-required">
+                {errors.fullName && '・' + errors.fullName.message}
+              </span>
             </div>
             <input
               type="text"
               className="input-form-text-box"
-              {...register('fullName', { required: '必須項目です' })}
+              {...register('fullName', {
+                required: {
+                  value: true,
+                  message: '入力必須項目です',
+                },
+              })}
             />
             <div className="input-form-label">
               氏名フリガナ
               <span className="input-form-label-required">（必須）</span>
+              <span className="text-error-message text-color-required">
+                {errors.fullNameFurigana &&
+                  '・' + errors.fullNameFurigana.message}
+              </span>
             </div>
             <input
               type="text"
               className="input-form-text-box"
-              {...register('fullNameFurigana', { required: '必須項目です' })}
+              {...register('fullNameFurigana', {
+                required: {
+                  value: true,
+                  message: '入力必須項目です',
+                },
+                pattern: {
+                  value: /^[ァ-ヴー　]*$/,
+                  message: '全角カナで入力してください',
+                },
+              })}
             />
             <div className="input-form-label">
               住所<span className="input-form-label-required">（必須）</span>
+              <span className="text-error-message text-color-required">
+                {errors.address && '・' + errors.address.message}
+              </span>
             </div>
             <input
               type="text"
               className="input-form-text-box"
-              {...register('address', { required: '必須項目です' })}
+              {...register('address', {
+                required: {
+                  value: true,
+                  message: '入力必須項目です',
+                },
+              })}
             />
             <div className="input-form-label">
               住民となった年月
               <span className="input-form-label-required">（必須）</span>
             </div>
-            <input
-              type="text"
-              className="input-form-text-box"
-              {...register('addressRegistDate', { required: '必須項目です' })}
-            />
+            <select
+              value={addressRegistYear}
+              className="input-form-select-year"
+              onChange={selectAddressRegistYear}
+            >
+              {years.map((year) => (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              ))}
+            </select>
+            <select
+              value={addressRegistMonth}
+              className="input-form-select-month"
+              onChange={selectAddressRegistMonth}
+            >
+              {months.map((month) => (
+                <option key={month} value={month}>
+                  {month}
+                </option>
+              ))}
+            </select>
             <div className="input-form-label">
               本籍地<span className="input-form-label-required">（必須）</span>
+              <span className="text-error-message text-color-required">
+                {errors.permanentAddress &&
+                  '・' + errors.permanentAddress.message}
+              </span>
             </div>
             <input
               type="text"
               className="input-form-text-box"
-              {...register('permanentAddress', { required: '必須項目です' })}
+              {...register('permanentAddress', {
+                required: {
+                  value: true,
+                  message: '入力必須項目です',
+                },
+              })}
             />
             <div className="pt-4 text-right">
               <button type="submit" className="input-form-button-green">

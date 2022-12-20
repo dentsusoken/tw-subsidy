@@ -31,8 +31,18 @@ const AccountListDoneMain = () => {
             {selectDetail ? selectDetail.applicantName + ' ' : ' '}
             様の承認処理が完了しました。
           </p>
-          <div className="pt-4 text-center">
-            <button onClick={onSubmit} className="input-form-button-green">
+          <div className="pt-4 flex justify-between">
+            <button
+              onClick={() => {
+                router.push({
+                  pathname: '/24_account-list',
+                });
+              }}
+              className="input-form-button-white-done"
+            >
+              申請一覧へ戻る
+            </button>
+            <button onClick={onSubmit} className="input-form-button-green-done">
               申請者の画面へ
             </button>
           </div>

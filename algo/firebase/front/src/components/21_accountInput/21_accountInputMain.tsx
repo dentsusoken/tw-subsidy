@@ -11,7 +11,11 @@ const AccountInputMain = () => {
 
   const [input, setInput] = useRecoilState(accountInputState);
 
-  const { register, handleSubmit } = useForm<AccountInputFormType>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<AccountInputFormType>({
     defaultValues: {
       bankCode: input.bankCode,
       branchNumber: input.branchNumber,
@@ -54,56 +58,120 @@ const AccountInputMain = () => {
             <div className="input-form-label">
               銀行コード
               <span className="input-form-label-required">（必須）</span>
+              <span className="text-error-message text-color-required">
+                {errors.bankCode && '・' + errors.bankCode.message}
+              </span>
             </div>
             <input
               type="text"
+              maxLength={4}
               className="input-form-text-box-half"
-              {...register('bankCode', { required: '必須項目です' })}
+              {...register('bankCode', {
+                required: {
+                  value: true,
+                  message: '入力必須項目です',
+                },
+                pattern: {
+                  value: /\d{4}/,
+                  message: '半角数字で4桁です',
+                },
+              })}
             />
             <div className="input-form-label">
               支店番号
               <span className="input-form-label-required">（必須）</span>
+              <span className="text-error-message text-color-required">
+                {errors.branchNumber && '・' + errors.branchNumber.message}
+              </span>
             </div>
             <input
               type="text"
+              maxLength={3}
               className="input-form-text-box-half"
-              {...register('branchNumber', { required: '必須項目です' })}
+              {...register('branchNumber', {
+                required: {
+                  value: true,
+                  message: '入力必須項目です',
+                },
+                pattern: {
+                  value: /\d{3}/,
+                  message: '半角数字で3桁です',
+                },
+              })}
             />
             <div className="input-form-label">
               口座番号
               <span className="input-form-label-required">（必須）</span>
+              <span className="text-error-message text-color-required">
+                {errors.accountNumber && '・' + errors.accountNumber.message}
+              </span>
             </div>
             <input
               type="text"
-              className="input-form-text-box"
-              {...register('accountNumber', { required: '必須項目です' })}
+              maxLength={8}
+              className="input-form-text-box-half"
+              {...register('accountNumber', {
+                required: {
+                  value: true,
+                  message: '入力必須項目です',
+                },
+                pattern: {
+                  value: /\d{7}|\d{8}/,
+                  message: '半角数字で7桁または8桁です',
+                },
+              })}
             />
             <div className="input-form-label">
               法人名称
               <span className="input-form-label-required">（必須）</span>
+              <span className="text-error-message text-color-required">
+                {errors.corporateName && '・' + errors.corporateName.message}
+              </span>
             </div>
             <input
               type="text"
               className="input-form-text-box"
-              {...register('corporateName', { required: '必須項目です' })}
+              {...register('corporateName', {
+                required: {
+                  value: true,
+                  message: '入力必須項目です',
+                },
+              })}
             />
             <div className="input-form-label">
               申請者名
               <span className="input-form-label-required">（必須）</span>
+              <span className="text-error-message text-color-required">
+                {errors.applicantName && '・' + errors.applicantName.message}
+              </span>
             </div>
             <input
               type="text"
               className="input-form-text-box"
-              {...register('applicantName', { required: '必須項目です' })}
+              {...register('applicantName', {
+                required: {
+                  value: true,
+                  message: '入力必須項目です',
+                },
+              })}
             />
             <div className="input-form-label">
               申請住所
               <span className="input-form-label-required">（必須）</span>
+              <span className="text-error-message text-color-required">
+                {errors.applicantAddress &&
+                  '・' + errors.applicantAddress.message}
+              </span>
             </div>
             <input
               type="text"
               className="input-form-text-box"
-              {...register('applicantAddress', { required: '必須項目です' })}
+              {...register('applicantAddress', {
+                required: {
+                  value: true,
+                  message: '入力必須項目です',
+                },
+              })}
             />
             <div className="pt-4 text-right">
               <button type="submit" className="input-form-button-green">

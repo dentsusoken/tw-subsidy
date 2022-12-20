@@ -68,9 +68,11 @@ const ResidentListMain = () => {
                       </svg>
                     )}
                   </td>
-                  <td className="text-color-unapproved">
-                    {!items.approvalStatus && '未承認'}
-                  </td>
+                  {!items.approvalStatus ? (
+                    <td className="text-color-unapproved">未承認</td>
+                  ) : (
+                    <td className="text-color-gray-search">承認済</td>
+                  )}
                   <td>
                     <button
                       onClick={() => {

@@ -11,11 +11,11 @@ const VCAcceptMain = () => {
   const delay = (ms: number | undefined) =>
     new Promise((resolve) => setTimeout(resolve, ms));
 
-  const buttonClickHandler = async () => {
+  const buttonDisabledHandler = () => {
     setDisabled(!disabled);
+  };
 
-    await delay(2000);
-
+  const buttonClickHandler = async () => {
     let pathname = '';
 
     switch (router.query.application) {
@@ -36,7 +36,7 @@ const VCAcceptMain = () => {
       <Header menuType={1} menuTitle={router.query.application + 'の受入'} />
       <main className="bg-color-background">
         <div className="py-0 px-[53px]">
-          <p className="py-16 text-center text-[14px] leading-relaxed">
+          <p className="pt-16 pb-10 text-center text-[14px] leading-relaxed">
             あなたが申請した、
             <br />
             {router.query.message}申請が最終承認されました。
@@ -44,24 +44,25 @@ const VCAcceptMain = () => {
             <br />
             デジタル証明書を受け入れますか？
           </p>
-          <div className="pt-4 flex justify-between">
+          <div className="text-center">
             <button
-              onClick={buttonClickHandler}
+              onClick={buttonDisabledHandler}
               disabled={disabled}
               className={
-                disabled ? 'input-form-button-gray' : 'input-form-button-white'
+                disabled
+                  ? 'input-form-button-gray w-[141px]'
+                  : 'input-form-button-green w-[141px]'
               }
             >
-              却下
+              {disabled ? '受入済' : '受入れる'}
             </button>
+          </div>
+          <div className="text-center pt-10">
             <button
               onClick={buttonClickHandler}
-              disabled={disabled}
-              className={
-                disabled ? 'input-form-button-gray' : 'input-form-button-green'
-              }
+              className="input-form-button-white-done w-[100px]"
             >
-              受入
+              VC一覧へ
             </button>
           </div>
         </div>

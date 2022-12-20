@@ -16,6 +16,8 @@ module.exports = {
       'input-form-text': ['16px', '16px'],
       'button-text': ['16px', '16px'],
       'search-text': ['13px', '13px'],
+      'error-message': ['10px', '10px'],
+      'done-button-text': ['15px', '24px'],
     },
     colors: {
       'color-key': '#55CAC3',
