@@ -1,26 +1,29 @@
-import { MouseEventHandler } from "react";
+import { Path, FieldValues, useFormContext, RegisterOptions } from 'react-hook-form';
 
-export type CheckBoxParams = {
+export type CheckBoxParams<T> = {
+    name: Path<T>
     label: string;
-    isChecked: boolean;
+    // isChecked: boolean;
+    validation?: RegisterOptions;
     isEnabled?: boolean;
-    onClick?: MouseEventHandler<HTMLImageElement>;
-    // onClick?: MouseEventHandler<HTMLInputElement>;
+    // onClick?: MouseEventHandler<HTMLImageElement>;
 }
 
-const CheckBox = ({ label, isChecked, isEnabled = true, onClick }: CheckBoxParams) => {
+const CheckBox = <T extends FieldValues>({ name, label, validation = undefined, isEnabled = true }: CheckBoxParams<T>) => {
+    // const CheckBox = ({ label, isChecked, isEnabled = true, onClick, register }: CheckBoxParams) => {
+    const { register } = useFormContext();
 
     return (
         <>
             <span className={"text-sm inline-block"}>{label}</span>
-            {isChecked
-                ? isEnabled
-                    ? <img src="/checked.svg" onClick={onClick} className={"inline-block ml-auto"} />
-                    : <img src="/checked_disabled.svg" className={"inline-block ml-auto"} />
-                : isEnabled
-                    ? <img src="/unchecked.svg" onClick={onClick} className={"inline-block ml-auto"} />
-                    : <img src="/unchecked_disabled.svg" className={"inline-block ml-auto"} />
+            {isEnabled
+                ? <input type="checkbox" className={"inline-block ml-auto scale-150 w-4"}
+                    {...typeof validation === "undefined"
+                        ? { ...register(name) }
+                        : { ...register(name), validation }} />
+                : <input type="checkbox" className={"inline-block ml-auto scale-150 w-4"} {...register(name)} disabled />
             }
+
         </>
     )
 

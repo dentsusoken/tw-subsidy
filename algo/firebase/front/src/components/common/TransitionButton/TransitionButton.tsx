@@ -1,26 +1,36 @@
-import BaseButton from '../BaseButton';
+import { FormEventHandler, MouseEventHandler } from 'react';
 
 export type TransitionButtonParams = {
     text: string;
     type: "next" | "prev";
     currentUser: "applicant" | "approver";
-    url: string;
-    query?: string;
+    isEnabled?: boolean;
+    onClick?: MouseEventHandler<HTMLButtonElement>
+    onSubmit?: FormEventHandler<HTMLButtonElement>
 }
 
-const TransitionButton = ({ url, text, type, currentUser, query }: TransitionButtonParams) => {
+const TransitionButton = ({ text, type, currentUser, isEnabled = true, onClick, onSubmit }: TransitionButtonParams) => {
     return (
-        <BaseButton url={url} className={
-            "w-22 h-12 py-3 rounded-md text-base font-bold " +
-            ((type == "next")
-                ? "text-white " + ((currentUser == "applicant")
-                    ? "bg-applicant ml-auto mt-auto"
-                    : "bg-approver ml-auto mt-auto")
-                : "bg-white text-black border border-past")
-        }
-        query={query}>
+        <button type='submit' onClick={onClick} onSubmit={onSubmit} disabled={!isEnabled}
+            className={
+                "w-22 h-12 py-3 rounded-md text-base font-bold " +
+                (
+                    (type == "next")
+                        ? "text-white ml-auto mt-auto " +
+                        (isEnabled
+                            ? ((currentUser == "applicant")
+                                ? "bg-applicant "
+                                : "bg-approver ")
+                            : "bg-past text-white ")
+                        :
+                        (isEnabled
+                            ? "bg-white text-black border border-past "
+                            : "bg-past text-white ")
+                )
+
+            }>
             {text}
-        </BaseButton>
+        </button>
     )
 };
 

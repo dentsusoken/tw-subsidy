@@ -1,21 +1,22 @@
+import { MouseEventHandler } from "react";
 import BaseButton from "../BaseButton";
 
 export type ChangeUserButtonParams = {
-    url: string;
     text: string;
     currentUser: "applicant" | "approver";
+    onClick: MouseEventHandler<HTMLButtonElement>;
 };
 
-const ChangeUserButton = ({ url, text, currentUser }: ChangeUserButtonParams) => {
+const ChangeUserButton = ({ text, currentUser, onClick }: ChangeUserButtonParams) => {
     return (
-        <BaseButton url={url} className={
-            "w-40 h-12 py-3 rounded-md text-base font-bold text-white mx-auto " +
+        <button onClick={onClick} className={
+            "block w-40 h-12 py-3 rounded-md text-base font-bold text-white mx-auto " +
             ((currentUser == "applicant")
                 ? "bg-approver"
                 : "bg-applicant ")
         }>
             {text}
-        </BaseButton>
+        </button>
     )
 };
 

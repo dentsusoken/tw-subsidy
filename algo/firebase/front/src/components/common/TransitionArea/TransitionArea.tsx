@@ -6,7 +6,7 @@ export type TransitionAreaParams = {
 
 const TransitionArea = ({ children }: TransitionAreaParams) => {
     return (
-        <div className={"mx-auto mt-19 flex w-80"}>
+        <div className={"mx-auto mt-19 flex w-full"}>
             {children}
         </div>
     )
