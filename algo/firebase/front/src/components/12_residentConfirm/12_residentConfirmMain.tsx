@@ -25,6 +25,8 @@ const ResidentConfirmMain = () => {
       fullNameFurigana: input.fullNameFurigana,
       address: input.address,
       addressRegistDate: input.addressRegistDate,
+      addressRegistYear: input.addressRegistYear,
+      addressRegistMonth: input.addressRegistMonth,
       permanentAddress: input.permanentAddress,
       applicationDate,
       verifyStatus: false,

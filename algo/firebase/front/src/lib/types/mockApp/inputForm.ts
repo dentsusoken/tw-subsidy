@@ -4,6 +4,8 @@ export type ResidentInputFormType = {
   fullNameFurigana: string; // 氏名フリガナ
   address: string; // 住所
   addressRegistDate: string; // 住民となった年月
+  addressRegistYear: string; // 住民となった年
+  addressRegistMonth: string; // 住民となった年
   permanentAddress: string; // 本籍地
   applicationDate?: string; // 申請日
   verifyStatus?: boolean; // 検証ステータス

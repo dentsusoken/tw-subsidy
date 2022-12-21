@@ -8,9 +8,6 @@ const VCAcceptMain = () => {
 
   const [disabled, setDisabled] = useState(false);
 
-  const delay = (ms: number | undefined) =>
-    new Promise((resolve) => setTimeout(resolve, ms));
-
   const buttonDisabledHandler = () => {
     setDisabled(!disabled);
   };

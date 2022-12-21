@@ -11,13 +11,13 @@ const ResidentListDetailMain = () => {
 
   const selectDetail = listState.find((v) => v.id === Number(router.query.id));
 
-  const onSubmit = () => {
+  const onSubmit = (status: boolean, pathname: string) => {
     // 検証・承認ステータスをONにする
     if (selectDetail) {
       const replaceData = {
         ...selectDetail,
-        verifyStatus: true,
-        approvalStatus: true,
+        verifyStatus: status,
+        approvalStatus: status,
       };
 
       const updateData = [...listState];
@@ -32,10 +32,7 @@ const ResidentListDetailMain = () => {
       setListState(updateData);
     }
 
-    router.push({
-      pathname: '/16_resident-list-done',
-      query: { id: router.query.id },
-    });
+    router.push({ pathname, query: { id: router.query.id } });
   };
 
   return (
@@ -68,16 +65,15 @@ const ResidentListDetailMain = () => {
           </div>
           <div className="pt-4 flex justify-between">
             <button
-              onClick={() => {
-                router.push({
-                  pathname: '/14_resident-list',
-                });
-              }}
+              onClick={() => onSubmit(false, '/14_resident-list')}
               className="input-form-button-white"
             >
               却下
             </button>
-            <button onClick={onSubmit} className="input-form-button-blue">
+            <button
+              onClick={() => onSubmit(true, '/16_resident-list-done')}
+              className="input-form-button-blue"
+            >
               承認
             </button>
           </div>

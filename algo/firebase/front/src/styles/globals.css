@@ -43,10 +43,10 @@
   @apply py-2 px-2.5 border border-solid border-color-input-text-line rounded-lg bg-color-background w-2/5 mb-[21px] text-input-form-text font-sans;
 }
 .input-form-button-white-done {
-  @apply inline-block text-center py-3 px-2 rounded-lg border border-solid border-color-gray text-done-button-text font-bold font-sans;
+  @apply inline-block text-center py-3 px-2 rounded-lg border border-solid border-color-gray text-button-done-text font-bold font-sans;
 }
 .input-form-button-green-done {
-  @apply inline-block text-center py-3 px-2 rounded-lg border border-solid border-color-key bg-color-key text-color-white text-done-button-text font-bold font-sans;
+  @apply inline-block text-center py-3 px-2 rounded-lg border border-solid border-color-key bg-color-key text-color-white text-button-done-text font-bold font-sans;
 }
 .input-form-button-gray-done {
   @apply inline-block text-center py-3 px-2 rounded-lg border border-solid border-color-menu-button bg-color-menu-button text-color-white text-button-text font-bold font-sans;

@@ -14,9 +14,11 @@ const ResidentInputMain = () => {
   const [input, setInput] = useRecoilState(residentInputState);
 
   const [addressRegistYear, setAddressRegistYear] = useState(
-    new Date().getFullYear().toString() + '年'
+    input.addressRegistYear
   );
-  const [addressRegistMonth, setAddressRegistMonth] = useState('1月');
+  const [addressRegistMonth, setAddressRegistMonth] = useState(
+    input.addressRegistMonth
+  );
 
   const selectAddressRegistYear = (e: any) => {
     setAddressRegistYear(e.target.value);
@@ -36,18 +38,27 @@ const ResidentInputMain = () => {
       fullNameFurigana: input.fullNameFurigana,
       address: input.address,
       addressRegistDate: input.addressRegistDate,
+      addressRegistYear: input.addressRegistYear,
+      addressRegistMonth: input.addressRegistMonth,
       permanentAddress: input.permanentAddress,
     },
   });
 
   const onSubmit = handleSubmit((data: ResidentInputFormType) => {
+    const year = addressRegistYear
+      ? addressRegistYear
+      : new Date().getFullYear().toString() + '年';
+    const monnth = addressRegistMonth ? addressRegistMonth : '1月';
+
     setInput(() => ({
       ...{
         id: 0,
         fullName: data.fullName,
         fullNameFurigana: data.fullNameFurigana,
         address: data.address,
-        addressRegistDate: addressRegistYear + addressRegistMonth,
+        addressRegistDate: year + monnth,
+        addressRegistYear: year,
+        addressRegistMonth: monnth,
         permanentAddress: data.permanentAddress,
       },
     }));

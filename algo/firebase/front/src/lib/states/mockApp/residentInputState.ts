@@ -11,6 +11,8 @@ export const residentInputState = atom<ResidentInputFormType>({
     fullNameFurigana: '',
     address: '',
     addressRegistDate: '',
+    addressRegistYear: '',
+    addressRegistMonth: '',
     permanentAddress: '',
     applicationDate: undefined,
     verifyStatus: undefined,

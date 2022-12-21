@@ -23,6 +23,8 @@ const MenuMain = () => {
         fullNameFurigana: '',
         address: '',
         addressRegistDate: '',
+        addressRegistYear: '',
+        addressRegistMonth: '',
         permanentAddress: '',
         applicationDate: undefined,
         verifyStatus: undefined,
