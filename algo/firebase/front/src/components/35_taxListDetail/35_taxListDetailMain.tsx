@@ -51,11 +51,39 @@ const TaxListDetailMain = () => {
         setListState(updateData);
         reset();
 
-        router.push('/36_taxListDone', '/36_taxListDone');
+        // router.push('/36_taxListDone', '/36_taxListDone');
+        router.push({
+            pathname: '/36_taxListDone',
+            query: { proc: "approve" }
+        }, '/36_taxListDone')
     };
 
     const back = () => {
         router.push('/34_taxList', '/34_taxList');
+    }
+
+    const revoke = () => {
+        const replaceData: TaxInputFormType = {
+            ...input,
+            approvalStatus: false,
+            verifyStatus: false
+        }
+        const updateData = listState.map((item) => {
+            if (item.id === replaceData.id) {
+                return replaceData;
+            }
+            else {
+                return item;
+            }
+        })
+
+        setListState(updateData);
+        reset();
+
+        router.push({
+            pathname: "/52_taxListRevoked",
+            query: { proc: "delete" }
+        }, "/52_taxListRevoked");
     }
 
     return (
@@ -64,17 +92,36 @@ const TaxListDetailMain = () => {
             <main>
                 <FormProvider {...methods} >
                     <Container title='申請内容照会'>
+                        {(router.pathname == '/35_taxListDetail')
+                            ? null
+                            :
+                            <div className={"text-center"}>
+                                <span className={"text-sm text-past"}>2022年12月20日 承認済</span>
+                            </div>
+                        }
                         <Container>
-                            <InputArea<TaxInputFormType> label={"申請年度"} name={"applicationYear"} validation={{ min: 4, max: 4, pattern: /[0-9]{4}/, required: true }} isRequired={true} isEnabled={false} />
-                            <InputArea<TaxInputFormType> label={"法人名称"} name={"corporationName"} validation={{ required: true }} isRequired={true} isEnabled={false} />
-                            <InputArea<TaxInputFormType> label={"所在地"} name={"corporationAddress"} validation={{ required: true }} isRequired={true} isEnabled={false} />
+                            <InputArea<TaxInputFormType> label={"申請年度"} name={"applicationYear"} validation={{ min: 4, max: 4, pattern: /[0-9]{4}/, required: true }} isEnabled={false} />
+                            <InputArea<TaxInputFormType> label={"法人名称"} name={"corporationName"} validation={{ required: true }} isEnabled={false} />
+                            <InputArea<TaxInputFormType> label={"所在地"} name={"corporationAddress"} validation={{ required: true }} isEnabled={false} />
                             <InputArea<TaxInputFormType> label='申請者名' name='fullName' placeholder='' isEnabled={false} />
                             <InputArea<TaxInputFormType> label='申請者住所' name="address" placeholder='' isEnabled={false} />
                         </Container>
-                    <TransitionArea>
-                        <TransitionButton text='戻る' type={"prev"} currentUser={"approver"} onClick={back} />
-                        <TransitionButton text='申請' type={"next"} currentUser={"approver"} onClick={onSubmit} />
-                    </TransitionArea>
+                        <TransitionArea>
+                            {(router.pathname == '/35_taxListDetail')
+                                ? (
+                                    <>
+                                        <TransitionButton text='却下' type={"prev"} currentUser={"approver"} onClick={back} />
+                                        <TransitionButton text='承認' type={"next"} currentUser={"approver"} onClick={onSubmit} />
+                                    </>
+                                )
+                                : (
+                                    <>
+                                        <TransitionButton text='戻る' type={"prev"} currentUser={"approver"} onClick={back} />
+                                        <TransitionButton text='承認取消' type={"warnig"} currentUser={"approver"} onClick={revoke} />
+                                    </>
+                                )
+                            }
+                        </TransitionArea>
                     </Container>
                 </FormProvider>
             </main>

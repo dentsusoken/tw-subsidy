@@ -33,7 +33,7 @@ const SubsidyInputMain = () => {
     });
 
     const onSubmit = (data: SubsidyInputFormType) => {
-        
+
         setInput(() => ({
             ...{
                 id: 0,
@@ -44,7 +44,7 @@ const SubsidyInputMain = () => {
                 address: data.address,
                 verifyStatus: false,
                 approvalStatus: false,
-                applicationDate:""
+                applicationDate: ""
             },
         }))
         router.push('/42_subsidyConfirm', '/42_subsidyConfirm');
@@ -57,30 +57,32 @@ const SubsidyInputMain = () => {
                 <Progress status={"input"} />
                 <FormProvider {...methods} >
                     <form onSubmit={methods.handleSubmit(onSubmit)}>
-                        <Container title={"申請書類の選択"}>
-                            <ul className={"border-y border-li"}>
-                                <li className={"py-3 pl-4 pr-6 w-78 flex"}>
-                                    <CheckBox<SubsidyInputFormType> label={"住民票"} name={"resident"} />
-                                </li>
-                                <li className={"py-3 pl-4 pr-6 w-78 flex border-y border-li"}>
-                                    <CheckBox<SubsidyInputFormType> label={"口座実在証明書"} name={"account"} />
-                                </li>
-                                <li className={"py-3 pl-4 pr-6 w-78 flex"}>
-                                    <CheckBox<SubsidyInputFormType> label={"納税証明書"} name={"tax"} />
-                                </li>
-                            </ul>
+                        <Container>
+                            <Container title={"申請書類の選択"}>
+                                <ul className={"border-y border-li"}>
+                                    <li className={"py-3 pl-4 pr-6 w-78 flex"}>
+                                        <CheckBox<SubsidyInputFormType> label={"住民票"} name={"resident"} />
+                                    </li>
+                                    <li className={"py-3 pl-4 pr-6 w-78 flex border-y border-li"}>
+                                        <CheckBox<SubsidyInputFormType> label={"口座実在証明書"} name={"account"} />
+                                    </li>
+                                    <li className={"py-3 pl-4 pr-6 w-78 flex"}>
+                                        <CheckBox<SubsidyInputFormType> label={"納税証明書"} name={"tax"} />
+                                    </li>
+                                </ul>
+                            </Container>
+                            <Container title={"申請者情報"}>
+                                <div>
+                                    <InputArea<SubsidyInputFormType> label='申請者名' name='fullName' placeholder='' isEnabled={false} />
+                                </div>
+                                <div>
+                                    <InputArea<SubsidyInputFormType> label='申請者住所' name="address" placeholder='' isEnabled={false} />
+                                </div>
+                            </Container>
+                            <TransitionArea>
+                                <TransitionButton text='確認' type={"next"} currentUser={"applicant"} />
+                            </TransitionArea>
                         </Container>
-                        <Container title={"申請者情報"}>
-                            <div>
-                                <InputArea<SubsidyInputFormType> label='申請者名' name='fullName' placeholder='' isEnabled={false} />
-                            </div>
-                            <div>
-                                <InputArea<SubsidyInputFormType> label='申請者住所' name="address" placeholder='' isEnabled={false} />
-                            </div>
-                        </Container>
-                        <TransitionArea>
-                            <TransitionButton text='確認' type={"next"} currentUser={"applicant"} />
-                        </TransitionArea>
                     </form>
                 </FormProvider>
             </main>

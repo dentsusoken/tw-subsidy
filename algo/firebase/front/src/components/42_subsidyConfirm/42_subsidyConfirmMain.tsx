@@ -64,31 +64,33 @@ const SubsidyConfirmMain = () => {
             <main>
                 <Progress status={"confirm"} />
                 <FormProvider {...methods} >
-                    <Container title={"申請書類の選択"}>
-                        <ul className={"border-y border-li"}>
-                            <li className={"py-3 pl-4 pr-6 w-78 flex"}>
-                                <CheckBox<SubsidyInputFormType> label={"住民票"} name={"resident"} isEnabled={false} />
-                            </li>
-                            <li className={"py-3 pl-4 pr-6 w-78 flex border-y border-li"}>
-                                <CheckBox<SubsidyInputFormType> label={"口座実在証明書"} name={"account"} isEnabled={false} />
-                            </li>
-                            <li className={"py-3 pl-4 pr-6 w-78 flex"}>
-                                <CheckBox<SubsidyInputFormType> label={"納税証明書"} name={"tax"} isEnabled={false} />
-                            </li>
-                        </ul>
+                    <Container>
+                        <Container title={"申請書類の選択"}>
+                            <ul className={"border-y border-li"}>
+                                <li className={"py-3 pl-4 pr-6 w-78 flex"}>
+                                    <CheckBox<SubsidyInputFormType> label={"住民票"} name={"resident"} isEnabled={false} />
+                                </li>
+                                <li className={"py-3 pl-4 pr-6 w-78 flex border-y border-li"}>
+                                    <CheckBox<SubsidyInputFormType> label={"口座実在証明書"} name={"account"} isEnabled={false} />
+                                </li>
+                                <li className={"py-3 pl-4 pr-6 w-78 flex"}>
+                                    <CheckBox<SubsidyInputFormType> label={"納税証明書"} name={"tax"} isEnabled={false} />
+                                </li>
+                            </ul>
+                        </Container>
+                        <Container title={"申請者情報"}>
+                            <div>
+                                <InputArea<SubsidyInputFormType> label='申請者名' name='fullName' placeholder='' isEnabled={false} />
+                            </div>
+                            <div>
+                                <InputArea<SubsidyInputFormType> label='申請者住所' name="address" placeholder='' isEnabled={false} />
+                            </div>
+                        </Container>
+                        <TransitionArea>
+                            <TransitionButton text='戻る' type={"prev"} currentUser={"applicant"} onClick={back} />
+                            <TransitionButton text='申請' type={"next"} currentUser={"applicant"} onClick={onSubmit} />
+                        </TransitionArea>
                     </Container>
-                    <Container title={"申請者情報"}>
-                        <div>
-                            <InputArea<SubsidyInputFormType> label='申請者名' name='fullName' placeholder='' isEnabled={false} />
-                        </div>
-                        <div>
-                            <InputArea<SubsidyInputFormType> label='申請者住所' name="address" placeholder='' isEnabled={false} />
-                        </div>
-                    </Container>
-                    <TransitionArea>
-                        <TransitionButton text='戻る' type={"prev"} currentUser={"applicant"} onClick={back} />
-                        <TransitionButton text='申請' type={"next"} currentUser={"applicant"} onClick={onSubmit} />
-                    </TransitionArea>
                 </FormProvider>
             </main>
 

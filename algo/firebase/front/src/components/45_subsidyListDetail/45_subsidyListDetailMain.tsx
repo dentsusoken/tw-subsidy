@@ -35,14 +35,14 @@ const SubsidyListDetailMain = () => {
 
     const onSubmit = () => {
 
-        const replaceData:SubsidyInputFormType = {
+        const replaceData: SubsidyInputFormType = {
             ...input,
             verifyStatus: true,
             approvalStatus: true,
-        } 
+        }
 
         const updateData = listState.map((item) => {
-            if (item.id === replaceData.id){
+            if (item.id === replaceData.id) {
                 return replaceData;
             }
             else {
@@ -53,7 +53,10 @@ const SubsidyListDetailMain = () => {
         setListState(updateData);
         reset();
 
-        router.push('/46_subsidyListDone', '/46_subsidyListDone');
+        router.push({
+            pathname:'/46_subsidyListDone',
+            query:{proc: "approve"}
+        }, '/46_subsidyListDone');
     };
 
     const back = () => {
@@ -87,11 +90,11 @@ const SubsidyListDetailMain = () => {
                                 <InputArea<SubsidyInputFormType> label='申請者住所' name="address" placeholder='' isEnabled={false} />
                             </div>
                         </Container>
+                        <TransitionArea>
+                            <TransitionButton text='戻る' type={"prev"} currentUser={"approver"} onClick={back} />
+                            <TransitionButton text='承認' type={"next"} currentUser={"approver"} onClick={onSubmit} />
+                        </TransitionArea>
                     </Container>
-                    <TransitionArea>
-                        <TransitionButton text='戻る' type={"prev"} currentUser={"applicant"} onClick={back} />
-                        <TransitionButton text='申請' type={"next"} currentUser={"applicant"} onClick={onSubmit} />
-                    </TransitionArea>
                 </FormProvider>
             </main>
 

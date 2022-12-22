@@ -41,12 +41,12 @@ const TaxConfirmMain = () => {
         const now = dayjs();
         const applicationDate = dayjs(now).format('M月D日(ddd)');
 
-        const subsidyInput: TaxInputFormType = {
+        const taxInput: TaxInputFormType = {
             ...input,
             id: id,
             applicationDate: applicationDate
         }
-        setList((items) => [...items, subsidyInput]);
+        setList((items) => [...items, taxInput]);
         reset();
 
         router.push('/33_taxDone', '/33_taxDone');
@@ -68,11 +68,11 @@ const TaxConfirmMain = () => {
                         <InputArea<TaxInputFormType> label={"所在地"} name={"corporationAddress"} validation={{ required: true }} isRequired={true} />
                         <InputArea<TaxInputFormType> label='申請者名' name='fullName' placeholder='' isEnabled={false} />
                         <InputArea<TaxInputFormType> label='申請者住所' name="address" placeholder='' isEnabled={false} />
+                        <TransitionArea>
+                            <TransitionButton text='戻る' type={"prev"} currentUser={"applicant"} onClick={back} />
+                            <TransitionButton text='申請' type={"next"} currentUser={"applicant"} onClick={onSubmit} />
+                        </TransitionArea>
                     </Container>
-                    <TransitionArea>
-                        <TransitionButton text='戻る' type={"prev"} currentUser={"applicant"} onClick={back} />
-                        <TransitionButton text='申請' type={"next"} currentUser={"applicant"} onClick={onSubmit} />
-                    </TransitionArea>
                 </FormProvider>
             </main>
 

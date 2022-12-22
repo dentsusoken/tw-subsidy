@@ -1,10 +1,9 @@
 import { MouseEventHandler } from "react";
-import BaseButton from "../BaseButton";
 
 export type ChangeUserButtonParams = {
     text: string;
     currentUser: "applicant" | "approver";
-    onClick: MouseEventHandler<HTMLButtonElement>;
+    onClick?: MouseEventHandler<HTMLButtonElement>;
 };
 
 const ChangeUserButton = ({ text, currentUser, onClick }: ChangeUserButtonParams) => {

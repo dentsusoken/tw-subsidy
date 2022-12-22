@@ -19,7 +19,15 @@ module.exports = {
       width: {
         "18": "4.5rem",
         "22": "5.5rem",
+        "35": "8.75rem",
         "76": "19rem",
+        "78": "19.5rem"
+      },
+      minWidth: {
+        "22": "5.5rem",
+        "68": "17rem"
+      },
+      maxWidth: {
         "78": "19.5rem"
       },
       lineHeight: {

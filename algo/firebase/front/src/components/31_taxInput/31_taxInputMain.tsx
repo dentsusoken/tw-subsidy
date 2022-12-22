@@ -62,10 +62,10 @@ const TaxInputMain = () => {
                             <InputArea<TaxInputFormType> label={"所在地"} name={"corporationAddress"} validation={{ required: true }} isRequired={true} />
                             <InputArea<TaxInputFormType> label='申請者名' name='fullName' placeholder='' isEnabled={false} />
                             <InputArea<TaxInputFormType> label='申請者住所' name="address" placeholder='' isEnabled={false} />
+                            <TransitionArea>
+                                <TransitionButton text='確認' type={"next"} currentUser={"applicant"} />
+                            </TransitionArea>
                         </Container>
-                        <TransitionArea>
-                            <TransitionButton text='確認' type={"next"} currentUser={"applicant"} />
-                        </TransitionArea>
                     </form>
                 </FormProvider>
             </main>
