@@ -17,11 +17,11 @@ const TransitionButton = ({ text, type, currentUser, onClick, onSubmit }: Transi
                     (type == "next")
                         ? "text-white ml-auto mt-auto " +
                         ((currentUser == "applicant")
-                            ? "bg-applicant "
-                            : "bg-approver ")
+                            ? "bg-color-green "
+                            : "bg-color-blue ")
                         : ((type == "warnig")
-                            ? "text-white ml-auto mt-auto bg-warnig"
-                            : "bg-white text-black border border-past ")
+                            ? "text-white ml-auto mt-auto bg-color-warnig"
+                            : "bg-white text-black border border-color-grey ")
                 )
             }>
             {text}

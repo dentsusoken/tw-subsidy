@@ -7,14 +7,14 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        "applicant": "#55CAC3",
-        "approver": "#6179B8",
-        "will": "#D9D9D9",
-        "past": "#B3B3B3",
-        "li": "#DCDCDC",
-        "disabled": "#F0F0F0",
-        "warnig": "#D32929",
-        "search": "#E6E6E6",
+        "color-green": "#55CAC3",
+        "color-blue": "#6179B8",
+        "color-light-grey": "#D9D9D9",
+        "color-grey": "#B3B3B3",
+        "color-gainsboro": "#DCDCDC",
+        "color-disabled": "#F0F0F0",
+        "color-color-warnig": "#D32929",
+        "color-search": "#E6E6E6",
       },
       width: {
         "18": "4.5rem",

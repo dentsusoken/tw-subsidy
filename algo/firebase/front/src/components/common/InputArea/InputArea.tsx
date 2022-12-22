@@ -14,13 +14,13 @@ const InputArea = <T extends FieldValues>({ name, label, validation = undefined,
 
     return (
         <div className={"mb-5"}>
-            <label htmlFor="name" className={"block text-sm pb-4"}>{label} {isRequired ? <span className={"text-warnig"}>（必須）</span> : null}</label>
+            <label htmlFor="name" className={"block text-sm pb-4"}>{label} {isRequired ? <span className={"text-color-warnig"}>（必須）</span> : null}</label>
             {isEnabled
-                ? <input type="text" id='name' className={"bg-white border border-past w-78 h-10 rounded-md p-2 text-base"} placeholder={placeholder}
+                ? <input type="text" id='name' className={"bg-white border border-color-grey w-78 h-10 rounded-md p-2 text-base"} placeholder={placeholder}
                     {...typeof validation === "undefined"
                         ? { ...register(name)} 
                         : { ...register(name, validation) }} />
-                : <input disabled type="text" id='name' className={"bg-disabled w-78 h-10 rounded-md p-2 text-base"} placeholder={placeholder} { ...register(name) }/>
+                : <input disabled type="text" id='name' className={"bg-color-disabled w-78 h-10 rounded-md p-2 text-base"} placeholder={placeholder} { ...register(name) }/>
             }
         </div>
     )

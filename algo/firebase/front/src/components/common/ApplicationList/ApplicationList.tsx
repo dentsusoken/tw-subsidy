@@ -43,7 +43,7 @@ const ApplicationList = ({ taxInfo, subsidyInfo, url, setTaxInput, setSubsidyInp
     return (
         <>
             {!!info ? (
-                <li className={"flex items-center w-full h-16 px-3 text-sm border-b border-li"}>
+                <li className={"flex items-center w-full h-16 px-3 text-sm border-b border-color-gainsboro"}>
 
                     <div className={"flex items-center mx-auto"}>
                         <span className={"pr-2"}>{info.applicationDate}</span>
@@ -51,8 +51,8 @@ const ApplicationList = ({ taxInfo, subsidyInfo, url, setTaxInput, setSubsidyInp
                         <div className={"w-12 h-12"}>
                             {info.verifyStatus ? (<img src="/authenticated.svg" alt="" className="inline-block" />) : ""}
                         </div>
-                        <span className={"text-center w-18 " + (info.approvalStatus ? "text-past" : "text-warnig")}>{info.approvalStatus ? "承認済" : "未承認"}</span>
-                        <button onClick={info.approvalStatus ? revoke : inquire} className={"w-18 h-7 leading-7 border border-past rounded-lg block ml-auto text-base text-center font-bold"}>照会</button>
+                        <span className={"text-center w-18 " + (info.approvalStatus ? "text-color-grey" : "text-color-warnig")}>{info.approvalStatus ? "承認済" : "未承認"}</span>
+                        <button onClick={info.approvalStatus ? revoke : inquire} className={"w-18 h-7 leading-7 border border-color-grey rounded-lg block ml-auto text-base text-center font-bold"}>照会</button>
                     </div>
 
                 </li>

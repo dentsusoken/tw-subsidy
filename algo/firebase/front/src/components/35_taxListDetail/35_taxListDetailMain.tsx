@@ -96,7 +96,7 @@ const TaxListDetailMain = () => {
                             ? null
                             :
                             <div className={"text-center"}>
-                                <span className={"text-sm text-past"}>2022年12月20日 承認済</span>
+                                <span className={"text-sm text-color-grey"}>2022年12月20日 承認済</span>
                             </div>
                         }
                         <Container>

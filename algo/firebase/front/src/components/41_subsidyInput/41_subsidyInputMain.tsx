@@ -59,11 +59,11 @@ const SubsidyInputMain = () => {
                     <form onSubmit={methods.handleSubmit(onSubmit)}>
                         <Container>
                             <Container title={"申請書類の選択"}>
-                                <ul className={"border-y border-li"}>
+                                <ul className={"border-y border-color-gainsboro"}>
                                     <li className={"py-3 pl-4 pr-6 w-78 flex"}>
                                         <CheckBox<SubsidyInputFormType> label={"住民票"} name={"resident"} />
                                     </li>
-                                    <li className={"py-3 pl-4 pr-6 w-78 flex border-y border-li"}>
+                                    <li className={"py-3 pl-4 pr-6 w-78 flex border-y border-color-gainsboro"}>
                                         <CheckBox<SubsidyInputFormType> label={"口座実在証明書"} name={"account"} />
                                     </li>
                                     <li className={"py-3 pl-4 pr-6 w-78 flex"}>

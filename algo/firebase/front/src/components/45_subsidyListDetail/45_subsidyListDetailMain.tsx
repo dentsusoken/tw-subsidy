@@ -70,11 +70,11 @@ const SubsidyListDetailMain = () => {
                 <FormProvider {...methods} >
                     <Container title={"申請内容照会"}>
                         <Container title={"申請書類の選択"}>
-                            <ul className={"border-y border-li"}>
+                            <ul className={"border-y border-color-gainsboro"}>
                                 <li className={"py-3 pl-4 pr-6 w-78 flex"}>
                                     <CheckBox<SubsidyInputFormType> label={"住民票"} name={"resident"} isEnabled={false} />
                                 </li>
-                                <li className={"py-3 pl-4 pr-6 w-78 flex border-y border-li"}>
+                                <li className={"py-3 pl-4 pr-6 w-78 flex border-y border-color-gainsboro"}>
                                     <CheckBox<SubsidyInputFormType> label={"口座実在証明書"} name={"account"} isEnabled={false} />
                                 </li>
                                 <li className={"py-3 pl-4 pr-6 w-78 flex"}>
