@@ -2,6 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+/* メニュー画面 */
+.menu-step {
+  @apply absolute top-0 left-0 w-[53px] h-[53px] rounded-full bg-color-key text-color-white text-center text-menu-step-text font-sans font-bold z-10;
+}
+.menu-button {
+  @apply block text-menu-button-text text-center py-4 px-0 w-full border border-solid border-color-menu-button rounded-lg font-sans z-0;
+}
+.menu-triangle {
+  @apply block mt-[18px] mx-auto mb-[-10px] w-0 h-0 border-solid border-t-[26px] border-r-[33.5px] border-b-0 border-l-[33.5px] border-t-color-triangle-border-top border-x-color-triangle-border border-b-color-triangle-border;
+}
+
 /* 入力フォームパーツ */
 .input-form-label {
   @apply block text-input-form-label w-full mb-4 font-sans;
@@ -51,58 +62,6 @@
 .input-form-button-gray-done {
   @apply inline-block text-center py-3 px-2 rounded-lg border border-solid border-color-menu-button bg-color-menu-button text-color-white text-button-text font-bold font-sans;
 }
-
-/* --------------------------------------------- */
-/* DEMO MENU */
-.demomenu-step-list {
-  width: 228px;
-  margin: 70px auto 0;
-}
-.numbering {
-  counter-reset: number;
-}
-.numbering li {
-  padding: 26px 0 0 42px;
-  position: relative;
-}
-.numbering li::before {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 53px;
-  height: 53px;
-  border-radius: 50%;
-  background-color: #55cac3;
-  color: #fff;
-  text-align: center;
-  font-size: 13px;
-  font-weight: bold;
-  line-height: 53px;
-  counter-increment: number;
-  content: 'STEP' counter(number);
-  z-index: 1;
-}
-.numbering li:not(:last-child)::after {
-  display: block;
-  margin: 18px auto -10px;
-  content: '';
-  width: 0;
-  height: 0;
-  border-style: solid;
-  border-width: 26px 33.5px 0 33.5px;
-  border-color: #d9d9d9 transparent transparent transparent;
-}
-.numbering li a,
-.numbering li p {
-  display: block;
-  font-size: 15px;
-  text-align: center;
-  padding: 1em 0;
-  width: 100%;
-  border: 1px solid #cfcfcf;
-  border-radius: 8px;
-}
-/* --------------------------------------------- */
 
 /* --------------------------------------------- */
 /* ステップ(入力->確認->完了) */

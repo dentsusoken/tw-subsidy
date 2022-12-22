@@ -34,6 +34,8 @@ module.exports = {
       'color-confirm': '#f0f0f0',
       'color-button-line': '#b3b3b3',
       'color-unapproved': '#D32929',
+      'color-triangle-border-top': '#d9d9d9',
+      'color-triangle-border': 'transparent',
     },
     extend: {},
   },
