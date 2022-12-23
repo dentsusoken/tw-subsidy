@@ -1,8 +1,4 @@
-import { useForm, FormProvider } from 'react-hook-form';
-import { useRecoilState, useSetRecoilState, useResetRecoilState } from 'recoil';
-import { useRouter } from 'next/router';
-import dayjs from 'dayjs';
-import 'dayjs/locale/ja';
+import { FormProvider } from 'react-hook-form';
 
 import Container from '@/components/common/Container';
 import Header from '@/components/common/Header';
@@ -13,60 +9,20 @@ import Progress from '@/components/common/Progress';
 import CheckBox from '@/components/common/CheckBox';
 
 import { SubsidyInputFormType } from '@/lib/types/mockApp/Form';
-import { subsidyInputState } from '@/lib/states/mockApp/subsidyInputState';
-import { subsidyListState } from '@/lib/states/mockApp/subsidyListState';
+import useSubsidyConfirmMain from './useSubsidyConfirmMain';
 
 const SubsidyConfirmMain = () => {
-    const [input, setInput] = useRecoilState(subsidyInputState);
-    const setList = useSetRecoilState(subsidyListState);
-    const reset = useResetRecoilState(subsidyInputState);
-    const router = useRouter();
-
-    const methods = useForm<SubsidyInputFormType>({
-        defaultValues: {
-            resident: input.resident,
-            account: input.account,
-            tax: input.tax,
-            // fullName: input.fullName,
-            fullName: "山田太郎",
-            // address: input.address,
-            address: "東京都渋谷区xxxxxx",
-            verifyStatus: false,
-            approvalStatus: false,
-        },
-    });
-
-    const onSubmit = () => {
-
-        dayjs.locale('ja');
-        const id = dayjs().unix();
-        const now = dayjs();
-        const applicationDate = dayjs(now).format('M月D日(ddd)');
-
-        const subsidyInput: SubsidyInputFormType = {
-            ...input,
-            id: id,
-            applicationDate: applicationDate
-        }
-        setList((items) => [...items, subsidyInput]);
-        reset();
-
-        router.push('/43_subsidyDone', '/43_subsidyDone');
-    };
-
-    const back = () => {
-        router.push('/41_subsidyInput', '/41_subsidyInput');
-    }
+        const { methods, onSubmit, back } = useSubsidyConfirmMain()
 
     return (
         <>
-            <Header title='補助金申請' currentUser={"applicant"} />
+            <Header />
             <main>
                 <Progress status={"confirm"} />
                 <FormProvider {...methods} >
                     <Container>
                         <Container title={"申請書類の選択"}>
-                            <ul className={"border-y border-color-gainsboro"}>
+                            <ul className={"border-y border-color-gainsboro mt-7 ml-3"}>
                                 <li className={"py-3 pl-4 pr-6 w-78 flex"}>
                                     <CheckBox<SubsidyInputFormType> label={"住民票"} name={"resident"} isEnabled={false} />
                                 </li>
@@ -79,10 +35,8 @@ const SubsidyConfirmMain = () => {
                             </ul>
                         </Container>
                         <Container title={"申請者情報"}>
-                            <div>
+                            <div className={"mt-7 ml-3"}>
                                 <InputArea<SubsidyInputFormType> label='申請者名' name='fullName' placeholder='' isEnabled={false} />
-                            </div>
-                            <div>
                                 <InputArea<SubsidyInputFormType> label='申請者住所' name="address" placeholder='' isEnabled={false} />
                             </div>
                         </Container>

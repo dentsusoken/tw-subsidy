@@ -12,9 +12,9 @@ const Container = ({ children, title, className }: ContainerParams) => {
             {title
                 ?
                 <> <h2 className={"font-bold text-base"}>{title}</h2>
-                    <div className={"ml-3 mt-7"}>
+                    {/* <div className={"text-center"}> */}
                         {children}
-                    </div>
+                    {/* </div> */}
                 </>
                 :
                 <>{children}</>

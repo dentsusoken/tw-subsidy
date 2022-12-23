@@ -1,30 +1,16 @@
-import { useState } from "react"
-import { useRouter } from "next/router";
-
 import Header from '@/components/common/Header';
 import Container from "../common/Container";
 import TransitionButton from "../common/TransitionButton";
 import AcceptButton from "../common/AcceptButton";
+import useVCAcceptMain from "./useVCAcceptMain";
 
 const VCAcceptMain = () => {
-    const router = useRouter();
-    const [isEnabled, setIsEnabled] = useState(true);
-
-    const delay = (ms: number | undefined) =>
-        new Promise((resolve) => setTimeout(resolve, ms));
-
-    const onSubmit = async () => {
-        setIsEnabled(!isEnabled);
-
-        await delay(2000);
-
-        router.push("00_menu", "00_menu")
-    }
+    const { isEnabled, accept, onSubmit } = useVCAcceptMain()
 
 
     return (
         <>
-            <Header currentUser={"applicant"} title={"納税証明書の受け入れ"} />
+            <Header />
             <main>
                 <Container>
                     <p className={"text-center text-sm mt-24 mx-auto w-60 leading-relaxed"}>
@@ -37,8 +23,8 @@ const VCAcceptMain = () => {
                     </p>
                 </Container>
                 <section className={"text-center"}>
-                    <AcceptButton isEnable={isEnabled} onClick={onSubmit} />
-                    <TransitionButton text="VC一覧へ" type={"prev"} currentUser={"applicant"} onClick={() => router.push("/61_VCList")} />
+                    <AcceptButton isEnable={isEnabled} onClick={accept} />
+                    <TransitionButton text="VC一覧へ" type={"prev"} currentUser={"applicant"} onClick={onSubmit} />
                 </section>
             </main>
         </>

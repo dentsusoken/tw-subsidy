@@ -1,4 +1,5 @@
 export type baseType ={
+    did: string;
     applicationDate: string;
     verifyStatus: boolean;
     approvalStatus: boolean;

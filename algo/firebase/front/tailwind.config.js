@@ -13,13 +13,14 @@ module.exports = {
         "color-grey": "#B3B3B3",
         "color-gainsboro": "#DCDCDC",
         "color-disabled": "#F0F0F0",
-        "color-color-warnig": "#D32929",
+        "color-warnig": "#D32929",
         "color-search": "#E6E6E6",
       },
       width: {
         "18": "4.5rem",
         "22": "5.5rem",
         "35": "8.75rem",
+        "70": "17.5rem",
         "76": "19rem",
         "78": "19.5rem"
       },

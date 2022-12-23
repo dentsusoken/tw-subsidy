@@ -3,14 +3,11 @@ import { Path, FieldValues, useFormContext, RegisterOptions } from 'react-hook-f
 export type CheckBoxParams<T> = {
     name: Path<T>
     label: string;
-    // isChecked: boolean;
     validation?: RegisterOptions;
     isEnabled?: boolean;
-    // onClick?: MouseEventHandler<HTMLImageElement>;
 }
 
 const CheckBox = <T extends FieldValues>({ name, label, validation = undefined, isEnabled = true }: CheckBoxParams<T>) => {
-    // const CheckBox = ({ label, isChecked, isEnabled = true, onClick, register }: CheckBoxParams) => {
     const { register } = useFormContext();
 
     return (

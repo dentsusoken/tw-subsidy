@@ -1,6 +1,4 @@
-import { useForm, FormProvider } from 'react-hook-form';
-import { useRecoilState } from 'recoil';
-import { useRouter } from 'next/router';
+import { FormProvider } from 'react-hook-form';
 
 import Container from '@/components/common/Container';
 import Header from '@/components/common/Header';
@@ -10,48 +8,14 @@ import TransitionArea from '@/components/common/TransitionArea';
 import Progress from '@/components/common/Progress';
 
 import { TaxInputFormType } from '@/lib/types/mockApp/Form';
-import { taxInputState } from '@/lib/states/mockApp/taxInputState';
+import useTaxInputMain from './useTaxInputMain';
 
 const TaxInputMain = () => {
-    const [input, setInput] = useRecoilState(taxInputState);
-    const router = useRouter();
-
-    const methods = useForm<TaxInputFormType>({
-        defaultValues: {
-            applicationYear: input.applicationYear,
-            corporationName: input.corporationName,
-            corporationAddress: input.corporationAddress,
-            // fullName: input.fullName,
-            fullName: "山田太郎",
-            // address: input.address,
-            address: "東京都渋谷区xxxxxx",
-            verifyStatus: false,
-            approvalStatus: false,
-            applicationDate: ""
-        },
-    });
-
-    const onSubmit = (data: TaxInputFormType) => {
-
-        setInput(() => ({
-            ...{
-                id: 0,
-                applicationYear: data.applicationYear,
-                corporationName: data.corporationName,
-                corporationAddress: data.corporationAddress,
-                fullName: data.fullName,
-                address: data.address,
-                applicationDate: "",
-                verifyStatus: false,
-                approvalStatus: false,
-            },
-        }))
-        router.push('/32_taxConfirm', '/32_taxConfirm');
-    };
+    const { methods, onSubmit } = useTaxInputMain()
 
     return (
         <>
-            <Header title='納税証明証交付申請' currentUser={"applicant"} />
+            <Header />
             <main>
                 <Progress status={"input"} />
                 <FormProvider {...methods} >
