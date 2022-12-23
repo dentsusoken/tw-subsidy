@@ -9,6 +9,9 @@ const Home: NextPage = () => {
       <div className="border-2 border-blue-500 rounded-full p-2 w-1/4 text-center hover:bg-blue-400 hover:text-white">
         <a href="./simple-demo">Simple Demo</a>
       </div>
+      <div className="border-2 border-blue-500 rounded-full p-2 w-1/4 text-center hover:bg-blue-400 hover:text-white">
+        <a href="./00_menu">Mock App</a>
+      </div>
     </div>
   );
 };
