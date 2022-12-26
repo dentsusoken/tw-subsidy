@@ -37,7 +37,7 @@ const useTaxListDetailMain = () => {
         const replaceData: TaxInputFormType = {
             ...input,
             verifyStatus: true,
-            approvalStatus: true,
+            // approvalStatus: true,
         }
 
         const updateData = listState.map((item) => {
@@ -50,7 +50,7 @@ const useTaxListDetailMain = () => {
         })
 
         setListState(updateData);
-        reset();
+        // reset();
 
         router.push({
             pathname: '/36_taxListDone',
@@ -91,7 +91,7 @@ const useTaxListDetailMain = () => {
 
         router.push({
             pathname: "/52_taxListRevoked",
-            query: { proc: "delete" }
+            query: { vc: "tax", proc: "delete" }
         }, "/52_taxListRevoked");
     }
 

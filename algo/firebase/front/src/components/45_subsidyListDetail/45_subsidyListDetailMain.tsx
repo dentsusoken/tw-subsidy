@@ -11,7 +11,7 @@ import { SubsidyInputFormType } from '@/lib/types/mockApp/Form';
 import useSubsidyListDetailMain from './useSubsidyListDetailMain';
 
 const SubsidyListDetailMain = () => {
-    const { methods, onSubmit, back } = useSubsidyListDetailMain()
+    const { pathname, methods, onSubmit, back } = useSubsidyListDetailMain()
 
     return (
         <>
@@ -19,6 +19,13 @@ const SubsidyListDetailMain = () => {
             <main>
                 <FormProvider {...methods} >
                     <Container title={"申請内容照会"}>
+                        <div className={"text-center pt-7"}>
+                            {(pathname == '/35_taxListDetail')
+                                ? null
+                                :
+                                <span className={"text-sm leading-relaxed text-color-grey-accepted"}>2022年12月20日 承認済</span>
+                            }
+                        </div>
                         <Container title={"申請書類の選択"}>
                             <ul className={"border-y border-color-gainsboro mt-7 ml-3"}>
                                 <li className={"py-3 pl-4 pr-6 w-78 flex"}>

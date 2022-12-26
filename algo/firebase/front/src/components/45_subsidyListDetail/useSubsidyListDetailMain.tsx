@@ -1,4 +1,5 @@
 import { useForm } from 'react-hook-form';
+import { useEffect, useState } from 'react';
 import { useRecoilState, useResetRecoilState, useRecoilValue } from 'recoil';
 import { useRouter } from 'next/router';
 import dayjs from 'dayjs';
@@ -8,11 +9,17 @@ import { SubsidyInputFormType } from '@/lib/types/mockApp/Form';
 import { subsidyInputState } from '@/lib/states/mockApp/subsidyInputState';
 import { subsidyListState } from '@/lib/states/mockApp/subsidyListState';
 
+
 const useSubsidyListDetailMain = () => {
     const input = useRecoilValue(subsidyInputState);
     const [listState, setListState] = useRecoilState(subsidyListState);
     const reset = useResetRecoilState(subsidyInputState);
     const router = useRouter();
+    const [pathname, setPathName] = useState("")
+
+    useEffect(() => {
+        setPathName(router.pathname);
+    })
 
     const methods = useForm<SubsidyInputFormType>({
         defaultValues: {
@@ -31,7 +38,7 @@ const useSubsidyListDetailMain = () => {
         const replaceData: SubsidyInputFormType = {
             ...input,
             verifyStatus: true,
-            approvalStatus: true,
+            // approvalStatus: true,
         }
 
         const updateData = listState.map((item) => {
@@ -56,7 +63,7 @@ const useSubsidyListDetailMain = () => {
         router.push('/44_subsidyList', '/44_subsidyList');
     }
 
-    return { methods, onSubmit, back }
+    return { pathname, methods, onSubmit, back }
 };
 
 export default useSubsidyListDetailMain;

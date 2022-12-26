@@ -22,7 +22,7 @@ const TaxListDetailMain = () => {
                             {(pathname == '/35_taxListDetail')
                                 ? null
                                 :
-                                <span className={"text-sm leading-relaxed text-color-grey"}>2022年12月20日 承認済</span>
+                                <span className={"text-sm leading-relaxed text-color-grey-accepted"}>2022年12月20日 承認済</span>
                             }
                         </div>
                         <Container>

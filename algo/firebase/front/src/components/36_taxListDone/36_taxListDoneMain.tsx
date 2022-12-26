@@ -2,7 +2,7 @@ import Header from '@/components/common/Header';
 import Container from '@/components/common/Container';
 import TransitionButton from '@/components/common/TransitionButton';
 import TransitionArea from '@/components/common/TransitionArea';
-import useTaxListDoneMain from './usetaxListDoneMain';
+import useTaxListDoneMain from './useTaxListDoneMain';
 
 const TaxListDoneMain = () => {
     const { title, msg, onSubmit, back } = useTaxListDoneMain()

@@ -28,7 +28,7 @@ const useSubsidyInputMain = () => {
 
         setInput(() => ({
             ...{
-                did: "",
+                did: "00001",
                 id: 0,
                 resident: data.resident,
                 account: data.account,

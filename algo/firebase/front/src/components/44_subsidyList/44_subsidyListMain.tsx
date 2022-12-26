@@ -1,7 +1,7 @@
 import Header from '@/components/common/Header';
 import SearchArea from '@/components/common/SearchArea'
 import NumberArea from '../common/NumberArea';
-import ApplicationList from '../common/ApplicationList';
+import ApplicationListItem from '../common/ApplicationListItem';
 import useSubsidyListMain from './useSubsidyListMain';
 
 const SubsidyListMain = () => {
@@ -16,7 +16,7 @@ const SubsidyListMain = () => {
                 <ul>
                     {
                         list.map((item, index) => {
-                            return (<ApplicationList subsidyInfo={item} key={index} setSubsidyInput={setSubsidyInput} />)
+                            return (<ApplicationListItem subsidyInfo={item} key={index} setSubsidyInput={setSubsidyInput} />)
                         })
                     }
                 </ul>

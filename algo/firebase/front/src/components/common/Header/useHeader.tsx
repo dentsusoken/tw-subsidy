@@ -15,7 +15,8 @@ const useHeader = () => {
         taxApprove: "納税証明書交付申請一覧",
         taxAccept: "納税証明書の受入",
         subsidyApply: "補助金申請",
-        subsidyApprove: "補助金申請一覧"
+        subsidyApprove: "補助金申請一覧",
+        VCList: "デジタル証明(VC)一覧"
     }
 
     const init = () => {
@@ -47,6 +48,25 @@ const useHeader = () => {
             case "/46_subsidyListDone":
                 setHeading(Headings.subsidyApprove);
                 setColor("bg-color-blue");
+                break;
+            case "/51_taxListAccepted":
+            case "/52_taxListRevoked":
+                switch (router.query.vc) {
+                    case "resident":
+                    case "account":
+                    case "tax":
+                        setHeading(Headings.taxApprove);
+                        break;
+                    case "subsidy":
+                        setHeading(Headings.subsidyApply);
+                        break;
+                    default:
+                }
+                setColor("bg-color-blue");
+                break;
+            case "/61_VCList":
+                setHeading(Headings.VCList);
+                setColor("bg-color-green");
                 break;
             default:
                 setHeading("不正なURL");

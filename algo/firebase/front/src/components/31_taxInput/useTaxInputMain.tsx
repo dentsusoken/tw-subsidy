@@ -29,7 +29,7 @@ const useTaxInputMain = () => {
 
         setInput(() => ({
             ...{
-                did: "",
+                did: "00001",
                 id: 0,
                 applicationYear: data.applicationYear,
                 corporationName: data.corporationName,

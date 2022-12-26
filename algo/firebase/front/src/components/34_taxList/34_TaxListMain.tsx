@@ -1,7 +1,7 @@
 import Header from '@/components/common/Header';
 import SearchArea from '@/components/common/SearchArea'
 import NumberArea from '../common/NumberArea';
-import ApplicationList from '../common/ApplicationList';
+import ApplicationListItem from '../common/ApplicationListItem';
 import useTaxListMain from './useTaxListMain';
 
 const TaxListMain = () => {
@@ -16,7 +16,7 @@ const TaxListMain = () => {
                 <ul className={""}>
                     {
                         list.map((item, index) => {
-                            return (<ApplicationList taxInfo={item} key={index} setTaxInput={setTaxInput} />)
+                            return (<ApplicationListItem taxInfo={item} key={index} setTaxInput={setTaxInput} />)
                         })
                     }
                 </ul>

@@ -1,4 +1,4 @@
-export type baseType ={
+export type baseType = {
     did: string;
     applicationDate: string;
     verifyStatus: boolean;
@@ -22,3 +22,25 @@ export type TaxInputFormType = {
     fullName: string;
     address: string;
 } & baseType;
+
+// 仮
+export type ResidentInputFormType = {
+    id: number;
+    applicationYear: string;
+    fullName: string;
+    address: string;
+} & baseType;
+
+// 仮
+export type AccountInputFormType = {
+    id: number;
+    applicationYear: string;
+    fullName: string;
+    address: string;
+} & baseType;
+
+export type VCListType = {
+    resident?: ResidentInputFormType;
+    account?: AccountInputFormType;
+    tax?: TaxInputFormType
+}
