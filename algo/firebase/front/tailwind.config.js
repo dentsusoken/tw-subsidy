@@ -5,6 +5,9 @@ module.exports = {
     './src/components/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
+    fontFamily : {
+      sans: ['"Noto Sans JP"'],
+    },
     extend: {
       colors: {
         "color-green": "#55CAC3",
