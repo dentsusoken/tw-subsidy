@@ -84,7 +84,7 @@ const MenuMain = () => {
             </li>
             <li className="pt-[26px] pr-0 pb-0 pl-[42px] relative">
               <span className="menu-step">STEP3</span>
-              <Link href="/00_menu">
+              <Link href="/31_taxInput">
                 <a onClick={handleClearState} className="menu-button">
                   納税証明書交付申請
                 </a>
@@ -93,7 +93,7 @@ const MenuMain = () => {
             </li>
             <li className="pt-[26px] pr-0 pb-0 pl-[42px] relative">
               <span className="menu-step">STEP4</span>
-              <Link href="/00_menu">
+              <Link href="/41_subsidyInput">
                 <a onClick={handleClearState} className="menu-button">
                   補助金申請
                 </a>
