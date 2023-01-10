@@ -5,13 +5,21 @@ import 'dayjs/locale/ja';
 
 import Header from '@/components/Header';
 import { AccountInputFormType } from '@/lib/types/mockApp/inputForm';
-import { accountInputState, accountListState } from '@/lib/states/mockApp';
+import { accountInputState, accountListState, accountVCRequestListState } from '@/lib/states/mockApp';
+
+import { createVerifiableMessage } from '@/lib/algosbt';
+import { holderPw } from '@/lib/algo/account/accounts';
+import holderDidAccountState from '@/lib/states/holderDidAccountState';
+import issuerDidAccountState from '@/lib/states/issuerDidAccountState';
 
 const AccountConfirmMain = () => {
   const router = useRouter();
 
   const [input, setInput] = useRecoilState(accountInputState);
-  const setList = useSetRecoilState(accountListState);
+  const setList = useSetRecoilState(accountVCRequestListState);
+
+  const [holderDidAccountGlobal] = useRecoilState(holderDidAccountState);
+  const [issuerDidAccountGlobal] = useRecoilState(issuerDidAccountState);
 
   const onSubmit = () => {
     dayjs.locale('ja');
@@ -34,7 +42,14 @@ const AccountConfirmMain = () => {
 
     setInput(() => ({ ...accountInputDate }));
 
-    setList((items) => [...items, accountInputDate]);
+    if (!!holderDidAccountGlobal && !!issuerDidAccountGlobal) {
+      setList((items) => [...items, createVerifiableMessage(
+        holderDidAccountGlobal,
+        issuerDidAccountGlobal.did,
+        accountInputDate,
+        holderPw
+      )]);
+    }
 
     router.push('/23_account-done');
   };
