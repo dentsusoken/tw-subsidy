@@ -3,7 +3,7 @@ import { useRecoilState, useRecoilValue, useResetRecoilState, useSetRecoilState 
 import { useRouter } from 'next/router';
 
 import { TaxInputFormType } from '@/lib/types/mockApp/Form';
-import { taxInputState, taxInputListState, taxVCRequestListState, taxVCListState } from '@/lib/states/mockApp';
+import { taxInputState, taxInputListState, taxVCRequestListState, taxVCListState, VCListState } from '@/lib/states/mockApp';
 import { useEffect, useState } from 'react';
 
 import { verifyVerifiableMessage, createVerifiableCredential } from '@/lib/algosbt';
@@ -18,6 +18,7 @@ const useTaxListDetailMain = () => {
     const input = useRecoilValue(taxInputState);
     const [listState, setListState] = useRecoilState(taxVCRequestListState);
     const setVCList = useSetRecoilState(taxVCListState);
+    const setIssuedVCList = useSetRecoilState(VCListState);
     const [pathname, setPathName] = useState("")
     const reset = useResetRecoilState(taxInputState);
     const router = useRouter();
@@ -66,7 +67,7 @@ const useTaxListDetailMain = () => {
                 );
                 setListState((items) => items.filter((item) => item.message.content.id != content.id));
                 setVCList((items) => [...items, vc]);
-                
+                setIssuedVCList((items) => ({ ...items, tax: { VC: vc, acceptStatus: false } }));
                 router.push({
                     pathname: '/36_taxListDone',
                     query: { proc: "approve" }

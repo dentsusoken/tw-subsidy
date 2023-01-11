@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import Header from '@/components/Header';
-import { residentVCListState, residentVCRequestListState } from '@/lib/states/mockApp';
+import { residentVCListState, residentVCRequestListState, VCListState } from '@/lib/states/mockApp';
 import { verifyVerifiableMessage, createVerifiableCredential } from '@/lib/algosbt';
 import { getAlgod } from '@/lib/algo/algod/algods';
 import chainState from '@/lib/states/chainState';
@@ -16,6 +16,7 @@ const ResidentListDetailMain = () => {
 
   const [listState, setListState] = useRecoilState(residentVCRequestListState);
   const setVCList = useSetRecoilState(residentVCListState);
+  const setIssuedVCList = useSetRecoilState(VCListState);
 
   const selectDetail = listState.find((v) => v.message.content.id === Number(router.query.id));
 
@@ -45,6 +46,7 @@ const ResidentListDetailMain = () => {
         );
         setListState((items) => items.filter((item) => item.message.content.id != content.id));
         setVCList((items) => [...items, vc]);
+        setIssuedVCList((items) => ({ ...items, resident: { VC: vc, acceptStatus: false } }));
         router.push({ pathname, query: { id: router.query.id } });
       }
     }
