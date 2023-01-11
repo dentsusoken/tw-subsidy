@@ -9,6 +9,9 @@ import { SubsidyInputFormType } from '@/lib/types/mockApp/Form';
 import { subsidyInputState } from '@/lib/states/mockApp/subsidyInputState';
 import { subsidyListState } from '@/lib/states/mockApp/subsidyListState';
 
+import { getAlgod } from '@/lib/algo/algod/algods';
+import { verifyVerifiablePresentation } from '@/lib/algosbt';
+import chainState from '@/lib/states/chainState';
 
 const useSubsidyListDetailMain = () => {
     const input = useRecoilValue(subsidyInputState);
@@ -16,6 +19,7 @@ const useSubsidyListDetailMain = () => {
     const reset = useResetRecoilState(subsidyInputState);
     const router = useRouter();
     const [pathname, setPathName] = useState("")
+    const [chain] = useRecoilState(chainState);
 
     useEffect(() => {
         setPathName(router.pathname);
@@ -33,25 +37,37 @@ const useSubsidyListDetailMain = () => {
         },
     });
 
-    const onSubmit = () => {
+    const onSubmit = async () => {
 
-        const replaceData: SubsidyInputFormType = {
-            ...input,
-            verifyStatus: true,
-            // approvalStatus: true,
+        const replaceData: SubsidyInputFormType = { ...input, }
+
+        if (!input.approvalStatus) {
+            const algod = getAlgod(chain);
+            if (input.resident && input.residentVP) {
+                replaceData.verifyStatus = await verifyVerifiablePresentation(algod, input.residentVP)
+            }
+            if (input.account && input.accountVP) {
+                replaceData.verifyStatus = await verifyVerifiablePresentation(algod, input.accountVP)
+            }
+            if (input.tax && input.taxVP) {
+                replaceData.verifyStatus = await verifyVerifiablePresentation(algod, input.taxVP)
+            }
+
+            if (replaceData.verifyStatus) {
+                replaceData.approvalStatus = true;
+            }
+
+            const updateData = listState.map((item) => {
+                if (item.id === replaceData.id) {
+                    return replaceData;
+                }
+                else {
+                    return item;
+                }
+            })
+            setListState(updateData);
+            reset();
         }
-
-        const updateData = listState.map((item) => {
-            if (item.id === replaceData.id) {
-                return replaceData;
-            }
-            else {
-                return item;
-            }
-        })
-
-        setListState(updateData);
-        reset();
 
         router.push({
             pathname: '/46_subsidyListDone',
