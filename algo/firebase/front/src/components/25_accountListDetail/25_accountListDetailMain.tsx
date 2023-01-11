@@ -91,7 +91,7 @@ const AccountListDetailMain = () => {
               却下
             </button>
             <button
-              onClick={() => onSubmit(true, '//26_account-list-done')}
+              onClick={() => onSubmit(true, '/26_account-list-done')}
               className="input-form-button-blue"
             >
               承認
