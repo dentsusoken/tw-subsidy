@@ -5,13 +5,21 @@ import 'dayjs/locale/ja';
 
 import Header from '@/components/Header';
 import { ResidentInputFormType } from '@/lib/types/mockApp/inputForm';
-import { residentInputState, residentListState } from '@/lib/states/mockApp';
+import { residentInputState, residentListState, residentVCRequestListState } from '@/lib/states/mockApp';
+
+import { createVerifiableMessage } from '@/lib/algosbt';
+import { holderPw } from '@/lib/algo/account/accounts';
+import holderDidAccountState from '@/lib/states/holderDidAccountState';
+import issuerDidAccountState from '@/lib/states/issuerDidAccountState';
 
 const ResidentConfirmMain = () => {
   const router = useRouter();
 
   const [input, setInput] = useRecoilState(residentInputState);
-  const setList = useSetRecoilState(residentListState);
+  const setList = useSetRecoilState(residentVCRequestListState);
+
+  const [holderDidAccountGlobal] = useRecoilState(holderDidAccountState);
+  const [issuerDidAccountGlobal] = useRecoilState(issuerDidAccountState);
 
   const onSubmit = () => {
     dayjs.locale('ja');
@@ -34,8 +42,14 @@ const ResidentConfirmMain = () => {
     };
 
     setInput(() => ({ ...residentInputDate }));
-
-    setList((items) => [...items, residentInputDate]);
+    if (!!holderDidAccountGlobal && !!issuerDidAccountGlobal) {
+      setList((items) => [...items, createVerifiableMessage(
+        holderDidAccountGlobal,
+        issuerDidAccountGlobal.did,
+        residentInputDate,
+        holderPw
+      )]);
+    }
 
     router.push('/13_resident-done');
   };

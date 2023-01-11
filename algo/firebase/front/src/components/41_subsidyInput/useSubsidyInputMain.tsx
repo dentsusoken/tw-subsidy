@@ -1,13 +1,15 @@
 import { useForm, FormProvider } from 'react-hook-form';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { useRouter } from 'next/router';
 
 import { SubsidyInputFormType } from '@/lib/types/mockApp/Form';
 import { subsidyInputState } from '@/lib/states/mockApp/subsidyInputState';
+import { VCListState } from '@/lib/states/mockApp';
 
 const useSubsidyInputMain = () => {
     const [input, setInput] = useRecoilState(subsidyInputState);
     const router = useRouter();
+    const VCListGlobal = useRecoilValue(VCListState);
 
     const methods = useForm<SubsidyInputFormType>({
         defaultValues: {
@@ -28,7 +30,6 @@ const useSubsidyInputMain = () => {
 
         setInput(() => ({
             ...{
-                did: "00001",
                 id: 0,
                 resident: data.resident,
                 account: data.account,
@@ -37,13 +38,16 @@ const useSubsidyInputMain = () => {
                 address: data.address,
                 verifyStatus: false,
                 approvalStatus: false,
-                applicationDate: ""
+                applicationDate: "",
+                residentVP: undefined,
+                accountVP: undefined,
+                taxVP: undefined
             },
         }))
         router.push('/42_subsidyConfirm', '/42_subsidyConfirm');
     };
 
-    return { methods, onSubmit }
+    return { methods, onSubmit, VCListGlobal }
 };
 
 export default useSubsidyInputMain;

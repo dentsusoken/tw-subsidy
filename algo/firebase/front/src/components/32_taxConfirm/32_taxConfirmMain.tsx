@@ -20,9 +20,9 @@ const TaxConfirmMain = () => {
                 <Progress status={"confirm"} />
                 <FormProvider {...methods} >
                     <Container>
-                        <InputArea<TaxInputFormType> label={"申請年度"} name={"applicationYear"} validation={{ min: 4, max: 4, pattern: /[0-9]{4}/, required: true }} isRequired={true} />
-                        <InputArea<TaxInputFormType> label={"法人名称"} name={"corporationName"} validation={{ required: true }} isRequired={true} />
-                        <InputArea<TaxInputFormType> label={"所在地"} name={"corporationAddress"} validation={{ required: true }} isRequired={true} />
+                        <InputArea<TaxInputFormType> label={"申請年度"} name={"applicationYear"} isEnabled={false} validation={{ min: 4, max: 4, pattern: /[0-9]{4}/, required: true }} isRequired={true} />
+                        <InputArea<TaxInputFormType> label={"法人名称"} name={"corporationName"} isEnabled={false} validation={{ required: true }} isRequired={true} />
+                        <InputArea<TaxInputFormType> label={"所在地"} name={"corporationAddress"} isEnabled={false} validation={{ required: true }} isRequired={true} />
                         <InputArea<TaxInputFormType> label='申請者名' name='fullName' placeholder='' isEnabled={false} />
                         <InputArea<TaxInputFormType> label='申請者住所' name="address" placeholder='' isEnabled={false} />
                         <TransitionArea>

@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
+import { useSetRecoilState } from 'recoil';
+import { VCListState } from '@/lib/states/mockApp';
 
 import Header from '@/components/Header';
 
@@ -7,25 +9,22 @@ const VCAcceptMain = () => {
   const router = useRouter();
 
   const [disabled, setDisabled] = useState(false);
+  const setVCList = useSetRecoilState(VCListState);
 
-  const buttonDisabledHandler = () => {
+  const acceptHandler = () => {
+    switch (router.query.application) {
+      case '住民票':
+        setVCList((items) => (items.resident ? { ...items, resident: { ...items.resident, acceptStatus: true } } : items));
+        break;
+      case '口座実在証明書':
+        setVCList((items) => (items.account ? { ...items, account: { ...items.account, acceptStatus: true } } : items));
+        break;
+    }
     setDisabled(!disabled);
   };
 
   const buttonClickHandler = async () => {
-    let pathname = '';
-
-    switch (router.query.application) {
-      case '住民票':
-      default:
-        pathname = '/14_resident-list';
-        break;
-      case '口座実在証明書':
-        pathname = '/24_account-list';
-        break;
-    }
-
-    router.push({ pathname });
+    router.push("/61_VCList")
   };
 
   return (
@@ -43,7 +42,7 @@ const VCAcceptMain = () => {
           </p>
           <div className="text-center">
             <button
-              onClick={buttonDisabledHandler}
+              onClick={acceptHandler}
               disabled={disabled}
               className={
                 disabled

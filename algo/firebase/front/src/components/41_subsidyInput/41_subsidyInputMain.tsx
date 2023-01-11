@@ -12,7 +12,7 @@ import { SubsidyInputFormType } from '@/lib/types/mockApp/Form';
 import useSubsidyInputMain from './useSubsidyInputMain';
 
 const SubsidyInputMain = () => {
-    const { methods, onSubmit } = useSubsidyInputMain()
+    const { methods, onSubmit, VCListGlobal } = useSubsidyInputMain()
 
     return (
         <>
@@ -25,13 +25,13 @@ const SubsidyInputMain = () => {
                             <Container title={"申請書類の選択"}>
                                 <ul className={"border-y border-color-gainsboro mt-7 ml-3"}>
                                     <li className={"py-3 pl-4 pr-6 w-78 flex"}>
-                                        <CheckBox<SubsidyInputFormType> label={"住民票"} name={"resident"} />
+                                        <CheckBox<SubsidyInputFormType> label={"住民票"} name={"resident"} isEnabled={VCListGlobal.resident ? true : false} />
                                     </li>
                                     <li className={"py-3 pl-4 pr-6 w-78 flex border-y border-color-gainsboro"}>
-                                        <CheckBox<SubsidyInputFormType> label={"口座実在証明書"} name={"account"} />
+                                        <CheckBox<SubsidyInputFormType> label={"口座実在証明書"} name={"account"} isEnabled={VCListGlobal.account ? true : false} />
                                     </li>
                                     <li className={"py-3 pl-4 pr-6 w-78 flex"}>
-                                        <CheckBox<SubsidyInputFormType> label={"納税証明書"} name={"tax"} />
+                                        <CheckBox<SubsidyInputFormType> label={"納税証明書"} name={"tax"} isEnabled={VCListGlobal.tax ? true : false} />
                                     </li>
                                 </ul>
                             </Container>

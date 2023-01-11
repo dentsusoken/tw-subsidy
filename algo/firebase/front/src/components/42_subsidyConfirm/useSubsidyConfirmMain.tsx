@@ -1,17 +1,27 @@
 import { useForm } from 'react-hook-form';
-import { useRecoilState, useSetRecoilState, useResetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState, useResetRecoilState, useRecoilValue } from 'recoil';
 import { useRouter } from 'next/router';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ja';
 
-import { SubsidyInputFormType } from '@/lib/types/mockApp/Form';
+import { SubsidyInputFormType, VPContent } from '@/lib/types/mockApp/Form';
 import { subsidyInputState } from '@/lib/states/mockApp/subsidyInputState';
 import { subsidyListState } from '@/lib/states/mockApp/subsidyListState';
+
+import { VerifiableCredential, DidAccount } from '@/lib/algosbt/types';
+import { createVerifiableMessage } from '@/lib/algosbt';
+import { VCListState } from '@/lib/states/mockApp';
+import { holderPw } from '@/lib/algo/account/accounts';
+import holderDidAccountState from '@/lib/states/holderDidAccountState';
+import verifierDidAccountState from '@/lib/states/verifierDidAccountState';
 
 const useSubsidyConfirmMain = () => {
     const [input, setInput] = useRecoilState(subsidyInputState);
     const setList = useSetRecoilState(subsidyListState);
     const reset = useResetRecoilState(subsidyInputState);
+    const VCListGlobal = useRecoilValue(VCListState);
+    const [holderDidAccountGlobal] = useRecoilState(holderDidAccountState);
+    const [verifierDidAccountGlobal] = useRecoilState(verifierDidAccountState);
     const router = useRouter();
 
     const methods = useForm<SubsidyInputFormType>({
@@ -28,22 +38,72 @@ const useSubsidyConfirmMain = () => {
         },
     });
 
-    const onSubmit = () => {
+    const createVPContent = (vc: VerifiableCredential) => {
+        const content: VPContent = {
+            credentials: [vc],
+        };
+        return content;
+    };
 
-        dayjs.locale('ja');
-        const id = dayjs().unix();
-        const now = dayjs();
-        const applicationDate = dayjs(now).format('M月D日(ddd)');
+    const createVPMessage = (
+        content: VPContent,
+        holderDidAccount: DidAccount,
+        verifierDid: string
+    ) => {
+        return createVerifiableMessage(
+            holderDidAccount,
+            verifierDid,
+            content,
+            holderPw
+        );
+    };
 
-        const subsidyInput: SubsidyInputFormType = {
-            ...input,
-            id: id,
-            applicationDate: applicationDate
+    const onSubmit = async () => {
+        if (holderDidAccountGlobal && verifierDidAccountGlobal) {
+            dayjs.locale('ja');
+            const id = dayjs().unix();
+            const now = dayjs();
+            const applicationDate = dayjs(now).format('M月D日(ddd)');
+
+            const subsidyInput: SubsidyInputFormType = {
+                ...input,
+                id: id,
+                applicationDate: applicationDate,
+            }
+
+            if (VCListGlobal.resident && input.resident) {
+                const content = createVPContent(VCListGlobal.resident.VC);
+                const vm = createVPMessage(
+                    content,
+                    holderDidAccountGlobal,
+                    verifierDidAccountGlobal.did
+                );
+
+                subsidyInput.residentVP = vm;
+            }
+            if (VCListGlobal.account && input.account) {
+                const content = createVPContent(VCListGlobal.account.VC);
+                const vm = createVPMessage(
+                    content,
+                    holderDidAccountGlobal,
+                    verifierDidAccountGlobal.did
+                );
+                subsidyInput.accountVP = vm;
+            }
+            if (VCListGlobal.tax && input.tax) {
+                const content = createVPContent(VCListGlobal.tax.VC);
+                const vm = createVPMessage(
+                    content,
+                    holderDidAccountGlobal,
+                    verifierDidAccountGlobal.did
+                );
+                subsidyInput.taxVP = vm;
+            }
+            setList((items) => [...items, subsidyInput]);
+            reset();
+
+            router.push('/43_subsidyDone', '/43_subsidyDone');
         }
-        setList((items) => [...items, subsidyInput]);
-        reset();
-
-        router.push('/43_subsidyDone', '/43_subsidyDone');
     };
 
     const back = () => {

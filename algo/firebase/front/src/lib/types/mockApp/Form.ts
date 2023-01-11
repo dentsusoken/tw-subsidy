@@ -1,5 +1,7 @@
+import { VerifiableMessage, VerifiableCredentialContent,VerifiableCredential } from '@/lib/algosbt/types';
+import { ResidentInputFormType, AccountInputFormType } from "./inputForm"
+
 export type baseType = {
-    did: string;
     applicationDate: string;
     verifyStatus: boolean;
     approvalStatus: boolean;
@@ -12,6 +14,9 @@ export type SubsidyInputFormType = {
     tax: boolean;
     fullName: string;
     address: string;
+    residentVP: VerifiableMessage<VPContent> | undefined;
+    accountVP: VerifiableMessage<VPContent> | undefined;
+    taxVP: VerifiableMessage<VPContent> | undefined;
 } & baseType;
 
 export type TaxInputFormType = {
@@ -23,24 +28,21 @@ export type TaxInputFormType = {
     address: string;
 } & baseType;
 
-// 仮
-export type ResidentInputFormType = {
-    id: number;
-    applicationYear: string;
-    fullName: string;
-    address: string;
-} & baseType;
-
-// 仮
-export type AccountInputFormType = {
-    id: number;
-    applicationYear: string;
-    fullName: string;
-    address: string;
-} & baseType;
-
 export type VCListType = {
-    resident?: ResidentInputFormType;
-    account?: AccountInputFormType;
-    tax?: TaxInputFormType
+    resident?: {
+        VC: VerifiableMessage<VerifiableCredentialContent<ResidentInputFormType>>;
+        acceptStatus: boolean;
+    };
+    account?: {
+        VC: VerifiableMessage<VerifiableCredentialContent<AccountInputFormType>>;
+        acceptStatus: boolean;
+    };
+    tax?: {
+        VC: VerifiableMessage<VerifiableCredentialContent<TaxInputFormType>>;
+        acceptStatus: boolean;
+    };
+}
+
+export type VPContent = {
+    credentials: VerifiableCredential[];
 }

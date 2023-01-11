@@ -1,18 +1,33 @@
 import { useForm } from 'react-hook-form';
-import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
 import { useRouter } from 'next/router';
 
 import { TaxInputFormType } from '@/lib/types/mockApp/Form';
-import { taxInputState } from '@/lib/states/mockApp/taxInputState';
-import { taxInputListState } from '@/lib/states/mockApp/taxInputListState';
+import { taxInputState, taxInputListState, taxVCRequestListState, taxVCListState, VCListState } from '@/lib/states/mockApp';
 import { useEffect, useState } from 'react';
+
+import { verifyVerifiableMessage, createVerifiableCredential } from '@/lib/algosbt';
+import { getAlgod } from '@/lib/algo/algod/algods';
+import chainState from '@/lib/states/chainState';
+import holderDidAccountState from '@/lib/states/holderDidAccountState';
+import issuerDidAccountState from '@/lib/states/issuerDidAccountState';
+
+import { issuerPw } from '@/lib/algo/account/accounts';
 
 const useTaxListDetailMain = () => {
     const input = useRecoilValue(taxInputState);
-    const [listState, setListState] = useRecoilState(taxInputListState);
+    const [listState, setListState] = useRecoilState(taxVCRequestListState);
+    const setVCList = useSetRecoilState(taxVCListState);
+    const setIssuedVCList = useSetRecoilState(VCListState);
     const [pathname, setPathName] = useState("")
     const reset = useResetRecoilState(taxInputState);
     const router = useRouter();
+
+    const [chainType] = useRecoilState(chainState);
+    const [holderDidAccountGlobal] = useRecoilState(holderDidAccountState);
+    const [issuerDidAccountGlobal] = useRecoilState(issuerDidAccountState);
+
+    const VCRequest = listState.find((v) => v.message.content.id === input.id);
 
     useEffect(() => {
         setPathName(router.pathname);
@@ -32,30 +47,34 @@ const useTaxListDetailMain = () => {
         },
     });
 
-    const approve = () => {
-
-        const replaceData: TaxInputFormType = {
-            ...input,
-            verifyStatus: true,
-            // approvalStatus: true,
+    const approve = async () => {
+        if (VCRequest && holderDidAccountGlobal && issuerDidAccountGlobal) {
+            const verified = verifyVerifiableMessage(VCRequest);
+            if (verified) {
+                const algod = getAlgod(chainType);
+                const content = VCRequest.message.content;
+                const vcContent = {
+                    ...content,
+                    verifyStatus: true,
+                    approvalStatus: true,
+                };
+                const vc = await createVerifiableCredential(
+                    algod,
+                    issuerDidAccountGlobal,
+                    holderDidAccountGlobal.did,
+                    vcContent,
+                    issuerPw
+                );
+                setListState((items) => items.filter((item) => item.message.content.id != content.id));
+                setVCList((items) => [...items, vc]);
+                setIssuedVCList((items) => ({ ...items, tax: { VC: vc, acceptStatus: false } }));
+                reset();
+                router.push({
+                    pathname: '/36_taxListDone',
+                    query: { proc: "approve" }
+                }, '/36_taxListDone')
+            }
         }
-
-        const updateData = listState.map((item) => {
-            if (item.id === replaceData.id) {
-                return replaceData;
-            }
-            else {
-                return item;
-            }
-        })
-
-        setListState(updateData);
-        // reset();
-
-        router.push({
-            pathname: '/36_taxListDone',
-            query: { proc: "approve" }
-        }, '/36_taxListDone')
     };
 
     const reject = () => {
@@ -77,16 +96,16 @@ const useTaxListDetailMain = () => {
             approvalStatus: false,
             verifyStatus: false
         }
-        const updateData = listState.map((item) => {
-            if (item.id === replaceData.id) {
-                return replaceData;
-            }
-            else {
-                return item;
-            }
-        })
+        // const updateData = listState.map((item) => {
+        //     if (item.message.content.id === replaceData.id) {
+        //         return replaceData;
+        //     }
+        //     else {
+        //         return item;
+        //     }
+        // })
 
-        setListState(updateData);
+        // setListState(updateData);
         reset();
 
         router.push({
