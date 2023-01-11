@@ -5,19 +5,25 @@ import { useRecoilValue } from 'recoil';
 
 import Header from '@/components/Header';
 import { AccountInputFormType } from '@/lib/types/mockApp/inputForm';
-import { accountListState } from '@/lib/states/mockApp';
+import { accountVCListState, accountVCRequestListState } from '@/lib/states/mockApp';
 
 const AccountListMain = () => {
   const router = useRouter();
 
   const [listCount, setListCount] = useState(0);
 
-  const listState: AccountInputFormType[] = useRecoilValue(accountListState);
+  const VCRequestlistState = useRecoilValue(accountVCRequestListState);
+  const VClistState = useRecoilValue(accountVCListState);
+  const [listState, setListState] = useState<AccountInputFormType[]>([]);
 
   const errorHandler = useErrorHandler();
 
   useEffect(() => {
     try {
+      const verifiedList: AccountInputFormType[] = VClistState.map((item) => item.message.content.content);
+      const requestList: AccountInputFormType[] = VCRequestlistState.map((item) => item.message.content)
+      const mergeList: AccountInputFormType[] = verifiedList.concat(requestList)
+      setListState(mergeList)
       setListCount(listState.length);
     } catch (e) {
       errorHandler(e);

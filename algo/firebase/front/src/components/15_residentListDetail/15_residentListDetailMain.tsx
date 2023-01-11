@@ -1,38 +1,53 @@
 import { useRouter } from 'next/router';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import Header from '@/components/Header';
-import { residentListState } from '@/lib/states/mockApp';
+import { residentVCListState, residentVCRequestListState } from '@/lib/states/mockApp';
+import { verifyVerifiableMessage, createVerifiableCredential } from '@/lib/algosbt';
+import { getAlgod } from '@/lib/algo/algod/algods';
+import chainState from '@/lib/states/chainState';
+import holderDidAccountState from '@/lib/states/holderDidAccountState';
+import issuerDidAccountState from '@/lib/states/issuerDidAccountState';
+
+import { issuerPw } from '@/lib/algo/account/accounts';
 
 const ResidentListDetailMain = () => {
   const router = useRouter();
 
-  const [listState, setListState] = useRecoilState(residentListState);
+  const [listState, setListState] = useRecoilState(residentVCRequestListState);
+  const setVCList = useSetRecoilState(residentVCListState);
 
-  const selectDetail = listState.find((v) => v.id === Number(router.query.id));
+  const selectDetail = listState.find((v) => v.message.content.id === Number(router.query.id));
 
-  const onSubmit = (status: boolean, pathname: string) => {
-    // 検証・承認ステータスをONにする
-    if (selectDetail) {
-      const replaceData = {
-        ...selectDetail,
-        verifyStatus: status,
-        approvalStatus: status,
-      };
+  const [chainType] = useRecoilState(chainState);
+  const [holderDidAccountGlobal] = useRecoilState(holderDidAccountState);
+  const [issuerDidAccountGlobal] = useRecoilState(issuerDidAccountState);
 
-      const updateData = [...listState];
 
-      for (let i = 0; i < listState.length; i++) {
-        if (listState[i].id === selectDetail.id) {
-          updateData.splice(i, 1, replaceData);
-          break;
-        }
+  const onSubmit = async (status: boolean, pathname: string) => {
+    if (selectDetail && holderDidAccountGlobal && issuerDidAccountGlobal) {
+      const verified = verifyVerifiableMessage(selectDetail);
+
+      if (verified) {
+        const algod = getAlgod(chainType);
+        const content = selectDetail.message.content;
+        const vcContent = {
+          ...content,
+          verifyStatus: status,
+          approvalStatus: status,
+        };
+        const vc = await createVerifiableCredential(
+          algod,
+          issuerDidAccountGlobal,
+          holderDidAccountGlobal.did,
+          vcContent,
+          issuerPw
+        );
+        setListState((items) => items.filter((item) => item.message.content.id != content.id));
+        setVCList((items) => [...items, vc]);
+        router.push({ pathname, query: { id: router.query.id } });
       }
-
-      setListState(updateData);
     }
-
-    router.push({ pathname, query: { id: router.query.id } });
   };
 
   return (
@@ -45,23 +60,23 @@ const ResidentListDetailMain = () => {
         <div className="py-0 px-[53px]">
           <div className="input-form-label">氏名</div>
           <div className="input-form-text-box-confirm">
-            {selectDetail ? selectDetail.fullName : ''}
+            {selectDetail ? selectDetail.message.content.fullName : ''}
           </div>
           <div className="input-form-label">氏名フリガナ</div>
           <div className="input-form-text-box-confirm">
-            {selectDetail ? selectDetail.fullNameFurigana : ''}
+            {selectDetail ? selectDetail.message.content.fullNameFurigana : ''}
           </div>
           <div className="input-form-label">住所</div>
           <div className="input-form-text-box-confirm">
-            {selectDetail ? selectDetail.address : ''}
+            {selectDetail ? selectDetail.message.content.address : ''}
           </div>
           <div className="input-form-label">住民となった年月</div>
           <div className="input-form-text-box-confirm">
-            {selectDetail ? selectDetail.addressRegistDate : ''}
+            {selectDetail ? selectDetail.message.content.addressRegistDate : ''}
           </div>
           <div className="input-form-label">本籍地</div>
           <div className="input-form-text-box-confirm">
-            {selectDetail ? selectDetail.permanentAddress : ''}
+            {selectDetail ? selectDetail.message.content.permanentAddress : ''}
           </div>
           <div className="pt-4 flex justify-between">
             <button

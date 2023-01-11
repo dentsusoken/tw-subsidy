@@ -1,38 +1,52 @@
 import { useRouter } from 'next/router';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import Header from '@/components/Header';
-import { accountListState } from '@/lib/states/mockApp';
+import { accountVCListState, accountVCRequestListState } from '@/lib/states/mockApp';
+import { verifyVerifiableMessage, createVerifiableCredential } from '@/lib/algosbt';
+import { getAlgod } from '@/lib/algo/algod/algods';
+import chainState from '@/lib/states/chainState';
+import holderDidAccountState from '@/lib/states/holderDidAccountState';
+import issuerDidAccountState from '@/lib/states/issuerDidAccountState';
+
+import { issuerPw } from '@/lib/algo/account/accounts';
 
 const AccountListDetailMain = () => {
   const router = useRouter();
 
-  const [listState, setListState] = useRecoilState(accountListState);
+  const [listState, setListState] = useRecoilState(accountVCRequestListState);
+  const setVCList = useSetRecoilState(accountVCListState);
 
-  const selectDetail = listState.find((v) => v.id === Number(router.query.id));
+  const selectDetail = listState.find((v) => v.message.content.id === Number(router.query.id));
 
-  const onSubmit = (status: boolean, pathname: string) => {
-    // 検証・承認ステータスをONにする
-    if (selectDetail) {
-      const replaceData = {
-        ...selectDetail,
-        verifyStatus: status,
-        approvalStatus: status,
-      };
+  const [chainType] = useRecoilState(chainState);
+  const [holderDidAccountGlobal] = useRecoilState(holderDidAccountState);
+  const [issuerDidAccountGlobal] = useRecoilState(issuerDidAccountState);
 
-      const updateData = [...listState];
+  const onSubmit = async (status: boolean, pathname: string) => {
+    if (selectDetail && holderDidAccountGlobal && issuerDidAccountGlobal) {
+      const verified = verifyVerifiableMessage(selectDetail);
 
-      for (let i = 0; i < listState.length; i++) {
-        if (listState[i].id === selectDetail.id) {
-          updateData.splice(i, 1, replaceData);
-          break;
-        }
+      if (verified) {
+        const algod = getAlgod(chainType);
+        const content = selectDetail.message.content;
+        const vcContent = {
+          ...content,
+          verifyStatus: status,
+          approvalStatus: status,
+        };
+        const vc = await createVerifiableCredential(
+          algod,
+          issuerDidAccountGlobal,
+          holderDidAccountGlobal.did,
+          vcContent,
+          issuerPw
+        );
+        setListState((items) => items.filter((item) => item.message.content.id != content.id));
+        setVCList((items) => [...items, vc]);
+        router.push({ pathname, query: { id: router.query.id } });
       }
-
-      setListState(updateData);
     }
-
-    router.push({ pathname, query: { id: router.query.id } });
   };
 
   return (
@@ -45,27 +59,27 @@ const AccountListDetailMain = () => {
         <div className="py-0 px-[53px]">
           <div className="input-form-label">銀行コード</div>
           <div className="input-form-text-box-confirm-half">
-            {selectDetail ? selectDetail.bankCode : ''}
+            {selectDetail ? selectDetail.message.content.bankCode : ''}
           </div>
           <div className="input-form-label">支店番号</div>
           <div className="input-form-text-box-confirm-half">
-            {selectDetail ? selectDetail.branchNumber : ''}
+            {selectDetail ? selectDetail.message.content.branchNumber : ''}
           </div>
           <div className="input-form-label">口座番号</div>
           <div className="input-form-text-box-confirm">
-            {selectDetail ? selectDetail.accountNumber : ''}
+            {selectDetail ? selectDetail.message.content.accountNumber : ''}
           </div>
           <div className="input-form-label">法人名称</div>
           <div className="input-form-text-box-confirm">
-            {selectDetail ? selectDetail.corporateName : ''}
+            {selectDetail ? selectDetail.message.content.corporateName : ''}
           </div>
           <div className="input-form-label">申請者名</div>
           <div className="input-form-text-box-confirm">
-            {selectDetail ? selectDetail.applicantName : ''}
+            {selectDetail ? selectDetail.message.content.applicantName : ''}
           </div>
           <div className="input-form-label">申請住所</div>
           <div className="input-form-text-box-confirm">
-            {selectDetail ? selectDetail.applicantAddress : ''}
+            {selectDetail ? selectDetail.message.content.applicantAddress : ''}
           </div>
           <div className="pt-4 flex justify-between">
             <button
