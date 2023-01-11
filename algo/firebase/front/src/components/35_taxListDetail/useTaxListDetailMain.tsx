@@ -68,6 +68,7 @@ const useTaxListDetailMain = () => {
                 setListState((items) => items.filter((item) => item.message.content.id != content.id));
                 setVCList((items) => [...items, vc]);
                 setIssuedVCList((items) => ({ ...items, tax: { VC: vc, acceptStatus: false } }));
+                reset();
                 router.push({
                     pathname: '/36_taxListDone',
                     query: { proc: "approve" }
