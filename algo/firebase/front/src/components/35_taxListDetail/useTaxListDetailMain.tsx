@@ -1,9 +1,9 @@
 import { useForm } from 'react-hook-form';
-import { useRecoilState, useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { useRouter } from 'next/router';
 
 import { TaxInputFormType } from '@/lib/types/mockApp/Form';
-import { taxInputState, taxInputListState, taxVCRequestListState, taxVCListState, VCListState } from '@/lib/states/mockApp';
+import { taxInputState, taxVCRequestListState, taxVCListState, VCListState } from '@/lib/states/mockApp';
 import { useEffect, useState } from 'react';
 
 import { verifyVerifiableMessage, createVerifiableCredential } from '@/lib/algosbt';
@@ -20,7 +20,7 @@ const useTaxListDetailMain = () => {
     const setVCList = useSetRecoilState(taxVCListState);
     const setIssuedVCList = useSetRecoilState(VCListState);
     const [pathname, setPathName] = useState("")
-    const reset = useResetRecoilState(taxInputState);
+    const [isIssuing, setIsIssuing] = useState(false)
     const router = useRouter();
 
     const [chainType] = useRecoilState(chainState);
@@ -49,6 +49,7 @@ const useTaxListDetailMain = () => {
 
     const approve = async () => {
         if (VCRequest && holderDidAccountGlobal && issuerDidAccountGlobal) {
+            setIsIssuing(true);
             const verified = verifyVerifiableMessage(VCRequest);
             if (verified) {
                 const algod = getAlgod(chainType);
@@ -68,7 +69,7 @@ const useTaxListDetailMain = () => {
                 setListState((items) => items.filter((item) => item.message.content.id != content.id));
                 setVCList((items) => [...items, vc]);
                 setIssuedVCList((items) => ({ ...items, tax: { VC: vc, acceptStatus: false } }));
-                reset();
+                setIsIssuing(false);
                 router.push({
                     pathname: '/36_taxListDone',
                     query: { proc: "approve" }
@@ -78,7 +79,7 @@ const useTaxListDetailMain = () => {
     };
 
     const reject = () => {
-        reset();
+        // reset();
 
         router.push({
             pathname: '/36_taxListDone',
@@ -91,11 +92,11 @@ const useTaxListDetailMain = () => {
     }
 
     const revoke = () => {
-        const replaceData: TaxInputFormType = {
-            ...input,
-            approvalStatus: false,
-            verifyStatus: false
-        }
+        // const replaceData: TaxInputFormType = {
+        //     ...input,
+        //     approvalStatus: false,
+        //     verifyStatus: false
+        // }
         // const updateData = listState.map((item) => {
         //     if (item.message.content.id === replaceData.id) {
         //         return replaceData;
@@ -106,7 +107,7 @@ const useTaxListDetailMain = () => {
         // })
 
         // setListState(updateData);
-        reset();
+        // reset();
 
         router.push({
             pathname: "/52_taxListRevoked",
@@ -114,7 +115,7 @@ const useTaxListDetailMain = () => {
         }, "/52_taxListRevoked");
     }
 
-    return { pathname, methods, approve, back, revoke, reject }
+    return { pathname, methods, isIssuing, approve, back, revoke, reject }
 };
 
 export default useTaxListDetailMain;

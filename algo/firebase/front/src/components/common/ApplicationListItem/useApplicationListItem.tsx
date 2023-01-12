@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 
 import { SubsidyInputFormType } from '@/lib/types/mockApp/Form';
 import { TaxInputFormType } from '@/lib/types/mockApp/Form';
-import { UrlObject } from 'url';
 
 export type useApplicationListItemParams = {
     taxInfo?: TaxInputFormType;

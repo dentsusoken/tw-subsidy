@@ -25,13 +25,13 @@ const SubsidyInputMain = () => {
                             <Container title={"申請書類の選択"}>
                                 <ul className={"border-y border-color-gainsboro mt-7 ml-3"}>
                                     <li className={"py-3 pl-4 pr-6 w-78 flex"}>
-                                        <CheckBox<SubsidyInputFormType> label={"住民票"} name={"resident"} isEnabled={VCListGlobal.resident ? true : false} />
+                                        <CheckBox<SubsidyInputFormType> label={"住民票"} name={"resident"} isEnabled={VCListGlobal.resident && VCListGlobal.resident.acceptStatus ? true : false} />
                                     </li>
                                     <li className={"py-3 pl-4 pr-6 w-78 flex border-y border-color-gainsboro"}>
-                                        <CheckBox<SubsidyInputFormType> label={"口座実在証明書"} name={"account"} isEnabled={VCListGlobal.account ? true : false} />
+                                        <CheckBox<SubsidyInputFormType> label={"口座実在証明書"} name={"account"} isEnabled={VCListGlobal.account && VCListGlobal.account.acceptStatus ? true : false} />
                                     </li>
                                     <li className={"py-3 pl-4 pr-6 w-78 flex"}>
-                                        <CheckBox<SubsidyInputFormType> label={"納税証明書"} name={"tax"} isEnabled={VCListGlobal.tax ? true : false} />
+                                        <CheckBox<SubsidyInputFormType> label={"納税証明書"} name={"tax"} isEnabled={VCListGlobal.tax && VCListGlobal.tax.acceptStatus ? true : false} />
                                     </li>
                                 </ul>
                             </Container>

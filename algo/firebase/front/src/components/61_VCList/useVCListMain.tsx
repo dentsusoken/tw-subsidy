@@ -2,7 +2,7 @@ import { useSetRecoilState, useRecoilValue } from 'recoil';
 
 import { subsidyInputState } from '@/lib/states/mockApp/subsidyInputState';
 import { VCListState } from '@/lib/states/mockApp';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { VCListType } from '@/lib/types/mockApp/Form';
 
 const useVCListMain = () => {

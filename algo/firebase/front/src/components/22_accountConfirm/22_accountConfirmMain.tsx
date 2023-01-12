@@ -5,7 +5,7 @@ import 'dayjs/locale/ja';
 
 import Header from '@/components/Header';
 import { AccountInputFormType } from '@/lib/types/mockApp/inputForm';
-import { accountInputState, accountListState, accountVCRequestListState } from '@/lib/states/mockApp';
+import { accountInputState, accountVCRequestListState } from '@/lib/states/mockApp';
 
 import { createVerifiableMessage } from '@/lib/algosbt';
 import { holderPw } from '@/lib/algo/account/accounts';

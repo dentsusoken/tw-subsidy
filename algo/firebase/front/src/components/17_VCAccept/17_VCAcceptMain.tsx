@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { VCListState } from '@/lib/states/mockApp';
 
 import Header from '@/components/Header';
@@ -9,18 +9,17 @@ const VCAcceptMain = () => {
   const router = useRouter();
 
   const [disabled, setDisabled] = useState(false);
-  const setVCList = useSetRecoilState(VCListState);
+  const [VCList, setVCList] = useRecoilState(VCListState);
+
+  useEffect(() => {
+    if (VCList.resident && VCList.resident.acceptStatus) {
+      setDisabled(true);
+    }
+  }, [disabled, VCList])
 
   const acceptHandler = () => {
-    switch (router.query.application) {
-      case '住民票':
-        setVCList((items) => (items.resident ? { ...items, resident: { ...items.resident, acceptStatus: true } } : items));
-        break;
-      case '口座実在証明書':
-        setVCList((items) => (items.account ? { ...items, account: { ...items.account, acceptStatus: true } } : items));
-        break;
-    }
     setDisabled(!disabled);
+    setVCList((items) => (items.resident ? { ...items, resident: { ...items.resident, acceptStatus: true } } : items));
   };
 
   const buttonClickHandler = async () => {
@@ -29,13 +28,13 @@ const VCAcceptMain = () => {
 
   return (
     <>
-      <Header menuType={1} menuTitle={router.query.application + 'の受入'} />
+      <Header menuType={1} menuTitle={'住民票の受入'} />
       <main className="bg-color-background">
         <div className="py-0 px-[53px]">
           <p className="pt-16 pb-10 text-center text-[14px] leading-relaxed">
             あなたが申請した、
             <br />
-            {router.query.message}申請が最終承認されました。
+            住民票申請が最終承認されました。
             <br />
             <br />
             デジタル証明書を受け入れますか？

@@ -10,6 +10,7 @@ import holderDidAccountState from '@/lib/states/holderDidAccountState';
 import issuerDidAccountState from '@/lib/states/issuerDidAccountState';
 
 import { issuerPw } from '@/lib/algo/account/accounts';
+import { useState } from 'react';
 
 const ResidentListDetailMain = () => {
   const router = useRouter();
@@ -17,6 +18,7 @@ const ResidentListDetailMain = () => {
   const [listState, setListState] = useRecoilState(residentVCRequestListState);
   const setVCList = useSetRecoilState(residentVCListState);
   const setIssuedVCList = useSetRecoilState(VCListState);
+  const [isIssuing, setIsIssuing] = useState(false)
 
   const selectDetail = listState.find((v) => v.message.content.id === Number(router.query.id));
 
@@ -27,6 +29,7 @@ const ResidentListDetailMain = () => {
 
   const onSubmit = async (status: boolean, pathname: string) => {
     if (selectDetail && holderDidAccountGlobal && issuerDidAccountGlobal) {
+      setIsIssuing(true);
       const verified = verifyVerifiableMessage(selectDetail);
 
       if (verified) {
@@ -47,6 +50,7 @@ const ResidentListDetailMain = () => {
         setListState((items) => items.filter((item) => item.message.content.id != content.id));
         setVCList((items) => [...items, vc]);
         setIssuedVCList((items) => ({ ...items, resident: { VC: vc, acceptStatus: false } }));
+        setIsIssuing(false);
         router.push({ pathname, query: { id: router.query.id } });
       }
     }
@@ -56,8 +60,14 @@ const ResidentListDetailMain = () => {
     <>
       <Header menuType={2} menuTitle={'住民票紐付申請一覧'} />
       <main className="bg-color-background">
-        <div className="pt-[31px] px-[27px] pb-[41px] text-input-form-text font-bold">
+        <div className="pt-[31px] px-[27px] pb-[34px] text-input-form-text font-bold">
           <h2>申請内容照会</h2>
+        </div>
+        <div className={"text-center h-7 relative"}>
+          {isIssuing
+            ? <span className={"absolute -translate-x-1/2 -translate-y-1/2 text-sm leading-relaxed text-yellow-500"}>VC発行中...</span>
+            : null
+          }
         </div>
         <div className="py-0 px-[53px]">
           <div className="input-form-label">氏名</div>
