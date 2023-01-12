@@ -2,16 +2,15 @@ import { useForm } from 'react-hook-form';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useResetRecoilState, useRecoilValue } from 'recoil';
 import { useRouter } from 'next/router';
-import dayjs from 'dayjs';
-import 'dayjs/locale/ja';
 
-import { SubsidyInputFormType } from '@/lib/types/mockApp/Form';
+import { SubsidyInputFormType, VPContent } from '@/lib/types/mockApp/Form';
 import { subsidyInputState } from '@/lib/states/mockApp/subsidyInputState';
 import { subsidyListState } from '@/lib/states/mockApp/subsidyListState';
 
 import { getAlgod } from '@/lib/algo/algod/algods';
 import { verifyVerifiablePresentation } from '@/lib/algosbt';
 import chainState from '@/lib/states/chainState';
+import { VerifiableMessage } from '@/lib/algosbt/types';
 
 const useSubsidyListDetailMain = () => {
     const input = useRecoilValue(subsidyInputState);
@@ -37,20 +36,30 @@ const useSubsidyListDetailMain = () => {
         },
     });
 
+    const VPVerify = async (flg: boolean, VP: VerifiableMessage<VPContent> | undefined) => {
+        const algod = getAlgod(chain);
+        let verify = false
+        if (flg && VP) {
+            verify = await verifyVerifiablePresentation(algod, VP);
+        }
+        else {
+            verify = true;
+        }
+        return verify
+    }
+
     const onSubmit = async () => {
-
-        const replaceData: SubsidyInputFormType = { ...input, }
-
         if (!input.approvalStatus) {
-            const algod = getAlgod(chain);
-            if (input.resident && input.residentVP) {
-                replaceData.verifyStatus = await verifyVerifiablePresentation(algod, input.residentVP)
-            }
-            if (input.account && input.accountVP) {
-                replaceData.verifyStatus = await verifyVerifiablePresentation(algod, input.accountVP)
-            }
-            if (input.tax && input.taxVP) {
-                replaceData.verifyStatus = await verifyVerifiablePresentation(algod, input.taxVP)
+            const replaceData: SubsidyInputFormType = { ...input, }
+            let residentVerifyStatus = false;
+            let accountVerifyStatus = false;
+            let taxVerifyStatus = false;
+            residentVerifyStatus = await VPVerify(input.resident, input.residentVP);
+            accountVerifyStatus = await VPVerify(input.account, input.accountVP);
+            taxVerifyStatus = await VPVerify(input.tax, input.taxVP);
+
+            if (residentVerifyStatus && accountVerifyStatus && taxVerifyStatus) {
+                replaceData.verifyStatus = true;
             }
 
             if (replaceData.verifyStatus) {
