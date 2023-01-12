@@ -11,6 +11,7 @@ const useHeader = () => {
     });
 
     const Headings = {
+        accountAccept: "口座実在証明書の受入",
         taxApply: "納税証明書交付申請",
         taxApprove: "納税証明書交付申請一覧",
         taxAccept: "納税証明書の受入",
@@ -21,6 +22,10 @@ const useHeader = () => {
 
     const init = () => {
         switch (router.pathname) {
+            case "/27_VCAccept":
+                setHeading(Headings.taxAccept);
+                setColor("bg-color-green");
+                break;
             case "/31_taxInput":
             case "/32_taxConfirm":
             case "/33_taxDone":

@@ -13,10 +13,7 @@ const AccountListDoneMain = () => {
   const selectDetail = listState.find((v) => v.id === Number(router.query.id));
 
   const onSubmit = () => {
-    router.push({
-      pathname: '/17_vc-accept',
-      query: { application: '口座実在証明書', message: '口座実在証明書' },
-    });
+    router.push("/27_VCAccept");
   };
 
   return (

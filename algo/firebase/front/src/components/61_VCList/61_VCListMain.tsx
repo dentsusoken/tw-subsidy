@@ -15,7 +15,7 @@ const VCListMain = () => {
                 <NumberArea listCount={listCount} resultCount={filterCount} />
                 <ul>
                     {!!VCList.resident && <VCListItem vc='住民票' accepted={VCList.resident.acceptStatus} url="17_vc-accept" />}
-                    {!!VCList.account && <VCListItem vc='口座証明書' accepted={VCList.account.acceptStatus} url="27_vc-accept" />}
+                    {!!VCList.account && <VCListItem vc='口座証明書' accepted={VCList.account.acceptStatus} url="27_VCAccept" />}
                     {!!VCList.tax && <VCListItem vc='納税証明書' accepted={VCList.tax.acceptStatus} url="37_VCAccept" />}
                 </ul>
             </main>

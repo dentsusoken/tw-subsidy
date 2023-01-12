@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/router";
 import { useRecoilState } from 'recoil';
 import { VCListState } from '@/lib/states/mockApp';
@@ -16,7 +16,7 @@ const useVCAcceptMain = () => {
 
     const accept = async () => {
         setIsEnabled(!isEnabled);
-        setVCList((items) => (items.tax ? { ...items, tax: { ...items.tax, acceptStatus: true } } : items));
+        setVCList((items) => (items.account ? { ...items, account: { ...items.account, acceptStatus: true } } : items));
     }
 
     const onSubmit = () => {
