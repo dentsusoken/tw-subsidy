@@ -2,9 +2,7 @@ import { useRouter } from 'next/router';
 import { useRecoilValue } from 'recoil';
 
 import Header from '@/components/Header';
-import { ResidentInputFormType } from '@/lib/types/mockApp/inputForm';
-import { VCListType } from '@/lib/types/mockApp/Form';
-import { residentListState, residentVCListState } from '@/lib/states/mockApp';
+import { residentVCListState } from '@/lib/states/mockApp';
 
 const ResidentListDoneMain = () => {
   const router = useRouter();

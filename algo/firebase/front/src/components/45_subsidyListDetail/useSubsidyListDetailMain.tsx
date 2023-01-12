@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { useEffect, useState } from 'react';
-import { useRecoilState, useResetRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { useRouter } from 'next/router';
 
 import { SubsidyInputFormType, VPContent } from '@/lib/types/mockApp/Form';

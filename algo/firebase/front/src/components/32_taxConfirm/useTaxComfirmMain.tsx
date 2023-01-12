@@ -1,5 +1,5 @@
 import { useForm } from 'react-hook-form';
-import { useRecoilState, useSetRecoilState, useResetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState, useResetRecoilState, useRecoilValue } from 'recoil';
 import { useRouter } from 'next/router';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ja';
@@ -16,7 +16,7 @@ import holderDidAccountState from '@/lib/states/holderDidAccountState';
 import issuerDidAccountState from '@/lib/states/issuerDidAccountState';
 
 const useTaxComfirmMain = () => {
-    const [input, setInput] = useRecoilState(taxInputState);
+    const input = useRecoilValue(taxInputState);
     const setList = useSetRecoilState(taxVCRequestListState);
     const reset = useResetRecoilState(taxInputState);
     const router = useRouter();

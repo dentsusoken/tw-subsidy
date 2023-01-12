@@ -16,7 +16,7 @@ import holderDidAccountState from '@/lib/states/holderDidAccountState';
 import verifierDidAccountState from '@/lib/states/verifierDidAccountState';
 
 const useSubsidyConfirmMain = () => {
-    const [input, setInput] = useRecoilState(subsidyInputState);
+    const input = useRecoilValue(subsidyInputState);
     const setList = useSetRecoilState(subsidyListState);
     const reset = useResetRecoilState(subsidyInputState);
     const VCListGlobal = useRecoilValue(VCListState);

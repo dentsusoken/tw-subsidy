@@ -1,9 +1,9 @@
 import { useForm } from 'react-hook-form';
-import { useRecoilState, useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { useRouter } from 'next/router';
 
 import { TaxInputFormType } from '@/lib/types/mockApp/Form';
-import { taxInputState, taxInputListState, taxVCRequestListState, taxVCListState, VCListState } from '@/lib/states/mockApp';
+import { taxInputState, taxVCRequestListState, taxVCListState, VCListState } from '@/lib/states/mockApp';
 import { useEffect, useState } from 'react';
 
 import { verifyVerifiableMessage, createVerifiableCredential } from '@/lib/algosbt';
@@ -92,11 +92,11 @@ const useTaxListDetailMain = () => {
     }
 
     const revoke = () => {
-        const replaceData: TaxInputFormType = {
-            ...input,
-            approvalStatus: false,
-            verifyStatus: false
-        }
+        // const replaceData: TaxInputFormType = {
+        //     ...input,
+        //     approvalStatus: false,
+        //     verifyStatus: false
+        // }
         // const updateData = listState.map((item) => {
         //     if (item.message.content.id === replaceData.id) {
         //         return replaceData;
