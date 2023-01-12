@@ -19,10 +19,6 @@ const TaxListDetailMain = () => {
                 <FormProvider {...methods} >
                     <Container title='申請内容照会'>
                         <div className={"text-center pt-7 relative"}>
-                            {isIssuing
-                                ? <span className={"absolute -translate-x-1/2 -translate-y-1/2 text-sm leading-relaxed text-yellow-500"}>VC発行中...</span>
-                                : null
-                            }
                             {(pathname == '/35_taxListDetail')
                                 ? null
                                 :
@@ -36,6 +32,12 @@ const TaxListDetailMain = () => {
                             <InputArea<TaxInputFormType> label='申請者名' name='fullName' placeholder='' isEnabled={false} />
                             <InputArea<TaxInputFormType> label='申請者住所' name="address" placeholder='' isEnabled={false} />
                         </Container>
+                        <div className={"relative"}>
+                            {isIssuing
+                                ? <span className={"absolute right-5 -translate-y-3 text-sm leading-relaxed text-yellow-500"}>VC発行中...</span>
+                                : null
+                            }
+                        </div>
                         <TransitionArea>
                             {(pathname == '/35_taxListDetail')
                                 ? (
