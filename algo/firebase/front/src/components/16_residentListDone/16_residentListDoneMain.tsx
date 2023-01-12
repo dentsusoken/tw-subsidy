@@ -3,14 +3,15 @@ import { useRecoilValue } from 'recoil';
 
 import Header from '@/components/Header';
 import { ResidentInputFormType } from '@/lib/types/mockApp/inputForm';
-import { residentListState } from '@/lib/states/mockApp';
+import { VCListType } from '@/lib/types/mockApp/Form';
+import { residentListState, residentVCListState } from '@/lib/states/mockApp';
 
 const ResidentListDoneMain = () => {
   const router = useRouter();
 
-  const listState: ResidentInputFormType[] = useRecoilValue(residentListState);
+  const listState = useRecoilValue(residentVCListState);
 
-  const selectDetail = listState.find((v) => v.id === Number(router.query.id));
+  const selectDetail = listState.find((v) => v.message.content.content.id === Number(router.query.id));
 
   const onSubmit = () => {
     router.push({
@@ -28,7 +29,7 @@ const ResidentListDoneMain = () => {
         </div>
         <div className="py-0 px-[53px]">
           <p className="py-16 text-center text-[14px] leading-relaxed">
-            {selectDetail ? selectDetail.fullName + ' ' : ' '}
+            {selectDetail ? selectDetail.message.content.content.fullName + ' ' : ' '}
             様の承認処理が完了しました。
           </p>
           <div className="pt-4 flex justify-between">

@@ -20,7 +20,7 @@ const useTaxListDetailMain = () => {
     const setVCList = useSetRecoilState(taxVCListState);
     const setIssuedVCList = useSetRecoilState(VCListState);
     const [pathname, setPathName] = useState("")
-    const reset = useResetRecoilState(taxInputState);
+    // const reset = useResetRecoilState(taxInputState);
     const router = useRouter();
 
     const [chainType] = useRecoilState(chainState);
@@ -68,7 +68,7 @@ const useTaxListDetailMain = () => {
                 setListState((items) => items.filter((item) => item.message.content.id != content.id));
                 setVCList((items) => [...items, vc]);
                 setIssuedVCList((items) => ({ ...items, tax: { VC: vc, acceptStatus: false } }));
-                reset();
+                // reset();
                 router.push({
                     pathname: '/36_taxListDone',
                     query: { proc: "approve" }
@@ -78,7 +78,7 @@ const useTaxListDetailMain = () => {
     };
 
     const reject = () => {
-        reset();
+        // reset();
 
         router.push({
             pathname: '/36_taxListDone',
@@ -106,7 +106,7 @@ const useTaxListDetailMain = () => {
         // })
 
         // setListState(updateData);
-        reset();
+        // reset();
 
         router.push({
             pathname: "/52_taxListRevoked",

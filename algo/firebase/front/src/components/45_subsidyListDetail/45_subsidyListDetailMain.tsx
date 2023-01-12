@@ -11,7 +11,7 @@ import { SubsidyInputFormType } from '@/lib/types/mockApp/Form';
 import useSubsidyListDetailMain from './useSubsidyListDetailMain';
 
 const SubsidyListDetailMain = () => {
-    const { pathname, methods, onSubmit, back } = useSubsidyListDetailMain()
+    const { pathname, methods, onSubmit, reject } = useSubsidyListDetailMain()
 
     return (
         <>
@@ -46,7 +46,7 @@ const SubsidyListDetailMain = () => {
                             </div>
                         </Container>
                         <TransitionArea>
-                            <TransitionButton text='戻る' type={"prev"} currentUser={"approver"} onClick={back} />
+                            <TransitionButton text='却下' type={"prev"} currentUser={"approver"} onClick={reject} />
                             <TransitionButton text='承認' type={"next"} currentUser={"approver"} onClick={onSubmit} />
                         </TransitionArea>
                     </Container>

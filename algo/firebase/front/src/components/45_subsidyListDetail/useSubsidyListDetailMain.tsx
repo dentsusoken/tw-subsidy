@@ -15,7 +15,7 @@ import { VerifiableMessage } from '@/lib/algosbt/types';
 const useSubsidyListDetailMain = () => {
     const input = useRecoilValue(subsidyInputState);
     const [listState, setListState] = useRecoilState(subsidyListState);
-    const reset = useResetRecoilState(subsidyInputState);
+    // const reset = useResetRecoilState(subsidyInputState);
     const router = useRouter();
     const [pathname, setPathName] = useState("")
     const [chain] = useRecoilState(chainState);
@@ -75,7 +75,7 @@ const useSubsidyListDetailMain = () => {
                 }
             })
             setListState(updateData);
-            reset();
+            // reset();
         }
 
         router.push({
@@ -84,11 +84,14 @@ const useSubsidyListDetailMain = () => {
         }, '/46_subsidyListDone');
     };
 
-    const back = () => {
-        router.push('/44_subsidyList', '/44_subsidyList');
-    }
+    const reject = () => {
+        router.push({
+            pathname: '/46_subsidyListDone',
+            query: { proc: "reject" }
+        }, '/46_subsidyListDone')
+    };
 
-    return { pathname, methods, onSubmit, back }
+    return { pathname, methods, onSubmit, reject }
 };
 
 export default useSubsidyListDetailMain;
