@@ -10,7 +10,7 @@ import { TaxInputFormType } from '@/lib/types/mockApp/Form';
 import useTaxListDetailMain from './useTaxListDetailMain';
 
 const TaxListDetailMain = () => {
-    const { pathname, methods, approve, back, revoke, reject } = useTaxListDetailMain();
+    const { pathname, methods, isIssuing, approve, back, revoke, reject } = useTaxListDetailMain();
 
     return (
         <>
@@ -18,11 +18,15 @@ const TaxListDetailMain = () => {
             <main>
                 <FormProvider {...methods} >
                     <Container title='申請内容照会'>
-                        <div className={"text-center pt-7"}>
+                        <div className={"text-center pt-7 relative"}>
+                            {isIssuing
+                                ? <span className={"absolute -translate-x-1/2 -translate-y-1/2 text-sm leading-relaxed text-yellow-500"}>VC発行中...</span>
+                                : null
+                            }
                             {(pathname == '/35_taxListDetail')
                                 ? null
                                 :
-                                <span className={"text-sm leading-relaxed text-color-grey-accepted"}>2022年12月20日 承認済</span>
+                                <span className={"absolute -translate-x-1/2 -translate-y-1/2 text-sm leading-relaxed text-color-grey-accepted"}>2022年12月20日 承認済</span>
                             }
                         </div>
                         <Container>

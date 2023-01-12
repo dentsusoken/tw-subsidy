@@ -20,7 +20,7 @@ const useTaxListDetailMain = () => {
     const setVCList = useSetRecoilState(taxVCListState);
     const setIssuedVCList = useSetRecoilState(VCListState);
     const [pathname, setPathName] = useState("")
-    // const reset = useResetRecoilState(taxInputState);
+    const [isIssuing, setIsIssuing] = useState(false)
     const router = useRouter();
 
     const [chainType] = useRecoilState(chainState);
@@ -49,6 +49,7 @@ const useTaxListDetailMain = () => {
 
     const approve = async () => {
         if (VCRequest && holderDidAccountGlobal && issuerDidAccountGlobal) {
+            setIsIssuing(true);
             const verified = verifyVerifiableMessage(VCRequest);
             if (verified) {
                 const algod = getAlgod(chainType);
@@ -68,7 +69,7 @@ const useTaxListDetailMain = () => {
                 setListState((items) => items.filter((item) => item.message.content.id != content.id));
                 setVCList((items) => [...items, vc]);
                 setIssuedVCList((items) => ({ ...items, tax: { VC: vc, acceptStatus: false } }));
-                // reset();
+                setIsIssuing(false);
                 router.push({
                     pathname: '/36_taxListDone',
                     query: { proc: "approve" }
@@ -114,7 +115,7 @@ const useTaxListDetailMain = () => {
         }, "/52_taxListRevoked");
     }
 
-    return { pathname, methods, approve, back, revoke, reject }
+    return { pathname, methods, isIssuing, approve, back, revoke, reject }
 };
 
 export default useTaxListDetailMain;
