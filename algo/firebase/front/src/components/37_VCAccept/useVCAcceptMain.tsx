@@ -9,7 +9,7 @@ const useVCAcceptMain = () => {
     const [VCList, setVCList] = useRecoilState(VCListState);
 
     useEffect(() => {
-        if (VCList.account && VCList.account.acceptStatus) {
+        if (VCList.tax && VCList.tax.acceptStatus) {
             setIsEnabled(false)
         }
     }, [isEnabled, VCList])
