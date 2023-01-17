@@ -11,7 +11,7 @@ import { SubsidyInputFormType } from '@/lib/types/mockApp/Form';
 import useSubsidyListDetailMain from './useSubsidyListDetailMain';
 
 const SubsidyListDetailMain = () => {
-    const { pathname, methods, onSubmit, reject } = useSubsidyListDetailMain()
+    const { methods, input, onSubmit, reject, verifyHandler } = useSubsidyListDetailMain()
 
     return (
         <>
@@ -19,7 +19,13 @@ const SubsidyListDetailMain = () => {
             <main>
                 <FormProvider {...methods} >
                     <Container title={"申請内容照会"}>
-                        <div className={"text-center pt-7"}></div>
+                        <div className={"text-center h-12"}>
+                            {
+                                input.verifyStatus
+                                    ? <p className={"text-sm pt-4"}><img src='/authenticated.svg' className={"inline -mx-2"} />検証済</p>
+                                    : <p className={"text-sm  pt-7"}><img src='/warning.svg' className={"inline"} /> 要検証</p>
+                            }
+                        </div>
                         <Container title={"申請書類の選択"}>
                             <ul className={"border-y border-color-gainsboro mt-7 ml-3"}>
                                 <li className={"py-3 pl-4 pr-6 w-78 flex"}>
@@ -41,7 +47,8 @@ const SubsidyListDetailMain = () => {
                         </Container>
                         <TransitionArea>
                             <TransitionButton text='却下' type={"prev"} currentUser={"approver"} onClick={reject} />
-                            <TransitionButton text='承認' type={"next"} currentUser={"approver"} onClick={onSubmit} />
+                            {input.verifyStatus ? null : <TransitionButton text='検証' type={"verify"} currentUser={"approver"} onClick={verifyHandler} />}
+                            <TransitionButton text='承認' type={"next"} currentUser={"approver"} onClick={onSubmit} isEnabled={input.verifyStatus} />
                         </TransitionArea>
                     </Container>
                 </FormProvider>

@@ -47,6 +47,7 @@ module.exports = {
         "color-disabled": "#F0F0F0",
         "color-warnig": "#D32929",
         "color-search": "#E6E6E6",
+        "color-verify": "#3EE76E"
       },
       width: {
         "15": "3.75rem",

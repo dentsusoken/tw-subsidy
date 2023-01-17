@@ -1,6 +1,7 @@
+import { Algodv2 } from 'algosdk';
 import { useForm } from 'react-hook-form';
-import { useEffect, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useState } from 'react';
+import { useRecoilState } from 'recoil';
 import { useRouter } from 'next/router';
 
 import { SubsidyInputFormType, VPContent } from '@/lib/types/mockApp/Form';
@@ -13,16 +14,10 @@ import chainState from '@/lib/states/chainState';
 import { VerifiableMessage } from '@/lib/algosbt/types';
 
 const useSubsidyListDetailMain = () => {
-    const input = useRecoilValue(subsidyInputState);
+    const [input, setInput] = useRecoilState(subsidyInputState);
     const [listState, setListState] = useRecoilState(subsidyListState);
-    // const reset = useResetRecoilState(subsidyInputState);
     const router = useRouter();
-    const [pathname, setPathName] = useState("")
     const [chain] = useRecoilState(chainState);
-
-    useEffect(() => {
-        setPathName(router.pathname);
-    })
 
     const methods = useForm<SubsidyInputFormType>({
         defaultValues: {
@@ -36,10 +31,9 @@ const useSubsidyListDetailMain = () => {
         },
     });
 
-    const VPVerify = async (flg: boolean, VP: VerifiableMessage<VPContent> | undefined) => {
-        const algod = getAlgod(chain);
+    const VPVerify = async (algod: Algodv2, isSubmit: boolean, VP: VerifiableMessage<VPContent> | undefined) => {
         let verify = false
-        if (flg && VP) {
+        if (isSubmit && VP) {
             verify = await verifyVerifiablePresentation(algod, VP);
         }
         else {
@@ -48,23 +42,20 @@ const useSubsidyListDetailMain = () => {
         return verify
     }
 
-    const onSubmit = async () => {
-        if (!input.approvalStatus) {
-            const replaceData: SubsidyInputFormType = { ...input, }
-            let residentVerifyStatus = false;
-            let accountVerifyStatus = false;
-            let taxVerifyStatus = false;
-            residentVerifyStatus = await VPVerify(input.resident, input.residentVP);
-            accountVerifyStatus = await VPVerify(input.account, input.accountVP);
-            taxVerifyStatus = await VPVerify(input.tax, input.taxVP);
+    const verifyHandler = async () => {
+        const algod = getAlgod(chain);
 
-            if (residentVerifyStatus && accountVerifyStatus && taxVerifyStatus) {
-                replaceData.verifyStatus = true;
-            }
+        let residentVerifyStatus = false;
+        let accountVerifyStatus = false;
+        let taxVerifyStatus = false;
 
-            if (replaceData.verifyStatus) {
-                replaceData.approvalStatus = true;
-            }
+        residentVerifyStatus = await VPVerify(algod, input.resident, input.residentVP);
+        accountVerifyStatus = await VPVerify(algod, input.account, input.accountVP);
+        taxVerifyStatus = await VPVerify(algod, input.tax, input.taxVP);
+
+        if (residentVerifyStatus && accountVerifyStatus && taxVerifyStatus) {
+            const replaceData: SubsidyInputFormType = { ...input, verifyStatus: true }
+            setInput(replaceData)
 
             const updateData = listState.map((item) => {
                 if (item.id === replaceData.id) {
@@ -75,7 +66,26 @@ const useSubsidyListDetailMain = () => {
                 }
             })
             setListState(updateData);
-            // reset();
+        }
+    }
+
+    const onSubmit = async () => {
+        if (!input.approvalStatus) {
+
+            if (input.verifyStatus) {
+                const replaceData: SubsidyInputFormType = { ...input, approvalStatus: true }
+                setInput(replaceData)
+
+                const updateData = listState.map((item) => {
+                    if (item.id === replaceData.id) {
+                        return replaceData;
+                    }
+                    else {
+                        return item;
+                    }
+                })
+                setListState(updateData);
+            }
         }
 
         router.push({
@@ -91,7 +101,7 @@ const useSubsidyListDetailMain = () => {
         }, '/46_subsidyListDone')
     };
 
-    return { pathname, methods, onSubmit, reject }
+    return { methods, input, onSubmit, reject, verifyHandler }
 };
 
 export default useSubsidyListDetailMain;
