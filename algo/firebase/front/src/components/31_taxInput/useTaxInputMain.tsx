@@ -17,9 +17,13 @@ const useTaxInputMain = () => {
 
     useEffect(() => {
         if (VCListGlobal && VCListGlobal.resident.length > 0) {
-            setResidentVC(VCListGlobal.resident[VCListGlobal.resident.length - 1].VC.message.content.content);
-            methods.setValue("fullName",VCListGlobal.resident[VCListGlobal.resident.length - 1].VC.message.content.content.fullName);
-            methods.setValue("address",VCListGlobal.resident[VCListGlobal.resident.length - 1].VC.message.content.content.address);
+            VCListGlobal.resident.map((value) => {
+                if (value.acceptStatus) {
+                    setResidentVC(VCListGlobal.resident[VCListGlobal.resident.length - 1].VC.message.content.content);
+                    methods.setValue("fullName", VCListGlobal.resident[VCListGlobal.resident.length - 1].VC.message.content.content.fullName)
+                    methods.setValue("address", VCListGlobal.resident[VCListGlobal.resident.length - 1].VC.message.content.content.address)
+                }
+            })
         }
     })
 

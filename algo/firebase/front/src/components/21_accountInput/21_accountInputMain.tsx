@@ -18,9 +18,13 @@ const AccountInputMain = () => {
 
   useEffect(() => {
     if (VCListGlobal && VCListGlobal.resident.length > 0) {
-      setResidentVC(VCListGlobal.resident[VCListGlobal.resident.length - 1].VC.message.content.content);
-      setValue("applicantName", VCListGlobal.resident[VCListGlobal.resident.length - 1].VC.message.content.content.fullName)
-      setValue("applicantAddress", VCListGlobal.resident[VCListGlobal.resident.length - 1].VC.message.content.content.address)
+      VCListGlobal.resident.map((value) => {
+        if (value.acceptStatus) {
+          setResidentVC(VCListGlobal.resident[VCListGlobal.resident.length - 1].VC.message.content.content);
+          setValue("applicantName", VCListGlobal.resident[VCListGlobal.resident.length - 1].VC.message.content.content.fullName)
+          setValue("applicantAddress", VCListGlobal.resident[VCListGlobal.resident.length - 1].VC.message.content.content.address)
+        }
+      })
     }
   })
 
