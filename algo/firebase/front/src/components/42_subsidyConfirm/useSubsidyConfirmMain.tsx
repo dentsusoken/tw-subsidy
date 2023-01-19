@@ -71,8 +71,8 @@ const useSubsidyConfirmMain = () => {
                 applicationDate: applicationDate,
             }
 
-            if (VCListGlobal.resident && input.resident) {
-                const content = createVPContent(VCListGlobal.resident.VC);
+            if (VCListGlobal.resident) {
+                const content = createVPContent(VCListGlobal.resident[parseInt(input.resident)].VC);
                 const vm = createVPMessage(
                     content,
                     holderDidAccountGlobal,
@@ -81,8 +81,8 @@ const useSubsidyConfirmMain = () => {
 
                 subsidyInput.residentVP = vm;
             }
-            if (VCListGlobal.account && input.account) {
-                const content = createVPContent(VCListGlobal.account.VC);
+            if (VCListGlobal.account) {
+                const content = createVPContent(VCListGlobal.account[parseInt(input.account)].VC);
                 const vm = createVPMessage(
                     content,
                     holderDidAccountGlobal,
@@ -90,8 +90,8 @@ const useSubsidyConfirmMain = () => {
                 );
                 subsidyInput.accountVP = vm;
             }
-            if (VCListGlobal.tax && input.tax) {
-                const content = createVPContent(VCListGlobal.tax.VC);
+            if (VCListGlobal.tax) {
+                const content = createVPContent(VCListGlobal.tax[parseInt(input.tax)].VC);
                 const vm = createVPMessage(
                     content,
                     holderDidAccountGlobal,
@@ -110,7 +110,7 @@ const useSubsidyConfirmMain = () => {
         router.push('/41_subsidyInput', '/41_subsidyInput');
     }
 
-    return { methods, onSubmit, back }
+    return { methods, input, onSubmit, back }
 };
 
 export default useSubsidyConfirmMain;

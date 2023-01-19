@@ -9,17 +9,29 @@ const VCAcceptMain = () => {
   const router = useRouter();
 
   const [disabled, setDisabled] = useState(false);
+  const [idx, setIdx] = useState(0);
   const [VCList, setVCList] = useRecoilState(VCListState);
 
   useEffect(() => {
-    if (VCList.resident && VCList.resident.acceptStatus) {
+    if (typeof router.query.idx === "string") {
+      setIdx(parseInt(router.query.idx))
+    }
+    if (!router.query.idx) {
+      setIdx(VCList.resident.length - 1)
+    }
+    
+    if (VCList.resident && VCList.resident[idx].acceptStatus) {
       setDisabled(true);
+    }
+    else {
+      setDisabled(false);
     }
   }, [disabled, VCList])
 
   const acceptHandler = () => {
     setDisabled(!disabled);
-    setVCList((items) => (items.resident ? { ...items, resident: { ...items.resident, acceptStatus: true } } : items));
+    const replaceData = VCList.resident.map((value, index) => index === idx ? { VC: value.VC, acceptStatus: true } : value)
+    setVCList((items) => (items.resident ? { ...items, resident: replaceData } : items));
   };
 
   const buttonClickHandler = async () => {

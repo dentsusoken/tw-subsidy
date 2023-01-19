@@ -49,7 +49,7 @@ const ResidentListDetailMain = () => {
         );
         setListState((items) => items.filter((item) => item.message.content.id != content.id));
         setVCList((items) => [...items, vc]);
-        setIssuedVCList((items) => ({ ...items, resident: { VC: vc, acceptStatus: false } }));
+        setIssuedVCList((items) => ({ ...items, resident: [...items.resident, { VC: vc, acceptStatus: false }] }));
         setIsIssuing(false);
         router.push({ pathname, query: { id: router.query.id } });
       }

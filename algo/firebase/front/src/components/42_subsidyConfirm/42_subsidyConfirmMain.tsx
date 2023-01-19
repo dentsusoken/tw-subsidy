@@ -7,12 +7,13 @@ import TransitionButton from '@/components/common/TransitionButton';
 import TransitionArea from '@/components/common/TransitionArea';
 import Progress from '@/components/common/Progress';
 import CheckBox from '@/components/common/CheckBox';
+import VCSelect from '../common/VCSelect';
 
 import { SubsidyInputFormType } from '@/lib/types/mockApp/Form';
 import useSubsidyConfirmMain from './useSubsidyConfirmMain';
 
 const SubsidyConfirmMain = () => {
-        const { methods, onSubmit, back } = useSubsidyConfirmMain()
+    const { methods, input, onSubmit, back } = useSubsidyConfirmMain()
 
     return (
         <>
@@ -22,15 +23,27 @@ const SubsidyConfirmMain = () => {
                 <FormProvider {...methods} >
                     <Container>
                         <Container title={"申請書類の選択"}>
-                            <ul className={"border-y border-color-gainsboro mt-7 ml-3"}>
+                            <ul className={"mt-7 ml-3"}>
                                 <li className={"py-3 pl-4 pr-6 w-78 flex"}>
-                                    <CheckBox<SubsidyInputFormType> label={"住民票"} name={"resident"} isEnabled={false} />
-                                </li>
-                                <li className={"py-3 pl-4 pr-6 w-78 flex border-y border-color-gainsboro"}>
-                                    <CheckBox<SubsidyInputFormType> label={"口座実在証明書"} name={"account"} isEnabled={false} />
+                                    <input type="text"
+                                        className={"w-[281px] h-[44px] px-2 rounded-lg text-base bg-color-disabled"}
+                                        disabled={true}
+                                        value={`住民票 - VC${parseInt(input.resident) + 1}`}
+                                    />
                                 </li>
                                 <li className={"py-3 pl-4 pr-6 w-78 flex"}>
-                                    <CheckBox<SubsidyInputFormType> label={"納税証明書"} name={"tax"} isEnabled={false} />
+                                    <input type="text"
+                                        className={"w-[281px] h-[44px] px-2 rounded-lg text-base bg-color-disabled"}
+                                        disabled={true}
+                                        value={`口座実在証明証 - VC${parseInt(input.account) + 1}`}
+                                    />
+                                </li>
+                                <li className={"py-3 pl-4 pr-6 w-78 flex"}>
+                                    <input type="text"
+                                        className={"w-[281px] h-[44px] px-2 rounded-lg text-base bg-color-disabled"}
+                                        disabled={true}
+                                        value={`納税証明書 - VC${parseInt(input.tax) + 1}`}
+                                    />
                                 </li>
                             </ul>
                         </Container>

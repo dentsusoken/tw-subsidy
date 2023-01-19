@@ -2,7 +2,7 @@ import { Path, FieldValues, useFormContext, RegisterOptions } from 'react-hook-f
 
 export type InputAreaParams<T> = {
     name: Path<T>;
-    label: string;
+    label?: string;
     validation?: RegisterOptions;
     placeholder?: string;
     isEnabled?: boolean;
