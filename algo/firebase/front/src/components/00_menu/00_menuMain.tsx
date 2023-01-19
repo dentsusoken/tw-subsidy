@@ -93,9 +93,9 @@ const MenuMain = () => {
     }))
     clearSubsidyInputState(() => ({
       id: 0,
-      resident: false,
-      account: false,
-      tax: false,
+      resident: "",
+      account: "",
+      tax: "",
       fullName: "",
       address: "",
       applicationDate: "",
