@@ -19,7 +19,7 @@ const VCAcceptMain = () => {
     if (!router.query.idx) {
       setIdx(VCList.resident.length - 1)
     }
-    
+
     if (VCList.resident && VCList.resident[idx].acceptStatus) {
       setDisabled(true);
     }
@@ -44,12 +44,22 @@ const VCAcceptMain = () => {
       <main className="bg-color-background">
         <div className="py-0 px-[53px]">
           <p className="pt-16 pb-10 text-center text-[14px] leading-relaxed">
-            あなたが申請した、
-            <br />
-            住民票申請が最終承認されました。
-            <br />
-            <br />
-            デジタル証明書を受け入れますか？
+            {disabled
+              ?
+              <>
+                <br />
+                <br />
+                <br />
+              </>
+              : <>
+                あなたが申請した、
+                <br />
+                住民票申請が最終承認されました。
+                <br />
+                <br />
+                デジタル証明書を受け入れますか？
+              </>
+            }
           </p>
           <div className="text-center">
             <button

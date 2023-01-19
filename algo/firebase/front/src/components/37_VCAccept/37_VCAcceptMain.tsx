@@ -14,12 +14,23 @@ const VCAcceptMain = () => {
             <main>
                 <Container>
                     <p className={"text-center text-sm mt-24 mx-auto w-60 leading-relaxed"}>
-                        あなたが申請した、
-                        <br />
-                        納税証明書申請が承認されました。
-                        <br />
-                        <br />
-                        デジタル証明書を受け入れますか？
+                        {
+                            isEnabled
+                                ? <>
+                                    あなたが申請した、
+                                    <br />
+                                    納税証明書申請が承認されました。
+                                    <br />
+                                    <br />
+                                    デジタル証明書を受け入れますか？
+                                </>
+                                :
+                                <>
+                                    <br />
+                                    <br />
+                                    <br />
+                                </>
+                        }
                     </p>
                 </Container>
                 <section className={"text-center"}>
