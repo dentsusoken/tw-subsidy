@@ -1,4 +1,4 @@
-import { VerifiableMessage, VerifiableCredentialContent,VerifiableCredential } from '@/lib/algosbt/types';
+import { VerifiableMessage, VerifiableCredentialContent, VerifiableCredential } from '@/lib/algosbt/types';
 import { ResidentInputFormType, AccountInputFormType } from "./inputForm"
 
 export type baseType = {
@@ -9,9 +9,9 @@ export type baseType = {
 
 export type SubsidyInputFormType = {
     id: number;
-    resident: boolean;
-    account: boolean;
-    tax: boolean;
+    resident: string;
+    account: string;
+    tax: string;
     fullName: string;
     address: string;
     residentVP: VerifiableMessage<VPContent> | undefined;
@@ -29,18 +29,18 @@ export type TaxInputFormType = {
 } & baseType;
 
 export type VCListType = {
-    resident?: {
+    resident: {
         VC: VerifiableMessage<VerifiableCredentialContent<ResidentInputFormType>>;
         acceptStatus: boolean;
-    };
-    account?: {
+    }[];
+    account: {
         VC: VerifiableMessage<VerifiableCredentialContent<AccountInputFormType>>;
         acceptStatus: boolean;
-    };
-    tax?: {
+    }[];
+    tax: {
         VC: VerifiableMessage<VerifiableCredentialContent<TaxInputFormType>>;
         acceptStatus: boolean;
-    };
+    }[];
 }
 
 export type VPContent = {

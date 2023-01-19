@@ -28,7 +28,6 @@ module.exports = {
         'color-gray-search': '#868686',
         'color-gray-count': '#E6E6E6',
         'color-white': '#FFFFFF',
-        'color-blue': '#6179B8',
         'color-line': '#D9D9D9',
         'color-menu-button': '#CFCFCF',
         'color-required': '#d32929',
@@ -38,8 +37,8 @@ module.exports = {
         'color-unapproved': '#D32929',
         'color-triangle-border-top': '#d9d9d9',
         'color-triangle-border': 'transparent',
-        "color-green": "#55CAC3",
-        "color-blue": "#6179B8",
+        "color-green": "#84A5E4",
+        "color-blue": "#6DB982",
         "color-light-grey": "#D9D9D9",
         "color-grey-accepted": "#B3B3B3",
         'color-gray-search': '#868686',
@@ -47,6 +46,7 @@ module.exports = {
         "color-disabled": "#F0F0F0",
         "color-warnig": "#D32929",
         "color-search": "#E6E6E6",
+        "color-verify": "#3EE76E"
       },
       width: {
         "15": "3.75rem",

@@ -9,15 +9,17 @@ const useVCListMain = () => {
     const setSubsidyInput = useSetRecoilState(subsidyInputState)
     const [query, setQuery] = useState("")
     const VCListGlobal = useRecoilValue(VCListState);
-    const [VCList, setVCList] = useState<VCListType>({})
+    const [VCList, setVCList] = useState<VCListType>()
     const [listCount, setListCount] = useState(0);
     const [filterCount, setfilterCount] = useState(0);
 
     useEffect(() => {
         setVCList(VCListGlobal);
-        setListCount(Object.keys(VCList).length)
-        setfilterCount(Object.keys(VCList).length)
-    }, [Object.keys(VCList).length]);
+        if (VCList) {
+            setListCount(VCList.resident.length + VCList.account.length + VCList.tax.length)
+            setfilterCount(VCList.resident.length + VCList.account.length + VCList.tax.length)
+        }
+    }, [VCList]);
 
     // const filterList = useMemo(() => {
     //     let tmp = VCList.filter(item => item.fullName.includes(query))

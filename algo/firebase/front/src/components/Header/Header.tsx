@@ -8,10 +8,13 @@ type HeaderParams = {
 const Header = ({ menuType, menuTitle }: HeaderParams) => {
   let elmHeader = (
     <header className="bg-color-gray">
-      <div className="pt-[22px] pr-[23px] pb-[23px] pl-[27px] flex justify-between items-center">
+      <div className="pt-[13px] pr-[23px] pb-[13px] pl-[27px] flex justify-between items-center">
         <h1 className="font-sans text-header-title text-color-white font-bold">
           {menuTitle}
         </h1>
+        <Link href="/61_VCList">
+          <a className={"w-[78px] h-[37px] py-2 text-center bg-white text-menu-button-text font-bold rounded-lg"}>VC一覧</a> 
+        </Link>
       </div>
     </header>
   );
@@ -21,7 +24,7 @@ const Header = ({ menuType, menuTitle }: HeaderParams) => {
     case 2:
       elmHeader = (
         <header
-          className={menuType === 1 ? 'bg-color-key' : 'bg-color-blue sticky'}
+          className={menuType === 1 ? 'bg-color-green' : 'bg-color-blue sticky'}
         >
           <div className="pt-[17px] pr-[23px] pb-[18px] pl-[27px] flex justify-between items-center">
             <h1 className="font-sans text-header-title text-color-white font-bold">

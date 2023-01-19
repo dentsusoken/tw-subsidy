@@ -14,9 +14,13 @@ const VCListMain = () => {
                 <SearchArea value={query} onChange={(e) => setQuery(e.currentTarget.value)} />
                 <NumberArea listCount={listCount} resultCount={filterCount} />
                 <ul>
-                    {!!VCList.resident && <VCListItem vc='住民票' accepted={VCList.resident.acceptStatus} url="17_vc-accept" />}
-                    {!!VCList.account && <VCListItem vc='口座証明書' accepted={VCList.account.acceptStatus} url="27_VCAccept" />}
-                    {!!VCList.tax && <VCListItem vc='納税証明書' accepted={VCList.tax.acceptStatus} url="37_VCAccept" />}
+                    {VCList &&
+                        <>
+                        {VCList.resident.map((value, index) => (<VCListItem key={index} vc={`住民票 - VC${index + 1}`} accepted={value.acceptStatus} url={{pathname:"17_vc-accept",query:{idx:index}}} />))}
+                        {VCList.account.map((value, index) => (<VCListItem key={index} vc={`口座証明書 - VC${index + 1}`} accepted={value.acceptStatus} url={{pathname:"27_VCAccept",query:{idx:index}}} />))}
+                        {VCList.tax.map((value, index) => (<VCListItem key={index} vc={`納税証明書 - VC${index + 1}`} accepted={value.acceptStatus} url={{pathname:"37_VCAccept",query:{idx:index}}} />))}
+                        </>
+                    }
                 </ul>
             </main>
         </>

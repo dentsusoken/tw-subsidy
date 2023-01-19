@@ -11,13 +11,18 @@ import { TaxInputFormType } from '@/lib/types/mockApp/Form';
 import useTaxInputMain from './useTaxInputMain';
 
 const TaxInputMain = () => {
-    const { methods, onSubmit } = useTaxInputMain()
+    const { methods, residentVC, onSubmit } = useTaxInputMain()
 
     return (
         <>
             <Header />
             <main>
                 <Progress status={"input"} />
+                {
+                    !residentVC
+                        ? <div className={"relative w-full text-center"}><span className={"absolute w-full left-0 -top-1 text-sm text-color-warnig"}>住民票紐付申請を実施してください。</span></div>
+                        : null
+                }
                 <FormProvider {...methods} >
                     <form onSubmit={methods.handleSubmit(onSubmit)}>
                         <Container>

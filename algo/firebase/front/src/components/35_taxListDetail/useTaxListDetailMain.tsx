@@ -68,7 +68,7 @@ const useTaxListDetailMain = () => {
                 );
                 setListState((items) => items.filter((item) => item.message.content.id != content.id));
                 setVCList((items) => [...items, vc]);
-                setIssuedVCList((items) => ({ ...items, tax: { VC: vc, acceptStatus: false } }));
+                setIssuedVCList((items) => ({ ...items, tax: [...items.tax, { VC: vc, acceptStatus: false }] }));
                 setIsIssuing(false);
                 router.push({
                     pathname: '/36_taxListDone',

@@ -118,7 +118,11 @@ const MenuMain = () => {
     clearTaxVCListState(() => []);
     clearTaxVCRequestListState(() => []);
     clearSubsidyListState(() => []);
-    clearVCListState(() => ({}));
+    clearVCListState(() => ({
+      resident: [],
+      account: [],
+      tax: []
+    }));
     showClearSuccessMsg();
   };
 
