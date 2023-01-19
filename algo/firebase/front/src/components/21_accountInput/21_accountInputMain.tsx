@@ -1,19 +1,33 @@
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import InputArea from '@/components/common/InputArea';
 
 import Header from '@/components/Header';
-import { AccountInputFormType } from '@/lib/types/mockApp/inputForm';
-import { accountInputState } from '@/lib/states/mockApp';
+import { AccountInputFormType, ResidentInputFormType } from '@/lib/types/mockApp/inputForm';
+import { accountInputState, VCListState } from '@/lib/states/mockApp';
+import { useEffect, useState } from 'react';
 
 const AccountInputMain = () => {
   const router = useRouter();
 
   const [input, setInput] = useRecoilState(accountInputState);
 
+  const VCListGlobal = useRecoilValue(VCListState);
+  const [residentVC, setResidentVC] = useState<ResidentInputFormType>();
+
+  useEffect(() => {
+    if (VCListGlobal && VCListGlobal.resident.length > 0) {
+      setResidentVC(VCListGlobal.resident[VCListGlobal.resident.length - 1].VC.message.content.content);
+      setValue("applicantName", VCListGlobal.resident[VCListGlobal.resident.length - 1].VC.message.content.content.fullName)
+      setValue("applicantAddress", VCListGlobal.resident[VCListGlobal.resident.length - 1].VC.message.content.content.address)
+    }
+  })
+
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<AccountInputFormType>({
     defaultValues: {
@@ -21,8 +35,8 @@ const AccountInputMain = () => {
       branchNumber: input.branchNumber,
       accountNumber: input.accountNumber,
       corporateName: input.corporateName,
-      applicantName: input.applicantName,
-      applicantAddress: input.applicantAddress,
+      applicantName: residentVC?.fullName,
+      applicantAddress: residentVC?.address,
     },
   });
 
@@ -53,6 +67,11 @@ const AccountInputMain = () => {
             <li>完了</li>
           </ul>
         </div>
+        {
+          !residentVC
+            ? <div className={"relative w-full text-center"}><span className={"absolute w-full left-0 -top-8 text-sm text-color-warnig"}>住民票紐付申請を実施してください。</span></div>
+            : null
+        }
         <div className="py-0 px-[53px]">
           <form onSubmit={onSubmit}>
             <div className="input-form-label">
@@ -140,38 +159,21 @@ const AccountInputMain = () => {
             />
             <div className="input-form-label">
               申請者名
-              <span className="input-form-label-required">（必須）</span>
-              <span className="text-error-message text-color-required">
-                {errors.applicantName && '・' + errors.applicantName.message}
-              </span>
             </div>
             <input
               type="text"
-              className="input-form-text-box"
-              {...register('applicantName', {
-                required: {
-                  value: true,
-                  message: '入力必須項目です',
-                },
-              })}
+              className="input-form-text-box-confirm"
+              {...register('applicantName')}
+              disabled={true}
             />
             <div className="input-form-label">
               申請住所
-              <span className="input-form-label-required">（必須）</span>
-              <span className="text-error-message text-color-required">
-                {errors.applicantAddress &&
-                  '・' + errors.applicantAddress.message}
-              </span>
             </div>
             <input
               type="text"
-              className="input-form-text-box"
-              {...register('applicantAddress', {
-                required: {
-                  value: true,
-                  message: '入力必須項目です',
-                },
-              })}
+              className="input-form-text-box-confirm"
+              {...register('applicantAddress')}
+              disabled={true}
             />
             <div className="pt-4 text-right">
               <button type="submit" className="input-form-button-green">
