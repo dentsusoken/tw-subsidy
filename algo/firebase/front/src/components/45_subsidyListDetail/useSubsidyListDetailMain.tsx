@@ -31,9 +31,9 @@ const useSubsidyListDetailMain = () => {
         },
     });
 
-    const VPVerify = async (algod: Algodv2, isSubmit: boolean, VP: VerifiableMessage<VPContent> | undefined) => {
+    const VPVerify = async (algod: Algodv2, VP: VerifiableMessage<VPContent> | undefined) => {
         let verify = false
-        if (isSubmit && VP) {
+        if (VP) {
             verify = await verifyVerifiablePresentation(algod, VP);
         }
         else {
@@ -49,9 +49,9 @@ const useSubsidyListDetailMain = () => {
         let accountVerifyStatus = false;
         let taxVerifyStatus = false;
 
-        residentVerifyStatus = await VPVerify(algod, input.resident, input.residentVP);
-        accountVerifyStatus = await VPVerify(algod, input.account, input.accountVP);
-        taxVerifyStatus = await VPVerify(algod, input.tax, input.taxVP);
+        residentVerifyStatus = await VPVerify(algod, input.residentVP);
+        accountVerifyStatus = await VPVerify(algod, input.accountVP);
+        taxVerifyStatus = await VPVerify(algod, input.taxVP);
 
         if (residentVerifyStatus && accountVerifyStatus && taxVerifyStatus) {
             const replaceData: SubsidyInputFormType = { ...input, verifyStatus: true }
