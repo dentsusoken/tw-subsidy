@@ -24,7 +24,7 @@ const Header = ({ menuType, menuTitle }: HeaderParams) => {
     case 2:
       elmHeader = (
         <header
-          className={menuType === 1 ? 'bg-color-key' : 'bg-color-blue sticky'}
+          className={menuType === 1 ? 'bg-color-green' : 'bg-color-blue sticky'}
         >
           <div className="pt-[17px] pr-[23px] pb-[18px] pl-[27px] flex justify-between items-center">
             <h1 className="font-sans text-header-title text-color-white font-bold">

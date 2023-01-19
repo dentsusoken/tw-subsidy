@@ -36,7 +36,7 @@
   @apply inline-block text-center py-4 px-7 rounded-lg border border-solid border-color-gray text-button-text font-bold font-sans;
 }
 .input-form-button-green {
-  @apply inline-block text-center py-4 px-7 rounded-lg border border-solid border-color-key bg-color-key text-color-white text-button-text font-bold font-sans;
+  @apply inline-block text-center py-4 px-7 rounded-lg border border-solid border-color-green bg-color-green text-color-white text-button-text font-bold font-sans;
 }
 .input-form-button-gray {
   @apply inline-block text-center py-4 px-7 rounded-lg border border-solid border-color-menu-button bg-color-menu-button text-color-white text-button-text font-bold font-sans;
@@ -57,7 +57,7 @@
   @apply inline-block text-center py-3 px-2 rounded-lg border border-solid border-color-gray text-button-done-text font-bold font-sans;
 }
 .input-form-button-green-done {
-  @apply inline-block text-center py-3 px-2 rounded-lg border border-solid border-color-key bg-color-key text-color-white text-button-done-text font-bold font-sans;
+  @apply inline-block text-center py-3 px-2 rounded-lg border border-solid border-color-green bg-color-green text-color-white text-button-done-text font-bold font-sans;
 }
 .input-form-button-gray-done {
   @apply inline-block text-center py-3 px-2 rounded-lg border border-solid border-color-menu-button bg-color-menu-button text-color-white text-button-text font-bold font-sans;
@@ -105,11 +105,11 @@ ul.step-list li::after {
   z-index: 1;
 }
 ul.step-list li.active {
-  color: #55cac3;
+  color: #84A5E4;
 }
 ul.step-list li.active::after {
-  border-color: #55cac3;
-  background-color: #55cac3;
+  border-color: #84A5E4;
+  background-color: #84A5E4;
 }
 ul.step-list li.active + li::after,
 ul.step-list li.active + li + li::after {
