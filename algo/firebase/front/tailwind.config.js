@@ -46,7 +46,10 @@ module.exports = {
         "color-disabled": "#F0F0F0",
         "color-warnig": "#D32929",
         "color-search": "#E6E6E6",
-        "color-verify": "#3EE76E"
+        "color-verify": "#3EE76E",
+        "applier-accent": "#5E8AE0",
+        "issuer-accent": "#46B164",
+        "subsidy-accent": "#F0B621",
       },
       width: {
         "15": "3.75rem",

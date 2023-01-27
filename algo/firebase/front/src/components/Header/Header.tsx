@@ -12,9 +12,6 @@ const Header = ({ menuType, menuTitle }: HeaderParams) => {
         <h1 className="font-sans text-header-title text-color-white font-bold">
           {menuTitle}
         </h1>
-        <Link href="/61_VCList">
-          <a className={"w-[78px] h-[37px] py-2 text-center bg-white text-menu-button-text font-bold rounded-lg"}>VC一覧</a> 
-        </Link>
       </div>
     </header>
   );
