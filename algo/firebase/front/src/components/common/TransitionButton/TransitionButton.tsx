@@ -24,7 +24,7 @@ const TransitionButton = ({ text, type, currentUser, isEnabled = true,  onClick,
                             ? "text-white ml-auto mt-auto bg-color-warnig"
                             : ((type == "verify")
                                 ? "bg-color-verify text-white ml-auto mt-auto"
-                                : "bg-white text-black border border-color-grey "))
+                                : "bg-white text-black border border-color-gray "))
                 )
             }>
             {text}

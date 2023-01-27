@@ -8,9 +8,9 @@ const useSelectActorButton = (target: string) => {
     }
 
     enum colors {
-        "applier" = "bg-applier-accent",
-        "issuer" = "bg-issuer-accent",
-        "subsidy" = "bg-subsidy-accent"
+        "applier" = "bg-color-applier-main",
+        "issuer" = "bg-color-issuer-main",
+        "subsidy" = "bg-color-subsidy-main"
     }
 
     const getUrl = () => {

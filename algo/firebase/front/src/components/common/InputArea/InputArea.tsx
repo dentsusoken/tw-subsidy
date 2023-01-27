@@ -16,7 +16,7 @@ const InputArea = <T extends FieldValues>({ name, label, validation = undefined,
         <div className={"mb-5 w-70 mx-auto"}>
             <label htmlFor="name" className={"block text-sm pb-4 text-left"}>{label} {isRequired ? <span className={"text-color-warnig"}>（必須）</span> : null}</label>
             <input type="text" id='name' placeholder={placeholder} disabled={!isEnabled}
-                className={"w-full h-10 rounded-md p-2 text-base " + (isEnabled ? "bg-white border border-color-grey" : "bg-color-disabled")}
+                className={"w-full h-10 rounded-md p-2 text-base " + (isEnabled ? "bg-white border border-color-gray" : "bg-color-disabled")}
                 {...typeof validation === "undefined"
                     ? { ...register(name) }
                     : { ...register(name, validation) }} />
