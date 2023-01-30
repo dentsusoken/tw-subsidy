@@ -1,9 +1,9 @@
-import Container from "../common/Container";
-import Header from "../common/Header";
-import ListConfirmLink from "../common/ListConfirmLink";
-import PageTitle from "../common/PageTitle";
-import StepLink from "../common/StepLink";
-import Arrow from "../common/Arrow";
+import Container from "../../common/Container";
+import Header from "../../common/Header";
+import ConfirmLink from "../../common/ListConfirmLink";
+import PageTitle from "../../common/PageTitle";
+import StepLink from "../../common/StepLink";
+import Arrow from "../../common/Arrow";
 
 const ApplierMenuMain = () => {
     return (
@@ -13,8 +13,8 @@ const ApplierMenuMain = () => {
                 <Container>
                     <PageTitle />
                     <div className="flex gap-[19px] w-fit mx-auto mt-16">
-                        <ListConfirmLink actor="applier" type="application" />
-                        <ListConfirmLink actor="applier" type="VC" />
+                        <ConfirmLink actor="applier" type="application" />
+                        <ConfirmLink actor="applier" type="VC" />
                     </div>
                 </Container>
                 <Container>

@@ -10,6 +10,10 @@ const useHeader = () => {
     enum Headings {
         mainMenu = "DEMO MENU",
         applierMenu = "申請者",
+        residentMenu = "区役所",
+        accountMenu = "銀行",
+        taxMenu = "税務署",
+        subsidyMenu = "申請先",
         accountAccept = "口座実在証明書の受入",
         taxApply = "納税証明書交付申請",
         taxApprove = "納税証明書交付申請一覧",
@@ -39,6 +43,12 @@ const useHeader = () => {
             case "/43_subsidyDone":
             case "/61_VCList":
                 return colors.applier;
+            case "/012_residentMenu":
+            case "/013_accountMenu":
+            case "/014_taxMenu":
+                return colors.issuer;
+            case "/015_subsidyMenu":
+                return colors.subsidy;
             case "/27_VCAccept":
                 return "bg-color-green";
             case "/34_taxList":
@@ -65,6 +75,14 @@ const useHeader = () => {
                 return Headings.mainMenu;
             case "/011_applierMenu":
                 return Headings.applierMenu;
+            case "/012_residentMenu":
+                return Headings.residentMenu;
+            case "/013_accountMenu":
+                return Headings.accountMenu;
+            case "/014_taxMenu":
+                return Headings.taxMenu;
+            case "/015_subsidyMenu":
+                return Headings.subsidyMenu;
             case "/27_VCAccept":
                 return Headings.taxAccept;
             case "/31_taxInput":

@@ -1,10 +1,10 @@
 const useSelectActorButton = (target: string) => {
     enum urls {
         "applier" = "/011_applierMenu",
-        "resident" = "/",
-        "account" = "/",
-        "tax" = "/",
-        "subsidy" = "/"
+        "resident" = "/012_residentMenu",
+        "account" = "/013_accountMenu",
+        "tax" = "/014_taxMenu",
+        "subsidy" = "/015_subsidyMenu"
     }
 
     enum colors {

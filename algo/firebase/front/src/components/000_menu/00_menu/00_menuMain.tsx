@@ -21,7 +21,7 @@ import holderDidAccountState from '@/lib/states/holderDidAccountState';
 import issuerDidAccountState from '@/lib/states/issuerDidAccountState';
 import verifierDidAccountState from '@/lib/states/verifierDidAccountState';
 import { useEffect, useState } from 'react';
-import SelectActorButton from '../common/SelectActorButton';
+import SelectActorButton from '../../common/SelectActorButton';
 
 
 

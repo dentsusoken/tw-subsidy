@@ -1,3 +1,3 @@
-import ListConfirmLink from "./ListConfirmLink";
+import ConfirmLink from "./ConfirmLink";
 
-export default ListConfirmLink;
+export default ConfirmLink;

@@ -1,16 +1,16 @@
 import Link from "next/link";
-import useListConfirmLink from "./useListConfirmLink";
+import useConfirmLink from "./useConfirmLink";
 
 export type ListConfirmLinkParam = {
-    actor: "applier" | "issuer" | "subsidy";
+    actor: "applier" | "resident" | "account" | "tax" | "subsidy";
     type: "application" | "VC"
 }
 
-const ListConfirmLink = ({ actor, type }: ListConfirmLinkParam) => {
-    const { getUrl } = useListConfirmLink(actor, type)
+const ConfirmLink = ({ actor, type }: ListConfirmLinkParam) => {
+    const { getUrl, getColor } = useConfirmLink(actor, type)
     return (
         <Link href={getUrl()}>
-            <a className="flex flex-col justify-center items-center gap-[6px] bg-color-applier-shadow w-[139px] h-[89px] rounded-lg">
+            <a className={"flex flex-col justify-center items-center gap-[6px] " + (actor === "applier" ? "w-[139px]" : "w-[246px]") + " h-[89px] rounded-lg " + getColor()}>
                 <img src={
                     type === "application"
                         ? "/application-icon.svg"
@@ -22,11 +22,11 @@ const ListConfirmLink = ({ actor, type }: ListConfirmLinkParam) => {
                 {
                     type === "application"
                         ? <span className="mt-[6px] text-center text-[15px] leading-[15px] font-bold">申請一覧</span>
-                        : <span className="text-center text-[12px] font-bold">デジタル証明書<br />(VC)一覧</span>
+                        : <span className={"text-center " + (actor === "applier" ? "text-[12px] " : "text-[15px] ") + "font-bold"}>デジタル証明書{(actor === "applier" ? <br /> : null)}(VC)一覧</span>
                 }
             </a>
         </Link>
     )
 };
 
-export default ListConfirmLink;
+export default ConfirmLink;
