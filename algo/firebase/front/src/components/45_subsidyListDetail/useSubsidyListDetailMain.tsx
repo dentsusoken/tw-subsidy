@@ -1,6 +1,5 @@
 import { Algodv2 } from 'algosdk';
 import { useForm } from 'react-hook-form';
-import { useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { useRouter } from 'next/router';
 

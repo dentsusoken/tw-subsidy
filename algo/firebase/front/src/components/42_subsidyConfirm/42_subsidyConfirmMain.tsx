@@ -6,8 +6,6 @@ import InputArea from '@/components/common/InputArea';
 import TransitionButton from '@/components/common/TransitionButton';
 import TransitionArea from '@/components/common/TransitionArea';
 import Progress from '@/components/common/Progress';
-import CheckBox from '@/components/common/CheckBox';
-import VCSelect from '../common/VCSelect';
 
 import { SubsidyInputFormType } from '@/lib/types/mockApp/Form';
 import useSubsidyConfirmMain from './useSubsidyConfirmMain';

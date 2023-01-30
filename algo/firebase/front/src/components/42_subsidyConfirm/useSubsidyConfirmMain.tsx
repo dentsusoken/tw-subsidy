@@ -63,7 +63,7 @@ const useSubsidyConfirmMain = () => {
             dayjs.locale('ja');
             const id = dayjs().unix();
             const now = dayjs();
-            const applicationDate = dayjs(now).format('M月D日(ddd)');
+            const applicationDate = dayjs(now).format('YYYY-MM-DD');
 
             const subsidyInput: SubsidyInputFormType = {
                 ...input,

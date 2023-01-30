@@ -1,5 +1,7 @@
 import { useRouter } from 'next/router';
 import { useRecoilState, useSetRecoilState } from 'recoil';
+import dayjs from 'dayjs';
+import 'dayjs/locale/ja';
 
 import Header from '@/components/Header';
 import { residentVCListState, residentVCRequestListState, VCListState } from '@/lib/states/mockApp';
@@ -34,11 +36,14 @@ const ResidentListDetailMain = () => {
 
       if (verified) {
         const algod = getAlgod(chainType);
+        dayjs.locale('ja');
+        const now = dayjs();
         const content = selectDetail.message.content;
         const vcContent = {
           ...content,
           verifyStatus: status,
           approvalStatus: status,
+          issueDate: dayjs(now).format('YYYY-MM-DD HH:mm:ss')
         };
         const vc = await createVerifiableCredential(
           algod,

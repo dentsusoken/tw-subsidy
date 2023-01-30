@@ -1,6 +1,8 @@
 import { useForm } from 'react-hook-form';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { useRouter } from 'next/router';
+import dayjs from 'dayjs';
+import 'dayjs/locale/ja';
 
 import { TaxInputFormType } from '@/lib/types/mockApp/Form';
 import { taxInputState, taxVCRequestListState, taxVCListState, VCListState } from '@/lib/states/mockApp';
@@ -53,11 +55,14 @@ const useTaxListDetailMain = () => {
             const verified = verifyVerifiableMessage(VCRequest);
             if (verified) {
                 const algod = getAlgod(chainType);
+                dayjs.locale('ja');
+                const now = dayjs();
                 const content = VCRequest.message.content;
                 const vcContent = {
                     ...content,
                     verifyStatus: true,
                     approvalStatus: true,
+                    issueDate: dayjs(now).format('YYYY-MM-DD HH:mm:ss')
                 };
                 const vc = await createVerifiableCredential(
                     algod,

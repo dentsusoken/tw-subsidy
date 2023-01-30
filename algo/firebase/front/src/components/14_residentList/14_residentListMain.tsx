@@ -6,6 +6,8 @@ import { useRecoilValue } from 'recoil';
 import Header from '@/components/Header';
 import { ResidentInputFormType } from '@/lib/types/mockApp/inputForm';
 import { residentVCListState, residentVCRequestListState } from '@/lib/states/mockApp';
+import dayjs from 'dayjs';
+import 'dayjs/locale/ja';
 
 const ResidentListMain = () => {
   const router = useRouter();
@@ -25,6 +27,7 @@ const ResidentListMain = () => {
       const mergeList: ResidentInputFormType[] = verifiedList.concat(requestList)
       setListState(mergeList)
       setListCount(listState.length);
+      dayjs.locale("ja")
     } catch (e) {
       errorHandler(e);
     }
@@ -56,7 +59,7 @@ const ResidentListMain = () => {
             {listForSort.map((items: ResidentInputFormType) => {
               return (
                 <tr key={items.id}>
-                  <td>{items.applicationDate}</td>
+                  <td>{dayjs(items.applicationDate).format("M月D日(ddd)")}</td>
                   <td>{items.fullName}</td>
                   <td>
                     {items.verifyStatus && (

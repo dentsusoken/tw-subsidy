@@ -20,7 +20,9 @@ const useHeader = () => {
         taxAccept = "納税証明書の受入",
         subsidyApply = "補助金申請",
         subsidyApprove = "補助金申請一覧",
-        VCList = "デジタル証明(VC)一覧"
+        VCList = "デジタル証明(VC)一覧",
+        VCInquiry = "デジタル証明書(VC)内容照会"
+        
     }
 
     enum colors {
@@ -42,6 +44,7 @@ const useHeader = () => {
             case "/42_subsidyConfirm":
             case "/43_subsidyDone":
             case "/61_VCList":
+            case "/62_VCInquiry":
                 return colors.applier;
             case "/012_residentMenu":
             case "/013_accountMenu":
@@ -117,7 +120,9 @@ const useHeader = () => {
                 break;
             case "/61_VCList":
                 return Headings.VCList;
-            default:
+            case "/62_VCInquiry":
+                return Headings.VCInquiry;
+                default:
                 return "不正なURL";
         }
     }

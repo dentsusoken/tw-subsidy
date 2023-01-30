@@ -1,7 +1,6 @@
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import InputArea from '@/components/common/InputArea';
 
 import Header from '@/components/Header';
 import { AccountInputFormType, ResidentInputFormType } from '@/lib/types/mockApp/inputForm';

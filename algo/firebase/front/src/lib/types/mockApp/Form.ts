@@ -3,6 +3,7 @@ import { ResidentInputFormType, AccountInputFormType } from "./inputForm"
 
 export type baseType = {
     applicationDate: string;
+    issueDate?: string;
     verifyStatus: boolean;
     approvalStatus: boolean;
 }
@@ -31,14 +32,17 @@ export type TaxInputFormType = {
 export type VCListType = {
     resident: {
         VC: VerifiableMessage<VerifiableCredentialContent<ResidentInputFormType>>;
+        acceptDate?: string;
         acceptStatus: boolean;
     }[];
     account: {
         VC: VerifiableMessage<VerifiableCredentialContent<AccountInputFormType>>;
+        acceptDate?: string;
         acceptStatus: boolean;
     }[];
     tax: {
         VC: VerifiableMessage<VerifiableCredentialContent<TaxInputFormType>>;
+        acceptDate?: string;
         acceptStatus: boolean;
     }[];
 }

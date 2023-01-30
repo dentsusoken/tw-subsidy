@@ -6,6 +6,8 @@ import { useRecoilValue } from 'recoil';
 import Header from '@/components/Header';
 import { AccountInputFormType } from '@/lib/types/mockApp/inputForm';
 import { accountVCListState, accountVCRequestListState } from '@/lib/states/mockApp';
+import dayjs from 'dayjs';
+import 'dayjs/locale/ja';
 
 const AccountListMain = () => {
   const router = useRouter();
@@ -56,7 +58,7 @@ const AccountListMain = () => {
             {listForSort.map((items: AccountInputFormType) => {
               return (
                 <tr key={items.id}>
-                  <td>{items.applicationDate}</td>
+                  <td>{dayjs(items.applicationDate).format("M月D日(ddd)")}</td>
                   <td>{items.applicantName}</td>
                   <td>
                     {items.verifyStatus && (

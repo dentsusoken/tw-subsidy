@@ -24,7 +24,6 @@ module.exports = {
         'color-key': '#55CAC3',
         'color-background': '#FFFFFF',
         'color-gray': '#B3B3B3',
-        'color-gray': '#B3B3B3',
         'color-gray-search': '#868686',
         'color-gray-count': '#E6E6E6',
         'color-white': '#FFFFFF',
@@ -54,6 +53,8 @@ module.exports = {
         "color-issuer-shadow": "rgba(70, 177, 100, 0.5)",
         "color-subsidy-main": "rgba(240, 182, 33, 1)",
         "color-subsidy-shadow": "rgba(240, 182, 33, 0.5)",
+        "color-vcheader": "#EBEAEA",
+        "color-vc-apply": "#5E8AE0"
       },
       width: {
         "15": "3.75rem",

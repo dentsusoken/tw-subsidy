@@ -66,6 +66,7 @@ const MenuMain = () => {
       addressRegistMonth: '',
       permanentAddress: '',
       applicationDate: undefined,
+      issueDate: undefined,
       verifyStatus: undefined,
       approvalStatus: undefined
     }))
@@ -78,6 +79,7 @@ const MenuMain = () => {
       applicantName: '',
       applicantAddress: '',
       applicationDate: undefined,
+      issueDate: undefined,
       verifyStatus: undefined,
       approvalStatus: undefined,
     }))
@@ -89,6 +91,7 @@ const MenuMain = () => {
       fullName: "",
       address: "",
       applicationDate: "",
+      issueDate: "",
       verifyStatus: false,
       approvalStatus: false,
     }))
@@ -100,6 +103,7 @@ const MenuMain = () => {
       fullName: "",
       address: "",
       applicationDate: "",
+      issueDate: "",
       verifyStatus: false,
       approvalStatus: false,
       residentVP: undefined,

@@ -11,12 +11,11 @@ export type CheckBoxParams<T> = {
         acceptStatus: boolean;
     }[]
     validation?: RegisterOptions;
-    isEnabled?: boolean;
     currentVal?: string;
 }
 
 
-const VCSelect = <T extends FieldValues>({ name, label, items, validation = undefined, isEnabled = true, currentVal }: CheckBoxParams<T>) => {
+const VCSelect = <T extends FieldValues>({ name, label, items, validation = undefined, currentVal }: CheckBoxParams<T>) => {
     const { register } = useFormContext();
     const [select, SetSelect] = useState("")
 

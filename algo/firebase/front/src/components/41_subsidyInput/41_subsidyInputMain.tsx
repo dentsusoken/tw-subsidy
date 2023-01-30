@@ -12,7 +12,7 @@ import { SubsidyInputFormType } from '@/lib/types/mockApp/Form';
 import useSubsidyInputMain from './useSubsidyInputMain';
 
 const SubsidyInputMain = () => {
-    const { methods, input, residentVC, onSubmit, VCListSelect } = useSubsidyInputMain()
+    const { methods, input, onSubmit, VCListSelect } = useSubsidyInputMain()
 
     return (
         <>
