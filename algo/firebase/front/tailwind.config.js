@@ -29,6 +29,7 @@ module.exports = {
         'color-gray-count': '#E6E6E6',
         'color-white': '#FFFFFF',
         'color-line': '#D9D9D9',
+        'color-line-shadow': "rgba(217, 217, 217, 0.4)",
         'color-menu-button': '#CFCFCF',
         'color-required': '#d32929',
         'color-input-text-line': '#b3b3b3',

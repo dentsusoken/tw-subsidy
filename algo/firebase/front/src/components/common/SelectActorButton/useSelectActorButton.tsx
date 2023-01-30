@@ -1,6 +1,6 @@
 const useSelectActorButton = (target: string) => {
     enum urls {
-        "applier" = "/",
+        "applier" = "/011_applierMenu",
         "resident" = "/",
         "account" = "/",
         "tax" = "/",
