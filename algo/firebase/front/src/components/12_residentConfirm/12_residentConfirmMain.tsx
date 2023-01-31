@@ -3,7 +3,7 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ja';
 
-import Header from '@/components/Header';
+import Header from '../common/Header';
 import { ResidentInputFormType } from '@/lib/types/mockApp/inputForm';
 import { residentInputState, residentVCRequestListState } from '@/lib/states/mockApp';
 
@@ -57,7 +57,7 @@ const ResidentConfirmMain = () => {
 
   return (
     <>
-      <Header menuType={1} menuTitle={'住民票紐付申請'} />
+      <Header />
       <main className="bg-color-background">
         <div className="step">
           <ul className="step-list">

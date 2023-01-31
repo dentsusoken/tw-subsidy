@@ -3,7 +3,7 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ja';
 
-import Header from '@/components/Header';
+import Header from '../common/Header';
 import { residentVCListState, residentVCRequestListState, VCListState } from '@/lib/states/mockApp';
 import { verifyVerifiableMessage, createVerifiableCredential } from '@/lib/algosbt';
 import { getAlgod } from '@/lib/algo/algod/algods';
@@ -63,7 +63,7 @@ const ResidentListDetailMain = () => {
 
   return (
     <>
-      <Header menuType={2} menuTitle={'住民票紐付申請一覧'} />
+      <Header />
       <main className="bg-color-background">
         <div className="pt-[31px] px-[27px] pb-[41px] text-input-form-text font-bold">
           <h2>申請内容照会</h2>

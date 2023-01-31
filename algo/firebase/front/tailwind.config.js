@@ -30,6 +30,7 @@ module.exports = {
         'color-line': '#D9D9D9',
         'color-line-shadow': "rgba(217, 217, 217, 0.4)",
         'color-menu-button': '#CFCFCF',
+        'color-menu-button-text': '#7F7F7F',
         'color-required': '#d32929',
         'color-input-text-line': '#b3b3b3',
         'color-confirm': '#f0f0f0',

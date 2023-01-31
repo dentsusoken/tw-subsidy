@@ -3,7 +3,7 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ja';
 
-import Header from '@/components/Header';
+import Header from '../common/Header';
 import { AccountInputFormType } from '@/lib/types/mockApp/inputForm';
 import { accountInputState, accountVCRequestListState } from '@/lib/states/mockApp';
 
@@ -56,7 +56,7 @@ const AccountConfirmMain = () => {
 
   return (
     <>
-      <Header menuType={1} menuTitle={'口座実在証明書申請'} />
+      <Header />
       <main className="bg-color-background">
         <div className="step">
           <ul className="step-list">

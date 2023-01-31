@@ -1,13 +1,13 @@
 import { useRouter } from 'next/router';
 
-import Header from '@/components/Header';
+import Header from '../common/Header';
 
 const AccountDoneMain = () => {
   const router = useRouter();
 
   return (
     <>
-      <Header menuType={1} menuTitle={'口座実在証明書申請'} />
+      <Header />
       <main className="bg-color-background">
         <div className="step">
           <ul className="step-list">

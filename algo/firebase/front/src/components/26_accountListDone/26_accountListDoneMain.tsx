@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { useRecoilValue } from 'recoil';
 
-import Header from '@/components/Header';
+import Header from '../common/Header';
 import { accountVCListState } from '@/lib/states/mockApp';
 
 const AccountListDoneMain = () => {
@@ -17,7 +17,7 @@ const AccountListDoneMain = () => {
 
   return (
     <>
-      <Header menuType={2} menuTitle={'口座実在証明書申請一覧'} />
+      <Header />
       <main className="bg-color-background">
         <div className="pt-[31px] px-[27px] pb-[41px] text-input-form-text font-bold">
           <h2>処理完了</h2>

@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { useRecoilValue } from 'recoil';
 
-import Header from '@/components/Header';
+import Header from '../common/Header';
 import { residentVCListState } from '@/lib/states/mockApp';
 
 const ResidentListDoneMain = () => {
@@ -20,7 +20,7 @@ const ResidentListDoneMain = () => {
 
   return (
     <>
-      <Header menuType={2} menuTitle={'住民票紐付申請一覧'} />
+      <Header />
       <main className="bg-color-background">
         <div className="pt-[31px] px-[27px] pb-[41px] text-input-form-text font-bold">
           <h2>処理完了</h2>

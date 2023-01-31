@@ -1,75 +1,57 @@
-const useConfirmLink = (actor: string, type: string) => {
-    enum applierUrls {
-        application = "/00_menu",
-        VC = "/61_VCList",
-    }
-    enum residentUrls {
-        application = "/14_resident-list",
-        VC = "/81_VCList",
-    }
-    enum accountUrls {
-        application = "/24_account-list",
-        VC = "/91_VCList",
-    }
-    enum taxUrls {
-        application = "/34_taxList",
-        VC = "/101_VCList",
-    }
-    enum subsidyUrls {
-        application = "/44_subsidyList",
-        VC = "/61_VCList",  //不要？
-    }
+import { urls } from "@/lib/types/mockApp";
 
-    enum colors {
-        applier = "bg-color-applier-shadow",
-        issuer = "bg-color-issuer-shadow",
-        subsidy = "bg-color-subsidy-shadow",
-    }
+const useConfirmLink = (actor: string, type: string) => {
+
+    const colors = {
+        applier: "bg-color-applier-shadow",
+        issuer: "bg-color-issuer-shadow",
+        subsidy: "bg-color-subsidy-shadow",
+    } as const;
 
     const getUrl = () => {
         switch (actor) {
             case "applier":
                 switch (type) {
                     case "application":
-                        return applierUrls.application;
+                        return urls.mainMenu;
                     case "VC":
-                        return applierUrls.VC;
+                        return urls.VCList;
                     default:
                         return "";
                 }
-                case "resident":
+            case "resident":
                 switch (type) {
                     case "application":
-                        return residentUrls.application;
+                        return urls.residentList;
                     case "VC":
-                        return residentUrls.VC;
+                        return urls.mainMenu;
                     default:
                         return "";
                 }
-                case "account":
+            case "account":
                 switch (type) {
                     case "application":
-                        return accountUrls.application;
+                        return urls.accountList;
                     case "VC":
-                        return accountUrls.VC;
+                        return urls.mainMenu;
                     default:
                         return "";
                 }
-                case "tax":
+            case "tax":
                 switch (type) {
                     case "application":
-                        return taxUrls.application;
+                        return urls.taxList;
                     case "VC":
-                        return taxUrls.VC;
+                        return urls.mainMenu;
                     default:
                         return "";
                 }
-                case "subsidy":
+            case "subsidy":
                 switch (type) {
                     case "application":
-                        return subsidyUrls.application;
+                        return urls.subsidyList
                     case "VC":
-                        return subsidyUrls.VC;
+                        return urls.mainMenu;
                     default:
                         return "";
                 }
@@ -78,7 +60,7 @@ const useConfirmLink = (actor: string, type: string) => {
         }
     }
 
-    const getColor = () => {
+    const getBgColor = () => {
         switch (actor) {
             case "applier":
                 return colors.applier;
@@ -93,7 +75,7 @@ const useConfirmLink = (actor: string, type: string) => {
         }
     }
 
-    return { getUrl, getColor }
+    return { getUrl, getBgColor }
 };
 
 export default useConfirmLink;

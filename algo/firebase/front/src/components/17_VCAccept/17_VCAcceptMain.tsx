@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { useRecoilState } from 'recoil';
 import { VCListState } from '@/lib/states/mockApp';
 
-import Header from '@/components/Header';
+import Header from '../common/Header';
 
 const VCAcceptMain = () => {
   const router = useRouter();
@@ -40,7 +40,7 @@ const VCAcceptMain = () => {
 
   return (
     <>
-      <Header menuType={1} menuTitle={'住民票の受入'} />
+      <Header />
       <main className="bg-color-background">
         <div className="py-0 px-[53px]">
           <p className="pt-16 pb-10 text-center text-[14px] leading-relaxed">

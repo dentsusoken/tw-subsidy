@@ -3,7 +3,7 @@ import { useErrorHandler } from 'react-error-boundary';
 import { useRouter } from 'next/router';
 import { useRecoilValue } from 'recoil';
 
-import Header from '@/components/Header';
+import Header from '../common/Header';
 import { ResidentInputFormType } from '@/lib/types/mockApp/inputForm';
 import { residentVCListState, residentVCRequestListState } from '@/lib/states/mockApp';
 import dayjs from 'dayjs';
@@ -39,7 +39,7 @@ const ResidentListMain = () => {
 
   return (
     <>
-      <Header menuType={2} menuTitle={'住民票紐付申請一覧'} />
+      <Header />
       <main className="bg-color-background">
         <div className="main-search">
           <svg className="fill-none w-5 h-6" viewBox="0 0 19 20">

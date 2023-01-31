@@ -1,30 +1,33 @@
-const useSelectActorButton = (target: string) => {
-    enum urls {
-        "applier" = "/011_applierMenu",
-        "resident" = "/012_residentMenu",
-        "account" = "/013_accountMenu",
-        "tax" = "/014_taxMenu",
-        "subsidy" = "/015_subsidyMenu"
-    }
+import { urls, icons } from "@/lib/types/mockApp";
 
-    enum colors {
-        "applier" = "bg-color-applier-main",
-        "issuer" = "bg-color-issuer-main",
-        "subsidy" = "bg-color-subsidy-main"
-    }
+const useSelectActorButton = (target: string) => {
+
+    const colors = {
+        applier: "bg-color-applier-main",
+        issuer: "bg-color-issuer-main",
+        subsidy: "bg-color-subsidy-main"
+    } as const;
+
+    const msg = {
+        applierMenu: "申請者メニュー",
+        residentMenu: "区役所メニュー",
+        accountMenu: "銀行メニュー",
+        taxMenu: "税務署メニュー",
+        subsidyMenu: "申請先メニュー",
+    } as const;
 
     const getUrl = () => {
         switch (target) {
             case "applier":
-                return urls.applier
+                return urls.applierMenu;
             case "resident":
-                return urls.resident
+                return urls.residentMenu;
             case "account":
-                return urls.account
+                return urls.accountMenu;
             case "tax":
-                return urls.tax
+                return urls.taxMenu;
             case "subsidy":
-                return urls.subsidy
+                return urls.subsidyMenu;
             default:
                 return ""
         }
@@ -45,8 +48,42 @@ const useSelectActorButton = (target: string) => {
         }
     }
 
+    const getIcons = () => {
+        switch (target) {
+            case "applier":
+                return icons.applier;
+            case "resident":
+                return icons.resident;
+            case "account":
+                return icons.account;
+            case "tax":
+                return icons.tax;
+            case "subsidy":
+                return icons.subsidy;
+            default:
+                return ""
+        }
+    }
 
-    return { getUrl, getBgColor }
+    const getLabel = () => {
+        switch (target) {
+            case "applier":
+                return msg.applierMenu;
+            case "resident":
+                return msg.residentMenu;
+            case "account":
+                return msg.accountMenu;
+            case "tax":
+                return msg.taxMenu;
+            case "subsidy":
+                return msg.subsidyMenu;
+            default:
+                return ""
+        }
+    }
+
+
+    return { getUrl, getBgColor, getIcons, getLabel }
 };
 
 export default useSelectActorButton;

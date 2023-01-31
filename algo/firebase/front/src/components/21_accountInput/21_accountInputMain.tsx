@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { useRecoilState, useRecoilValue } from 'recoil';
 
-import Header from '@/components/Header';
+import Header from '../common/Header';
 import { AccountInputFormType, ResidentInputFormType } from '@/lib/types/mockApp/inputForm';
 import { accountInputState, VCListState } from '@/lib/states/mockApp';
 import { useEffect, useState } from 'react';
@@ -61,7 +61,7 @@ const AccountInputMain = () => {
 
   return (
     <>
-      <Header menuType={1} menuTitle={'口座実在証明申請'} />
+      <Header />
       <main className="bg-color-background">
         <div className="step">
           <ul className="step-list">

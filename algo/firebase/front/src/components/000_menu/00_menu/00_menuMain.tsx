@@ -142,16 +142,16 @@ const MenuMain = () => {
 
   return (
     <>
-      <Header/>
+      <Header />
       <main className="bg-color-background">
         <section className={"flex flex-col gap-6 w-fit mx-auto mt-11"}>
-          <SelectActorButton label='申請者メニュー' icon='/applier-icon.svg' target="applier" />
+          <SelectActorButton target="applier" />
           <div className={"flex flex-col gap-3"}>
-            <SelectActorButton label='区役所メニュー' icon='/resident-icon.svg' target="resident" />
-            <SelectActorButton label='銀行メニュー' icon='/account-icon.svg' target="account" />
-            <SelectActorButton label='税務署メニュー' icon='/tax-icon.svg' target="tax" />
+            <SelectActorButton target="resident" />
+            <SelectActorButton target="account" />
+            <SelectActorButton target="tax" />
           </div>
-          <SelectActorButton label='申請先メニュー' icon='/subsidy-icon.svg' target="subsidy" />
+          <SelectActorButton target="subsidy" />
         </section>
       </main>
     </>
