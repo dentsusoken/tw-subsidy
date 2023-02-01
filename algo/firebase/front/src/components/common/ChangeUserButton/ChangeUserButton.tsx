@@ -8,12 +8,7 @@ export type ChangeUserButtonParams = {
 
 const ChangeUserButton = ({ text, currentUser, onClick }: ChangeUserButtonParams) => {
     return (
-        <button onClick={onClick} className={
-            "block w-40 h-12 py-3 rounded-md text-base font-bold text-white mx-auto " +
-            ((currentUser == "applicant")
-                ? "bg-color-blue"
-                : "bg-color-green ")
-        }>
+        <button onClick={onClick} className={"block w-40 h-12 py-3 text-base font-bold mx-auto border border-color-gray rounded-md"}>
             {text}
         </button>
     )
