@@ -13,9 +13,9 @@ const Progress = ({ status }: ProgressParams) => {
             </div>
             <div className={"flex justify-center items-center"}>
                 <div className={"w-4 h-4 rounded-full block " + ((status == "input") ? "bg-color-green" : (status == "confirm") ? "bg-color-gray" : "bg-color-gray")}></div>
-                <hr className={"block w-28 border-dotted"} />
+                <hr className={`block w-28 ${(status == "input") ?"border-dotted": "border"} border-color-gray`} />
                 <div className={"w-4 h-4 rounded-full block " + ((status == "input") ? "bg-white border border-color-light-gray" : (status == "confirm") ? "bg-color-green" : "bg-color-gray")}></div>
-                <hr className={"block w-28 border-dotted"} />
+                <hr className={`block w-28 ${(status == "input" || status == "confirm") ?"border-dotted": "border"} border-color-gray`} />
                 <div className={"w-4 h-4 rounded-full block " + ((status == "input") ? "bg-white border border-color-light-gray" : (status == "confirm") ? "bg-white border border-color-light-gray" : "bg-color-green")}></div>
             </div>
         </section>

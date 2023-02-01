@@ -9,8 +9,8 @@ const TaxMenuMain = () => {
             <main>
                 <Container>
                     <div className="flex flex-col gap-[19px] w-fit mx-auto mt-16">
-                        <ConfirmLink actor="resident" type="application" />
-                        <ConfirmLink actor="resident" type="VC" />
+                        <ConfirmLink actor="tax" type="application" />
+                        <ConfirmLink actor="tax" type="VC" />
                     </div>
                 </Container>
             </main>
