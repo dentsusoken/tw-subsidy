@@ -17,7 +17,7 @@ const Header = () => {
                     {icon && <img src={icon} alt="アイコン" className={"pr-2"} />}
                     <h1 className={"text-white text-lg font-bold"}>{heading}</h1>
                     {url && <Link href={url}>
-                        <a className={"w-[62px] h-[34px] bg-white ml-auto leading-[34px] text-center text-color-menu-button-text uppercase border border-color-menu-button rounded-lg"} >
+                        <a className={"w-[62px] h-[34px] bg-white ml-auto text-[15px] font-bold leading-[34px] text-center text-color-menu-button-text uppercase border border-color-menu-button rounded-lg"} >
                             {label}
                         </a>
                     </Link>}
