@@ -7,6 +7,7 @@ import Header from '../common/Header';
 import { ResidentInputFormType } from '@/lib/types/mockApp/inputForm';
 import { years, months } from '@/lib/types/mockApp/setDate';
 import { residentInputState } from '@/lib/states/mockApp';
+import Progress from '../common/Progress';
 
 const ResidentInputMain = () => {
   const router = useRouter();
@@ -70,14 +71,8 @@ const ResidentInputMain = () => {
     <>
       <Header />
       <main className="bg-color-background">
-        <div className="step">
-          <ul className="step-list">
-            <li className="active">入力</li>
-            <li>確認</li>
-            <li>完了</li>
-          </ul>
-        </div>
-        <div className="py-0 px-[53px]">
+        <Progress status='input'/>
+        <div className="mt-[9px] py-0 px-[53px]">
           <form onSubmit={onSubmit}>
             <div className="input-form-label">
               氏名<span className="input-form-label-required">（必須）</span>

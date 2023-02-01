@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 
 import Header from '../common/Header';
+import Progress from '../common/Progress';
 
 const ResidentDoneMain = () => {
   const router = useRouter();
@@ -9,14 +10,8 @@ const ResidentDoneMain = () => {
     <>
       <Header />
       <main className="bg-color-background">
-        <div className="step">
-          <ul className="step-list">
-            <li>入力</li>
-            <li>確認</li>
-            <li className="active">完了</li>
-          </ul>
-        </div>
-        <div className="py-0 px-[53px]">
+        <Progress status='done'/>
+        <div className="mt-[9px] py-0 px-[53px]">
           <p className="py-16 text-center text-[14px] leading-relaxed">
             住民票紐付申請が完了しました。
             <br />

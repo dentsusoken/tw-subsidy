@@ -11,6 +11,7 @@ import { createVerifiableMessage } from '@/lib/algosbt';
 import { holderPw } from '@/lib/algo/account/accounts';
 import holderDidAccountState from '@/lib/states/holderDidAccountState';
 import issuerDidAccountState from '@/lib/states/issuerDidAccountState';
+import Progress from '../common/Progress';
 
 const ResidentConfirmMain = () => {
   const router = useRouter();
@@ -59,14 +60,8 @@ const ResidentConfirmMain = () => {
     <>
       <Header />
       <main className="bg-color-background">
-        <div className="step">
-          <ul className="step-list">
-            <li>入力</li>
-            <li className="active">確認</li>
-            <li>完了</li>
-          </ul>
-        </div>
-        <div className="py-0 px-[53px]">
+        <Progress status='confirm'/>
+        <div className="mt-[9px] py-0 px-[53px]">
           <div className="input-form-label">氏名</div>
           <input
             type="text"

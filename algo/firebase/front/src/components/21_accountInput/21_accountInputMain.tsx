@@ -6,6 +6,7 @@ import Header from '../common/Header';
 import { AccountInputFormType, ResidentInputFormType } from '@/lib/types/mockApp/inputForm';
 import { accountInputState, VCListState } from '@/lib/states/mockApp';
 import { useEffect, useState } from 'react';
+import Progress from '../common/Progress';
 
 const AccountInputMain = () => {
   const router = useRouter();
@@ -63,19 +64,13 @@ const AccountInputMain = () => {
     <>
       <Header />
       <main className="bg-color-background">
-        <div className="step">
-          <ul className="step-list">
-            <li className="active">入力</li>
-            <li>確認</li>
-            <li>完了</li>
-          </ul>
-        </div>
+        <Progress status='input'/>
         {
           !residentVC
             ? <div className={"relative w-full text-center"}><span className={"absolute w-full left-0 -top-8 text-sm text-color-warnig"}>住民票紐付申請を実施してください。</span></div>
             : null
         }
-        <div className="py-0 px-[53px]">
+        <div className="mt-[9px] py-0 px-[53px]">
           <form onSubmit={onSubmit}>
             <div className="input-form-label">
               銀行コード
