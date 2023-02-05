@@ -26,21 +26,21 @@ const SubsidyConfirmMain = () => {
                                     <input type="text"
                                         className={"w-[281px] h-[44px] px-2 rounded-lg text-base bg-color-disabled"}
                                         disabled={true}
-                                        value={`住民票 - VC${parseInt(input.resident) + 1}`}
+                                        value={`住民票 - VC${input.resident ? parseInt(input.resident) + 1 : 0}`}
                                     />
                                 </li>
                                 <li className={"py-3 pl-4 pr-6 w-78 flex"}>
                                     <input type="text"
                                         className={"w-[281px] h-[44px] px-2 rounded-lg text-base bg-color-disabled"}
                                         disabled={true}
-                                        value={`口座実在証明証 - VC${parseInt(input.account) + 1}`}
+                                        value={`口座実在証明証 - VC${input.account ? parseInt(input.account) + 1 : 0}`}
                                     />
                                 </li>
                                 <li className={"py-3 pl-4 pr-6 w-78 flex"}>
                                     <input type="text"
                                         className={"w-[281px] h-[44px] px-2 rounded-lg text-base bg-color-disabled"}
                                         disabled={true}
-                                        value={`納税証明書 - VC${parseInt(input.tax) + 1}`}
+                                        value={`納税証明書 - VC${input.tax ? parseInt(input.tax) + 1 : 0}`}
                                     />
                                 </li>
                             </ul>
