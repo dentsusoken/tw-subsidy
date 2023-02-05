@@ -4,7 +4,7 @@ export type ProgressParams = {
 
 const Progress = ({ status }: ProgressParams) => {
     return (
-        <section className={"w-72 h-20 mx-auto pt-6 pb-7"}>
+        <section className={"w-72 h-20 mx-auto pb-7"}>
 
             <div className={"flex justify-start px-1"}>
                 <span className={"text-[11px] font-bold block " + ((status == "input") ? "text-color-green" : (status == "confirm") ? "text-color-gray" : "text-color-gray")}>入力</span>

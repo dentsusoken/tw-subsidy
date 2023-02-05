@@ -13,7 +13,7 @@ const useConfirmLink = (actor: string, type: string) => {
             case "applier":
                 switch (type) {
                     case "application":
-                        return urls.mainMenu;
+                        return urls.applicationList;
                     case "VC":
                         return urls.VCList;
                     default:

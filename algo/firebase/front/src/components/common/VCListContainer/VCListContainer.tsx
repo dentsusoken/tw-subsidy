@@ -5,7 +5,6 @@ import useVCListContainer from './useVCListContainer';
 export type VCListItems = {
     id: number;
     issueDate: string | undefined;
-    acceptStatus: boolean;
 }[]
 
 export type VCListContainerTypes = {
@@ -29,7 +28,6 @@ const VCListContainer = ({ type, items }: VCListContainerTypes) => {
                                 <span className={"w-7 text-color-gray"}>{index + 1}.</span>
                                 <span className={"w-14 text-xs text-color-gray mr-3"}>{dayjs(item.issueDate).format("YY/MM/DD")}</span>
                                 <span className={"w-35 ml-auto text-xs font-bold"}>{type} - VC{items.length - index}</span>
-                                <span className={"w-10 ml-auto mr-2 text-xs " + (item.acceptStatus ? "text-color-gray" : "text-color-warnig")}>{item.acceptStatus ? "受入済" : "未受入"}</span>
                                 <button className={"w-16 h-7 ml-auto border rounded-lg"} onClick={() => onInquiry(type, item.id, items.length - index)}>照会</button>
                             </li>
                         ))

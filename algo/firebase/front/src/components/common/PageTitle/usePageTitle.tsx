@@ -27,6 +27,7 @@ const usePageTitle = () => {
         accountMenu: "銀行メニュー",
         taxMenu: "税務署メニュー",
         subsidyMenu: "申請先メニュー",
+        applicationList: "申請一覧",
     } as const;
 
     const getTitle = () => {
@@ -78,6 +79,8 @@ const usePageTitle = () => {
             case urls.taxListDone:
             case urls.subsidyListDone:
                 return title.issueDone;
+            case urls.applicationList:
+                return title.applicationList
         }
     }
 

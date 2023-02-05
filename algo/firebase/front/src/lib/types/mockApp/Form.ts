@@ -8,6 +8,26 @@ export type baseType = {
     approvalStatus: boolean;
 }
 
+export type TaxInputFormType = {
+    id: number;
+    applicationYear: string;
+    corporationName: string;
+    corporationAddress: string;
+    fullName: string;
+    address: string;
+} & baseType;
+
+export type ResidentVCRequestType = VerifiableMessage<ResidentInputFormType>
+export type AccountVCRequestType = VerifiableMessage<AccountInputFormType>
+export type TaxVCRequestType = VerifiableMessage<TaxInputFormType>
+export type SubsidyVCRequestType = VerifiableMessage<SubsidyInputFormType>
+
+
+export type ResidentVCType = VerifiableMessage<VerifiableCredentialContent<ResidentInputFormType>>
+export type AccountVCType = VerifiableMessage<VerifiableCredentialContent<AccountInputFormType>>
+export type TaxVCType = VerifiableMessage<VerifiableCredentialContent<TaxInputFormType>>
+export type SubsidyVCType = VerifiableMessage<VerifiableCredentialContent<SubsidyInputFormType>>
+
 export type SubsidyInputFormType = {
     id: number;
     resident: string;
@@ -20,31 +40,12 @@ export type SubsidyInputFormType = {
     taxVP: VerifiableMessage<VPContent> | undefined;
 } & baseType;
 
-export type TaxInputFormType = {
-    id: number;
-    applicationYear: string;
-    corporationName: string;
-    corporationAddress: string;
-    fullName: string;
-    address: string;
-} & baseType;
 
 export type VCListType = {
-    resident: {
-        VC: VerifiableMessage<VerifiableCredentialContent<ResidentInputFormType>>;
-        acceptDate?: string;
-        acceptStatus: boolean;
-    }[];
-    account: {
-        VC: VerifiableMessage<VerifiableCredentialContent<AccountInputFormType>>;
-        acceptDate?: string;
-        acceptStatus: boolean;
-    }[];
-    tax: {
-        VC: VerifiableMessage<VerifiableCredentialContent<TaxInputFormType>>;
-        acceptDate?: string;
-        acceptStatus: boolean;
-    }[];
+    resident: ResidentVCType[];
+    account: AccountVCType[];
+    tax: TaxVCType[];
+    subsidy: SubsidyVCType[];
 }
 
 export type VPContent = {

@@ -51,9 +51,9 @@ const AccountListDetailMain = () => {
           vcContent,
           issuerPw
         );
-        setListState((items) => items.filter((item) => item.message.content.id != content.id));
+        // setListState((items) => items.filter((item) => item.message.content.id != content.id));
         setVCList((items) => [...items, vc]);
-        setIssuedVCList((items) => ({ ...items, account: [...items.account, { VC: vc, acceptStatus: false }] }));
+        setIssuedVCList((items) => ({ ...items, account: [...items.account, vc] }));
         setIsIssuing(false);
         router.push({ pathname, query: { id: router.query.id } });
       }

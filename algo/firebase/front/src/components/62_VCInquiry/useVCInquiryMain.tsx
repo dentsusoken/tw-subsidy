@@ -25,31 +25,22 @@ const useVCInquiryMain = () => {
             setType(router.query.type)
             setIdx(parseInt(router.query.idx))
             if (router.query.type === "住民票") {
-                setResidentInput(VCListGlobal.resident[parseInt(router.query.idx) - 1].VC.message.content.content);
-                setApplicationDate(dayjs(VCListGlobal.resident[parseInt(router.query.idx) - 1].VC.message.content.content.applicationDate).format("YY/MM/DD HH:mm"));
-                setIssueDate(dayjs(VCListGlobal.resident[parseInt(router.query.idx) - 1].VC.message.content.content.issueDate).format("YY/MM/DD HH:mm"));
-                if (VCListGlobal.resident[parseInt(router.query.idx) - 1].acceptStatus) {
-                    setIsEnabled(false);
-                    setAcceptDate(dayjs(VCListGlobal.resident[parseInt(router.query.idx) - 1].acceptDate).format("YY/MM/DD HH:mm"));
-                }
+                setResidentInput(VCListGlobal.resident[parseInt(router.query.idx) - 1].message.content.content);
+                setApplicationDate(dayjs(VCListGlobal.resident[parseInt(router.query.idx) - 1].message.content.content.applicationDate).format("YY/MM/DD HH:mm"));
+                setIssueDate(dayjs(VCListGlobal.resident[parseInt(router.query.idx) - 1].message.content.content.issueDate).format("YY/MM/DD HH:mm"));
+
             }
             else if (router.query.type === "口座実在証明書") {
-                setAccountInput(VCListGlobal.account[parseInt(router.query.idx) - 1].VC.message.content.content);
-                setApplicationDate(dayjs(VCListGlobal.account[parseInt(router.query.idx) - 1].VC.message.content.content.applicationDate).format("YY/MM/DD HH:mm"));
-                setIssueDate(dayjs(VCListGlobal.account[parseInt(router.query.idx) - 1].VC.message.content.content.issueDate).format("YY/MM/DD HH:mm"));
-                if (VCListGlobal.account[parseInt(router.query.idx) - 1].acceptStatus) {
-                    setIsEnabled(false);
-                    setAcceptDate(dayjs(VCListGlobal.account[parseInt(router.query.idx) - 1].acceptDate).format("YY/MM/DD HH:mm"));
-                }
+                setAccountInput(VCListGlobal.account[parseInt(router.query.idx) - 1].message.content.content);
+                setApplicationDate(dayjs(VCListGlobal.account[parseInt(router.query.idx) - 1].message.content.content.applicationDate).format("YY/MM/DD HH:mm"));
+                setIssueDate(dayjs(VCListGlobal.account[parseInt(router.query.idx) - 1].message.content.content.issueDate).format("YY/MM/DD HH:mm"));
+
             }
             else if (router.query.type === "納税証明書") {
-                setTaxInput(VCListGlobal.tax[parseInt(router.query.idx) - 1].VC.message.content.content);
-                setApplicationDate(dayjs(VCListGlobal.tax[parseInt(router.query.idx) - 1].VC.message.content.content.applicationDate).format("YY/MM/DD HH:mm"));
-                setIssueDate(dayjs(VCListGlobal.tax[parseInt(router.query.idx) - 1].VC.message.content.content.issueDate).format("YY/MM/DD HH:mm"));
-                if (VCListGlobal.tax[parseInt(router.query.idx) - 1].acceptStatus) {
-                    setIsEnabled(false);
-                    setAcceptDate(dayjs(VCListGlobal.tax[parseInt(router.query.idx) - 1].acceptDate).format("YY/MM/DD HH:mm"));
-                }
+                setTaxInput(VCListGlobal.tax[parseInt(router.query.idx) - 1].message.content.content);
+                setApplicationDate(dayjs(VCListGlobal.tax[parseInt(router.query.idx) - 1].message.content.content.applicationDate).format("YY/MM/DD HH:mm"));
+                setIssueDate(dayjs(VCListGlobal.tax[parseInt(router.query.idx) - 1].message.content.content.issueDate).format("YY/MM/DD HH:mm"));
+
             }
         }
     });
@@ -64,15 +55,15 @@ const useVCInquiryMain = () => {
         const acceptDate = dayjs(now).format('YYYY-MM-DD HH:mm:ss');
         setIsEnabled(!isEnabled);
         if (type === "住民票") {
-            const replaceData = VCListGlobal.resident.map((value, index) => index === idx - 1 ? { VC: value.VC, acceptStatus: true, acceptDate: acceptDate } : value)
+            const replaceData = VCListGlobal.resident.map((value, index) => index === idx - 1 ?  value : value)
             setVCListGlobal((items) => (items.resident ? { ...items, resident: replaceData } : items));
         }
         else if (type === "口座実在証明書") {
-            const replaceData = VCListGlobal.account.map((value, index) => index === idx - 1 ? { VC: value.VC, acceptStatus: true, acceptDate: acceptDate } : value)
+            const replaceData = VCListGlobal.account.map((value, index) => index === idx - 1 ? value: value)
             setVCListGlobal((items) => (items.account ? { ...items, account: replaceData } : items));
         }
         else if (type === "納税証明書") {
-            const replaceData = VCListGlobal.tax.map((value, index) => index === idx - 1 ? { VC: value.VC, acceptStatus: true, acceptDate: acceptDate } : value)
+            const replaceData = VCListGlobal.tax.map((value, index) => index === idx - 1 ? value : value)
             setVCListGlobal((items) => (items.tax ? { ...items, tax: replaceData } : items));
         }
         setAcceptDate(now.format("YY/MM/DD HH:mm"));

@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import Header from '@/components/common/Header';
@@ -22,6 +21,7 @@ import issuerDidAccountState from '@/lib/states/issuerDidAccountState';
 import verifierDidAccountState from '@/lib/states/verifierDidAccountState';
 import { useEffect, useState } from 'react';
 import SelectActorButton from '../../common/SelectActorButton';
+import { useErrorHandler } from 'react-error-boundary';
 
 
 
@@ -45,6 +45,8 @@ const MenuMain = () => {
 
   const [haveDid, setHaveDid] = useState(true)
   const [clearMsg, setclearMsg] = useState("")
+
+  const errorHandler = useErrorHandler();
 
   useEffect(() => {
     if (holderDidAccountGlobal && issuerDidAccountGlobal && verifierDidAccountGlobal) {
@@ -115,23 +117,29 @@ const MenuMain = () => {
 
 
   const onClear = () => {
-    handleClearInputState();
-    clearResidentVCListState(() => []);
-    clearResidentVCRequestListState(() => []);
-    clearAccountVCListState(() => []);
-    clearAccountVCRequestListState(() => []);
-    clearTaxVCListState(() => []);
-    clearTaxVCRequestListState(() => []);
-    clearSubsidyListState(() => []);
-    clearVCListState(() => ({
-      resident: [],
-      account: [],
-      tax: []
-    }));
-    showClearSuccessMsg();
+    try {
+      handleClearInputState();
+      clearResidentVCListState(() => []);
+      clearResidentVCRequestListState(() => []);
+      clearAccountVCListState(() => []);
+      clearAccountVCRequestListState(() => []);
+      clearTaxVCListState(() => []);
+      clearTaxVCRequestListState(() => []);
+      clearSubsidyListState(() => []);
+      clearVCListState(() => ({
+        resident: [],
+        account: [],
+        tax: []
+      }));
+      showClearSuccessMsg();
+    } catch (e) {
+      errorHandler(e);
+    }
   };
 
   const showClearSuccessMsg = async () => {
+    console.log("ggg");
+
     setclearMsg("データクリアが完了しました。")
     await delay(5000);
     setclearMsg("")
@@ -153,6 +161,8 @@ const MenuMain = () => {
           </div>
           <SelectActorButton target="subsidy" />
         </section>
+        {clearMsg}
+        <button onClick={onClear}>リセット</button>
       </main>
     </>
   );

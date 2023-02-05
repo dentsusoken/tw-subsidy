@@ -1,10 +1,9 @@
 import { atom } from 'recoil';
 
-import { TaxInputFormType } from '@/lib/types/mockApp/Form';
-import { VerifiableMessage } from '@/lib/algosbt/types';
 import persistAtom from '../persistAtom';
+import { TaxVCRequestType } from '@/lib/types/mockApp';
 
-export const taxVCRequestListState = atom<VerifiableMessage<TaxInputFormType>[]>({
+export const taxVCRequestListState = atom<TaxVCRequestType[]>({
     key: 'taxVCRequestListState',
     default: [],
     effects_UNSTABLE: [persistAtom],

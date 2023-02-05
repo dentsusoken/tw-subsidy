@@ -8,7 +8,8 @@ export const VCListState = atom<VCListType>({
     default: {
         resident: [],
         account: [],
-        tax: []
+        tax: [],
+        subsidy:[]
     },
     effects_UNSTABLE: [persistAtom],
 });

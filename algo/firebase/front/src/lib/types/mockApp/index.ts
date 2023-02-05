@@ -1,3 +1,7 @@
+import { RequestItem } from "@/components/common/ApplicationListContainer/ApplicationListContainer";
+import AlgodClient from "algosdk/dist/types/src/client/v2/algod/algod";
+import { AccountVCRequestType, AccountVCType, ResidentVCRequestType, ResidentVCType, TaxVCRequestType } from "./Form";
+
 export const urls = {
     mainMenu: "/00_menu",
     applierMenu: "/011_applierMenu",
@@ -33,6 +37,8 @@ export const urls = {
     taxListRevoked: "/52_taxListRevoked",
     VCList: "/61_VCList",
     VCInquiry: "/62_VCInquiry",
+    applicationList: "/71_applicationList",
+    applicationListDetail: "/72_applicationListDetail",
 } as const;
 
 export const icons = {
@@ -50,3 +56,8 @@ export const msg = {
     taxMenu: "税務署メニュー",
     subsidyMenu: "申請先メニュー",
 } as const;
+
+export * from "./Form"
+export * from "./inputForm"
+
+export type getRequestListType = (algod: AlgodClient, reqList: Array<ResidentVCRequestType | AccountVCRequestType | TaxVCRequestType>, VCList: Array<ResidentVCType | AccountVCType | TaxVCRequestType>) => Promise<RequestItem>; 

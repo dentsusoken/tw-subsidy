@@ -18,23 +18,20 @@ const useVCListMain = () => {
         if (VCListGlobal) {
             const residentList: VCListItems = VCListGlobal.resident.map((item) => {
                 return {
-                    id: item.VC.message.content.content.id,
-                    issueDate: item.VC.message.content.content.issueDate,
-                    acceptStatus: item.acceptStatus
+                    id: item.message.content.content.id,
+                    issueDate: item.message.content.content.issueDate,
                 }
             });
             const accountList: VCListItems = VCListGlobal.account.map((item) => {
                 return {
-                    id: item.VC.message.content.content.id,
-                    issueDate: item.VC.message.content.content.issueDate,
-                    acceptStatus: item.acceptStatus
+                    id: item.message.content.content.id,
+                    issueDate: item.message.content.content.issueDate,
                 }
             });
             const taxList: VCListItems = VCListGlobal.tax.map((item) => {
                 return {
-                    id: item.VC.message.content.content.id,
-                    issueDate: item.VC.message.content.content.issueDate,
-                    acceptStatus: item.acceptStatus
+                    id: item.message.content.content.id,
+                    issueDate: item.message.content.content.issueDate,
                 }
             });
             setResidentVCList(sortList(residentList));

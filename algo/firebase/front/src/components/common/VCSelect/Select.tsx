@@ -6,10 +6,7 @@ import { Path, FieldValues, useFormContext, RegisterOptions } from 'react-hook-f
 export type CheckBoxParams<T> = {
     name: Path<T>
     label: string;
-    items: {
-        VC: VerifiableMessage<VerifiableCredentialContent<unknown>>;
-        acceptStatus: boolean;
-    }[]
+    items: VerifiableMessage<VerifiableCredentialContent<unknown>>[];
     validation?: RegisterOptions;
     currentVal?: string;
 }
@@ -38,7 +35,7 @@ const VCSelect = <T extends FieldValues>({ name, label, items, validation = unde
                 >
                     {items.length !== 0
                         ? items.map((value, index) => (
-                            value.acceptStatus ? <option value={index} key={index}>{label} - VC{index + 1}</option> : null
+                            <option value={index} key={index}>{label} - VC{index + 1}</option>
                         ))
                         : <option></option>
                     }

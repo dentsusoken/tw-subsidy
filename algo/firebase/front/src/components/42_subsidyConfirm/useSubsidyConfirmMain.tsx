@@ -29,10 +29,8 @@ const useSubsidyConfirmMain = () => {
             resident: input.resident,
             account: input.account,
             tax: input.tax,
-            // fullName: input.fullName,
-            fullName: "山田太郎",
-            // address: input.address,
-            address: "東京都渋谷区xxxxxx",
+            fullName: input.fullName,
+            address: input.address,
             verifyStatus: false,
             approvalStatus: false,
         },
@@ -72,7 +70,7 @@ const useSubsidyConfirmMain = () => {
             }
 
             if (VCListGlobal.resident) {
-                const content = createVPContent(VCListGlobal.resident[parseInt(input.resident)].VC);
+                const content = createVPContent(VCListGlobal.resident[parseInt(input.resident)]);
                 const vm = createVPMessage(
                     content,
                     holderDidAccountGlobal,
@@ -82,7 +80,7 @@ const useSubsidyConfirmMain = () => {
                 subsidyInput.residentVP = vm;
             }
             if (VCListGlobal.account) {
-                const content = createVPContent(VCListGlobal.account[parseInt(input.account)].VC);
+                const content = createVPContent(VCListGlobal.account[parseInt(input.account)]);
                 const vm = createVPMessage(
                     content,
                     holderDidAccountGlobal,
@@ -91,7 +89,7 @@ const useSubsidyConfirmMain = () => {
                 subsidyInput.accountVP = vm;
             }
             if (VCListGlobal.tax) {
-                const content = createVPContent(VCListGlobal.tax[parseInt(input.tax)].VC);
+                const content = createVPContent(VCListGlobal.tax[parseInt(input.tax)]);
                 const vm = createVPMessage(
                     content,
                     holderDidAccountGlobal,

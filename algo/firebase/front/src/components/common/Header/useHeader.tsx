@@ -52,6 +52,8 @@ const useHeader = () => {
             case urls.subsidyDone:
             case urls.VCList:
             case urls.VCInquiry:
+            case urls.applicationList:
+            case urls.applicationListDetail:
                 return colors.applier;
             case urls.residentMenu:
             case urls.residentList:
@@ -95,6 +97,8 @@ const useHeader = () => {
             case urls.subsidyDone:
             case urls.VCList:
             case urls.VCInquiry:
+            case urls.applicationList:
+            case urls.applicationListDetail:
                 return Headings.applierMenu;
             case urls.residentMenu:
             case urls.residentList:
@@ -138,6 +142,8 @@ const useHeader = () => {
             case urls.subsidyDone:
             case urls.VCList:
             case urls.VCInquiry:
+            case urls.applicationList:
+            case urls.applicationListDetail:
                 return icons.applier;
             case urls.residentMenu:
             case urls.residentList:
@@ -186,6 +192,8 @@ const useHeader = () => {
             case urls.subsidyDone:
             case urls.VCList:
             case urls.VCInquiry:
+            case urls.applicationList:
+            case urls.applicationListDetail:
                 return { url: urls.applierMenu, label: "menu" };
             case urls.residentList:
             case urls.residentListDetail:
