@@ -12,7 +12,7 @@ import { SubsidyInputFormType } from '@/lib/types/mockApp/Form';
 import useSubsidyInputMain from './useSubsidyInputMain';
 
 const SubsidyInputMain = () => {
-    const { methods, input, onSubmit, VCListSelect } = useSubsidyInputMain()
+    const { methods, input, onSubmit, VCListSelect, isEnable } = useSubsidyInputMain()
 
     return (
         <>
@@ -25,20 +25,20 @@ const SubsidyInputMain = () => {
                             <Container title={"申請書類の選択"} isRequred={true}>
                                 <ul className={"mt-7 ml-3"}>
                                     <li className={"py-3 pl-4 pr-6 w-78 flex"}>
-                                        {VCListSelect ? <VCSelect<SubsidyInputFormType> label={"住民票"} name={"resident"} items={VCListSelect.resident} currentVal={input.resident} validation={{ required: true }} /> : null}
+                                        {VCListSelect ? <VCSelect<SubsidyInputFormType> label={"住民票"} name={"resident"} items={VCListSelect.resident} currentVal={input.resident} /> : null}
                                     </li>
                                     <li className={"py-3 pl-4 pr-6 w-78 flex"}>
-                                        {VCListSelect ? <VCSelect<SubsidyInputFormType> label={"口座実在証明書"} name={"account"} items={VCListSelect.account} currentVal={input.resident} validation={{ required: true }} /> : null}
+                                        {VCListSelect ? <VCSelect<SubsidyInputFormType> label={"口座実在証明書"} name={"account"} items={VCListSelect.account} currentVal={input.resident} /> : null}
                                     </li>
                                     <li className={"py-3 pl-4 pr-6 w-78 flex"}>
-                                        {VCListSelect ? <VCSelect<SubsidyInputFormType> label={"納税証明書"} name={"tax"} items={VCListSelect.tax} currentVal={input.resident} validation={{ required: true }} /> : null}
+                                        {VCListSelect ? <VCSelect<SubsidyInputFormType> label={"納税証明書"} name={"tax"} items={VCListSelect.tax} currentVal={input.resident} /> : null}
                                     </li>
                                 </ul>
                             </Container>
                             <Container title={"申請者情報"}>
                                 <div className={"mt-7 ml-3"}>
-                                    <InputArea<SubsidyInputFormType> label='申請者名' name='fullName' placeholder='' isEnabled={false} />
-                                    <InputArea<SubsidyInputFormType> label='申請者住所' name="address" placeholder='' isEnabled={false} />
+                                    <InputArea<SubsidyInputFormType> label='申請者名' name='fullName' placeholder='' isEnabled={isEnable} />
+                                    <InputArea<SubsidyInputFormType> label='申請者住所' name="address" placeholder='' isEnabled={isEnable} />
                                 </div>
                             </Container>
                             <TransitionArea>

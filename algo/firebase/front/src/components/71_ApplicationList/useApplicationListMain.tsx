@@ -1,5 +1,5 @@
 import { verifyVerifiableCredential } from "@/lib/algosbt";
-import { accountVCRequestListState, residentVCRequestListState, taxVCRequestListState, VCListState } from "@/lib/states/mockApp";
+import { accountVCRequestListState, residentVCRequestListState, subsidyListState, taxVCRequestListState, VCListState } from "@/lib/states/mockApp";
 import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { RequestItem } from "../common/ApplicationListContainer/ApplicationListContainer";
@@ -17,7 +17,7 @@ const useApplicationListMain = () => {
     const residentRequestGlobal = useRecoilValue(residentVCRequestListState);
     const accountRequestGlobal = useRecoilValue(accountVCRequestListState);
     const taxRequestGlobal = useRecoilValue(taxVCRequestListState);
-    const subsidyRequestGlobal = useRecoilValue(subsidyVCRequestListState);
+    const subsidyRequestGlobal = useRecoilValue(subsidyListState);
     const VCList = useRecoilValue(VCListState);
     const chain = useRecoilValue(chainState);
 
@@ -95,17 +95,15 @@ const useApplicationListMain = () => {
                     let issuedStatus = false;
                     let revokeStatus = false;
                     if (VCList.subsidy) {
-                        const subsidyVC = VCList.subsidy.find((vc) => { return vc.message.content.content.id === item.message.content.id });
+                        const subsidyVC = VCList.subsidy.find((vc) => { return vc.message.content.content.id === item.id });
                         if (subsidyVC) {
                             issuedStatus = true;
                             revokeStatus = await verifyVerifiableCredential(algod, subsidyVC);
                         }
                     }
-                    console.log(item);
-                    
                     return {
-                        id: item.message.content.id,
-                        applicationDate: item.message.content.applicationDate,
+                        id: item.id,
+                        applicationDate: item.applicationDate,
                         issuedStatus: issuedStatus,
                         revokeStatus: revokeStatus,
                     }

@@ -18,13 +18,13 @@ const useTaxListMain = () => {
 
 
     useEffect(() => {
-        const verifiedList: TaxInputFormType[] = VClistState.map((item) => item.message.content.content);
+        // const verifiedList: TaxInputFormType[] = VClistState.map((item) => item.message.content.content);
         const requestList: TaxInputFormType[] = VCRequestlistState.map((item) => item.message.content)
-        const mergeList: TaxInputFormType[] = verifiedList.concat(requestList)
-        setList(mergeList);
-        setListCount(taxInputList.length)
-        setfilterCount(taxInputList.length)
-    }, [taxInputList.length]);
+        // const mergeList: TaxInputFormType[] = verifiedList.concat(requestList)
+        setList(requestList);
+        setListCount(VCRequestlistState.length)
+        setfilterCount(VCRequestlistState.length)
+    }, [VCRequestlistState.length]);
 
     const filterList = useMemo(() => {
         let tmp = taxInputList.filter(item => item.fullName.includes(query))

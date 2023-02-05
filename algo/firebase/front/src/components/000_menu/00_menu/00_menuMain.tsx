@@ -129,7 +129,8 @@ const MenuMain = () => {
       clearVCListState(() => ({
         resident: [],
         account: [],
-        tax: []
+        tax: [],
+        subsidy:[]
       }));
       showClearSuccessMsg();
     } catch (e) {
@@ -138,8 +139,6 @@ const MenuMain = () => {
   };
 
   const showClearSuccessMsg = async () => {
-    console.log("ggg");
-
     setclearMsg("データクリアが完了しました。")
     await delay(5000);
     setclearMsg("")

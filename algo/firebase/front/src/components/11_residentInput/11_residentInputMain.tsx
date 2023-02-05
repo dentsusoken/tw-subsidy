@@ -71,7 +71,7 @@ const ResidentInputMain = () => {
     <>
       <Header />
       <main className="bg-color-background">
-        <Progress status='input'/>
+        <Progress status='input' />
         <div className="mt-[9px] py-0 px-[53px]">
           <form onSubmit={onSubmit}>
             <div className="input-form-label">
@@ -83,12 +83,7 @@ const ResidentInputMain = () => {
             <input
               type="text"
               className="input-form-text-box"
-              {...register('fullName', {
-                required: {
-                  value: true,
-                  message: '入力必須項目です',
-                },
-              })}
+              {...register('fullName')}
             />
             <div className="input-form-label">
               氏名フリガナ
@@ -102,10 +97,6 @@ const ResidentInputMain = () => {
               type="text"
               className="input-form-text-box"
               {...register('fullNameFurigana', {
-                required: {
-                  value: true,
-                  message: '入力必須項目です',
-                },
                 pattern: {
                   value: /^[ァ-ヴー　]*$/,
                   message: '全角カナで入力してください',
@@ -121,12 +112,7 @@ const ResidentInputMain = () => {
             <input
               type="text"
               className="input-form-text-box"
-              {...register('address', {
-                required: {
-                  value: true,
-                  message: '入力必須項目です',
-                },
-              })}
+              {...register('address')}
             />
             <div className="input-form-label">
               住民となった年月
@@ -164,12 +150,7 @@ const ResidentInputMain = () => {
             <input
               type="text"
               className="input-form-text-box"
-              {...register('permanentAddress', {
-                required: {
-                  value: true,
-                  message: '入力必須項目です',
-                },
-              })}
+              {...register('permanentAddress')}
             />
             <div className="pt-4 text-right">
               <button type="submit" className="input-form-button-green">

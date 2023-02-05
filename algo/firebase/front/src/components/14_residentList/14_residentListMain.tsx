@@ -22,16 +22,16 @@ const ResidentListMain = () => {
 
   useEffect(() => {
     try {
-      const verifiedList: ResidentInputFormType[] = VClistState.map((item) => item.message.content.content);
+      // const verifiedList: ResidentInputFormType[] = VClistState.map((item) => item.message.content.content);
       const requestList: ResidentInputFormType[] = VCRequestlistState.map((item) => item.message.content)
-      const mergeList: ResidentInputFormType[] = verifiedList.concat(requestList)
-      setListState(mergeList)
-      setListCount(listState.length);
+      // const mergeList: ResidentInputFormType[] = verifiedList.concat(requestList)
+      setListState(requestList)
+      setListCount(VClistState.length);
       dayjs.locale("ja")
     } catch (e) {
       errorHandler(e);
     }
-  }, [listState.length, errorHandler]);
+  }, [VClistState.length, errorHandler]);
 
   // [id]の降順で表示
   const listForSort = [...listState];

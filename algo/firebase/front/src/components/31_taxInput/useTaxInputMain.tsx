@@ -14,14 +14,16 @@ const useTaxInputMain = () => {
 
     const VCListGlobal = useRecoilValue(VCListState);
     const [residentVC, setResidentVC] = useState<ResidentInputFormType>();
+    const [isEnable, setIsEnable] = useState<boolean>(false);
 
     useEffect(() => {
         if (VCListGlobal && VCListGlobal.resident.length > 0) {
-            VCListGlobal.resident.map((value) => {
-                setResidentVC(VCListGlobal.resident[VCListGlobal.resident.length - 1].message.content.content);
-                methods.setValue("fullName", VCListGlobal.resident[VCListGlobal.resident.length - 1].message.content.content.fullName)
-                methods.setValue("address", VCListGlobal.resident[VCListGlobal.resident.length - 1].message.content.content.address)
-            })
+            setResidentVC(VCListGlobal.resident[VCListGlobal.resident.length - 1].message.content.content);
+            methods.setValue("fullName", VCListGlobal.resident[VCListGlobal.resident.length - 1].message.content.content.fullName)
+            methods.setValue("address", VCListGlobal.resident[VCListGlobal.resident.length - 1].message.content.content.address)
+        }
+        else {
+            setIsEnable(true);
         }
     })
 
@@ -58,7 +60,7 @@ const useTaxInputMain = () => {
         router.push('/32_taxConfirm', '/32_taxConfirm');
     };
 
-    return { methods, residentVC, onSubmit }
+    return { methods, residentVC, isEnable, onSubmit }
 };
 
 export default useTaxInputMain;

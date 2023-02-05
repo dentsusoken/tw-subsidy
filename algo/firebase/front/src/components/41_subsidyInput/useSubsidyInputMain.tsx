@@ -14,15 +14,17 @@ const useSubsidyInputMain = () => {
     const router = useRouter();
     const VCListGlobal = useRecoilValue(VCListState);
     const [residentVC, setResidentVC] = useState<ResidentInputFormType>();
+    const [isEnable, setIsEnable] = useState<boolean>(false);
 
     useEffect(() => {
         setVCListSelect(VCListGlobal);
         if (VCListGlobal && VCListGlobal.resident.length > 0) {
-            VCListGlobal.resident.map((value) => {
-                    setResidentVC(VCListGlobal.resident[VCListGlobal.resident.length - 1].message.content.content);
-                    methods.setValue("fullName", VCListGlobal.resident[VCListGlobal.resident.length - 1].message.content.content.fullName)
-                    methods.setValue("address", VCListGlobal.resident[VCListGlobal.resident.length - 1].message.content.content.address)
-            })
+            setResidentVC(VCListGlobal.resident[VCListGlobal.resident.length - 1].message.content.content);
+            methods.setValue("fullName", VCListGlobal.resident[VCListGlobal.resident.length - 1].message.content.content.fullName)
+            methods.setValue("address", VCListGlobal.resident[VCListGlobal.resident.length - 1].message.content.content.address)
+        }
+        else {
+            setIsEnable(true);
         }
     }, [VCListGlobal])
 
@@ -62,7 +64,7 @@ const useSubsidyInputMain = () => {
         router.push('/42_subsidyConfirm', '/42_subsidyConfirm');
     };
 
-    return { methods, input, residentVC, onSubmit, VCListSelect }
+    return { methods, input, residentVC, onSubmit, VCListSelect, isEnable }
 };
 
 export default useSubsidyInputMain;

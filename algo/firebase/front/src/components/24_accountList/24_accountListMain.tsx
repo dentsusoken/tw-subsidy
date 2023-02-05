@@ -22,15 +22,15 @@ const AccountListMain = () => {
 
   useEffect(() => {
     try {
-      const verifiedList: AccountInputFormType[] = VClistState.map((item) => item.message.content.content);
+      // const verifiedList: AccountInputFormType[] = VClistState.map((item) => item.message.content.content);
       const requestList: AccountInputFormType[] = VCRequestlistState.map((item) => item.message.content)
-      const mergeList: AccountInputFormType[] = verifiedList.concat(requestList)
-      setListState(mergeList)
-      setListCount(listState.length);
+      // const mergeList: AccountInputFormType[] = verifiedList.concat(requestList)
+      setListState(requestList)
+      setListCount(VClistState.length);
     } catch (e) {
       errorHandler(e);
     }
-  }, [listState.length, errorHandler]);
+  }, [VClistState.length, errorHandler]);
 
   // [id]の降順で表示
   const listForSort = [...listState];

@@ -26,9 +26,9 @@ const TaxListDetailMain = () => {
                             }
                         </div>
                         <Container>
-                            <InputArea<TaxInputFormType> label={"申請年度"} name={"applicationYear"} validation={{ min: 4, max: 4, pattern: /[0-9]{4}/, required: true }} isEnabled={false} />
-                            <InputArea<TaxInputFormType> label={"法人名称"} name={"corporationName"} validation={{ required: true }} isEnabled={false} />
-                            <InputArea<TaxInputFormType> label={"所在地"} name={"corporationAddress"} validation={{ required: true }} isEnabled={false} />
+                            <InputArea<TaxInputFormType> label={"申請年度"} name={"applicationYear"} isEnabled={false} />
+                            <InputArea<TaxInputFormType> label={"法人名称"} name={"corporationName"} isEnabled={false} />
+                            <InputArea<TaxInputFormType> label={"所在地"} name={"corporationAddress"} isEnabled={false} />
                             <InputArea<TaxInputFormType> label='申請者名' name='fullName' placeholder='' isEnabled={false} />
                             <InputArea<TaxInputFormType> label='申請者住所' name="address" placeholder='' isEnabled={false} />
                         </Container>

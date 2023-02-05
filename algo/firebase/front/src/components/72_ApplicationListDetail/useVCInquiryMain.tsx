@@ -1,7 +1,7 @@
 import { useRecoilValue } from 'recoil';
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { accountVCRequestListState, residentVCRequestListState, taxVCRequestListState, VCListState } from '@/lib/states/mockApp';
+import { accountVCRequestListState, residentVCRequestListState, subsidyListState, taxVCRequestListState, VCListState } from '@/lib/states/mockApp';
 import { AccountInputFormType, ResidentInputFormType } from '@/lib/types/mockApp/inputForm';
 import { SubsidyInputFormType, TaxInputFormType } from '@/lib/types/mockApp/Form';
 
@@ -33,7 +33,7 @@ const useVCInquiryMain = () => {
     const residentRequestGlobal = useRecoilValue(residentVCRequestListState);
     const accountRequestGlobal = useRecoilValue(accountVCRequestListState);
     const taxRequestGlobal = useRecoilValue(taxVCRequestListState);
-    const subsidyRequestGlobal = useRecoilValue(subsidyVCRequestListState);
+    const subsidyRequestGlobal = useRecoilValue(subsidyListState);
 
     const chain = useRecoilValue(chainState);
     const errorHandler = useErrorHandler()
@@ -106,19 +106,20 @@ const useVCInquiryMain = () => {
                         }
                     }
                     else if (type === "subsidy") {
-                        const req = subsidyRequestGlobal.find((v) => { return v.message.content.id === id });
-                        const vc = VCListGlobal.subsidy.find((v) => { return v.message.content.content.id === id });
+                        const req = subsidyRequestGlobal.find((v) => { return v.id === id });
+                        const vc = ""
+                        // const vc = VCListGlobal.subsidy.find((v) => { return v.message.content.content.id === id });
                         if (req) {
                             let issuedStatus = false;
                             let revokeStatus = false;
-                            setSubsidyInput(req.message.content);
+                            setSubsidyInput(req);
                             if (vc) {
                                 issuedStatus = true;
                                 revokeStatus = await verifyVerifiableCredential(algod, vc);
                             }
                             setReqItem({
                                 id: id,
-                                applicationDate: dayjs(req.message.content.applicationDate).format("YY/MM/DD HH:mm"),
+                                applicationDate: dayjs(req.applicationDate).format("YY/MM/DD HH:mm"),
                                 issuedStatus: issuedStatus,
                                 revokeStatus: revokeStatus
                             });

@@ -11,7 +11,7 @@ import { TaxInputFormType } from '@/lib/types/mockApp/Form';
 import useTaxInputMain from './useTaxInputMain';
 
 const TaxInputMain = () => {
-    const { methods, residentVC, onSubmit } = useTaxInputMain()
+    const { methods, residentVC, isEnable, onSubmit } = useTaxInputMain()
 
     return (
         <>
@@ -20,17 +20,17 @@ const TaxInputMain = () => {
                 <Progress status={"input"} />
                 {
                     !residentVC
-                        ? <div className={"relative w-full text-center"}><span className={"absolute w-full left-0 -top-1 text-sm text-color-warnig"}>住民票紐付申請を実施してください。</span></div>
+                        ? <div className={"relative w-full text-center"}><span className={"absolute w-full left-0 -top-5 text-sm text-color-warnig"}>住民票紐付申請を実施してください。</span></div>
                         : null
                 }
                 <FormProvider {...methods} >
                     <form onSubmit={methods.handleSubmit(onSubmit)}>
                         <Container>
-                            <InputArea<TaxInputFormType> label={"申請年度"} name={"applicationYear"} placeholder={"2023"} validation={{ pattern: /[0-9]{4}/, required: true }} isRequired={true} />
-                            <InputArea<TaxInputFormType> label={"法人名称"} name={"corporationName"} validation={{ required: true }} isRequired={true} />
-                            <InputArea<TaxInputFormType> label={"所在地"} name={"corporationAddress"} validation={{ required: true }} isRequired={true} />
-                            <InputArea<TaxInputFormType> label='申請者名' name='fullName' placeholder='' isEnabled={false} />
-                            <InputArea<TaxInputFormType> label='申請者住所' name="address" placeholder='' isEnabled={false} />
+                            <InputArea<TaxInputFormType> label={"申請年度"} name={"applicationYear"} placeholder={"2023"} validation={{ pattern: /[0-9]{4}/ }} isRequired={true} />
+                            <InputArea<TaxInputFormType> label={"法人名称"} name={"corporationName"} isRequired={true} />
+                            <InputArea<TaxInputFormType> label={"所在地"} name={"corporationAddress"} isRequired={true} />
+                            <InputArea<TaxInputFormType> label='申請者名' name='fullName' placeholder='' isEnabled={isEnable} />
+                            <InputArea<TaxInputFormType> label='申請者住所' name="address" placeholder='' isEnabled={isEnable} />
                             <TransitionArea>
                                 <TransitionButton text='確認' type={"next"} currentUser={"applicant"} />
                             </TransitionArea>
