@@ -15,6 +15,7 @@ import holderDidAccountState from '@/lib/states/holderDidAccountState';
 import issuerDidAccountState from '@/lib/states/issuerDidAccountState';
 
 import { issuerPw } from '@/lib/algo/account/accounts';
+import { useErrorHandler } from 'react-error-boundary';
 
 const useTaxListDetailMain = () => {
     const input = useRecoilValue(taxInputState);
@@ -24,6 +25,7 @@ const useTaxListDetailMain = () => {
     const [pathname, setPathName] = useState("")
     const [isIssuing, setIsIssuing] = useState(false)
     const router = useRouter();
+    const errorHandler = useErrorHandler();
 
     const [chainType] = useRecoilState(chainState);
     const [holderDidAccountGlobal] = useRecoilState(holderDidAccountState);
@@ -50,36 +52,40 @@ const useTaxListDetailMain = () => {
     });
 
     const approve = async () => {
-        if (VCRequest && holderDidAccountGlobal && issuerDidAccountGlobal) {
-            setIsIssuing(true);
-            const verified = verifyVerifiableMessage(VCRequest);
-            if (verified) {
-                const algod = getAlgod(chainType);
-                dayjs.locale('ja');
-                const now = dayjs();
-                const content = VCRequest.message.content;
-                const vcContent = {
-                    ...content,
-                    verifyStatus: true,
-                    approvalStatus: true,
-                    issueDate: dayjs(now).format('YYYY-MM-DD HH:mm:ss')
-                };
-                const vc = await createVerifiableCredential(
-                    algod,
-                    issuerDidAccountGlobal,
-                    holderDidAccountGlobal.did,
-                    vcContent,
-                    issuerPw
-                );
-                // setListState((items) => items.filter((item) => item.message.content.id != content.id));
-                setVCList((items) => [...items, vc]);
-                setIssuedVCList((items) => ({ ...items, tax: [...items.tax, vc] }));
-                setIsIssuing(false);
-                router.push({
-                    pathname: '/36_taxListDone',
-                    query: { proc: "approve" }
-                }, '/36_taxListDone')
+        try {
+            if (VCRequest && holderDidAccountGlobal && issuerDidAccountGlobal) {
+                setIsIssuing(true);
+                const verified = verifyVerifiableMessage(VCRequest);
+                if (verified) {
+                    const algod = getAlgod(chainType);
+                    dayjs.locale('ja');
+                    const now = dayjs();
+                    const content = VCRequest.message.content;
+                    const vcContent = {
+                        ...content,
+                        verifyStatus: true,
+                        approvalStatus: true,
+                        issueDate: dayjs(now).format('YYYY-MM-DD HH:mm:ss')
+                    };
+                    const vc = await createVerifiableCredential(
+                        algod,
+                        issuerDidAccountGlobal,
+                        holderDidAccountGlobal.did,
+                        vcContent,
+                        issuerPw
+                    );
+                    // setListState((items) => items.filter((item) => item.message.content.id != content.id));
+                    setVCList((items) => [...items, vc]);
+                    setIssuedVCList((items) => ({ ...items, tax: [...items.tax, vc] }));
+                    setIsIssuing(false);
+                    router.push({
+                        pathname: '/36_taxListDone',
+                        query: { proc: "approve" }
+                    }, '/36_taxListDone')
+                }
             }
+        } catch (e) {
+            errorHandler(e);
         }
     };
 

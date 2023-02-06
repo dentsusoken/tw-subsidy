@@ -11,11 +11,13 @@ import { getAlgod } from '@/lib/algo/algod/algods';
 import { verifyVerifiablePresentation } from '@/lib/algosbt';
 import chainState from '@/lib/states/chainState';
 import { VerifiableMessage } from '@/lib/algosbt/types';
+import { useErrorHandler } from 'react-error-boundary';
 
 const useSubsidyListDetailMain = () => {
     const [input, setInput] = useRecoilState(subsidyInputState);
     const [listState, setListState] = useRecoilState(subsidyListState);
     const router = useRouter();
+    const errorHandler = useErrorHandler();
     const [chain] = useRecoilState(chainState);
 
     const methods = useForm<SubsidyInputFormType>({
@@ -31,40 +33,48 @@ const useSubsidyListDetailMain = () => {
     });
 
     const VPVerify = async (algod: Algodv2, VP: VerifiableMessage<VPContent> | undefined) => {
-        let verify = false
-        if (VP) {
-            verify = await verifyVerifiablePresentation(algod, VP);
+        try {
+            let verify = false
+            if (VP) {
+                verify = await verifyVerifiablePresentation(algod, VP);
+            }
+            else {
+                verify = true;
+            }
+            return verify
+        } catch (e) {
+            throw e;
         }
-        else {
-            verify = true;
-        }
-        return verify
     }
 
     const verifyHandler = async () => {
-        const algod = getAlgod(chain);
+        try {
+            const algod = getAlgod(chain);
 
-        let residentVerifyStatus = false;
-        let accountVerifyStatus = false;
-        let taxVerifyStatus = false;
+            let residentVerifyStatus = false;
+            let accountVerifyStatus = false;
+            let taxVerifyStatus = false;
 
-        residentVerifyStatus = await VPVerify(algod, input.residentVP);
-        accountVerifyStatus = await VPVerify(algod, input.accountVP);
-        taxVerifyStatus = await VPVerify(algod, input.taxVP);
+            residentVerifyStatus = await VPVerify(algod, input.residentVP);
+            accountVerifyStatus = await VPVerify(algod, input.accountVP);
+            taxVerifyStatus = await VPVerify(algod, input.taxVP);
 
-        if (residentVerifyStatus && accountVerifyStatus && taxVerifyStatus) {
-            const replaceData: SubsidyInputFormType = { ...input, verifyStatus: true }
-            setInput(replaceData)
+            if (residentVerifyStatus && accountVerifyStatus && taxVerifyStatus) {
+                const replaceData: SubsidyInputFormType = { ...input, verifyStatus: true }
+                setInput(replaceData)
 
-            const updateData = listState.map((item) => {
-                if (item.id === replaceData.id) {
-                    return replaceData;
-                }
-                else {
-                    return item;
-                }
-            })
-            setListState(updateData);
+                const updateData = listState.map((item) => {
+                    if (item.id === replaceData.id) {
+                        return replaceData;
+                    }
+                    else {
+                        return item;
+                    }
+                })
+                setListState(updateData);
+            }
+        } catch (e) {
+            errorHandler(e);
         }
     }
 

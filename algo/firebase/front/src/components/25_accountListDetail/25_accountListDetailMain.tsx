@@ -13,9 +13,11 @@ import issuerDidAccountState from '@/lib/states/issuerDidAccountState';
 
 import { issuerPw } from '@/lib/algo/account/accounts';
 import { useState } from 'react';
+import { useErrorHandler } from 'react-error-boundary';
 
 const AccountListDetailMain = () => {
   const router = useRouter();
+  const errorHandler = useErrorHandler();
 
   const [listState, setListState] = useRecoilState(accountVCRequestListState);
   const setVCList = useSetRecoilState(accountVCListState);
@@ -29,34 +31,39 @@ const AccountListDetailMain = () => {
   const [issuerDidAccountGlobal] = useRecoilState(issuerDidAccountState);
 
   const onSubmit = async (status: boolean, pathname: string) => {
-    if (selectDetail && holderDidAccountGlobal && issuerDidAccountGlobal) {
-      setIsIssuing(true);
-      const verified = verifyVerifiableMessage(selectDetail);
+    try {
+      if (selectDetail && holderDidAccountGlobal && issuerDidAccountGlobal) {
+        setIsIssuing(true);
+        const verified = verifyVerifiableMessage(selectDetail);
 
-      if (verified) {
-        const algod = getAlgod(chainType);
-        dayjs.locale('ja');
-        const now = dayjs();
-        const content = selectDetail.message.content;
-        const vcContent = {
-          ...content,
-          verifyStatus: status,
-          approvalStatus: status,
-          issueDate: dayjs(now).format('YYYY-MM-DD HH:mm:ss')
-        };
-        const vc = await createVerifiableCredential(
-          algod,
-          issuerDidAccountGlobal,
-          holderDidAccountGlobal.did,
-          vcContent,
-          issuerPw
-        );
-        // setListState((items) => items.filter((item) => item.message.content.id != content.id));
-        setVCList((items) => [...items, vc]);
-        setIssuedVCList((items) => ({ ...items, account: [...items.account, vc] }));
-        setIsIssuing(false);
-        router.push({ pathname, query: { id: router.query.id } });
+        if (verified) {
+          const algod = getAlgod(chainType);
+          dayjs.locale('ja');
+          const now = dayjs();
+          const content = selectDetail.message.content;
+          const vcContent = {
+            ...content,
+            verifyStatus: status,
+            approvalStatus: status,
+            issueDate: dayjs(now).format('YYYY-MM-DD HH:mm:ss')
+          };
+          const vc = await createVerifiableCredential(
+            algod,
+            issuerDidAccountGlobal,
+            holderDidAccountGlobal.did,
+            vcContent,
+            issuerPw
+          );
+          // setListState((items) => items.filter((item) => item.message.content.id != content.id));
+          setVCList((items) => [...items, vc]);
+          setIssuedVCList((items) => ({ ...items, account: [...items.account, vc] }));
+          setIsIssuing(false);
+          router.push({ pathname, query: { id: router.query.id } });
+        }
       }
+    } catch (e) {
+      setIsIssuing(false);
+      errorHandler(e);
     }
   };
 

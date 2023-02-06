@@ -12,9 +12,11 @@ import { holderPw } from '@/lib/algo/account/accounts';
 import holderDidAccountState from '@/lib/states/holderDidAccountState';
 import issuerDidAccountState from '@/lib/states/issuerDidAccountState';
 import Progress from '../common/Progress';
+import { useErrorHandler } from 'react-error-boundary';
 
 const ResidentConfirmMain = () => {
   const router = useRouter();
+  const errorHandler = useErrorHandler();
 
   const [input, setInput] = useRecoilState(residentInputState);
   const setList = useSetRecoilState(residentVCRequestListState);
@@ -23,44 +25,48 @@ const ResidentConfirmMain = () => {
   const [issuerDidAccountGlobal] = useRecoilState(issuerDidAccountState);
 
   const onSubmit = () => {
-    dayjs.locale('ja');
-    const id = dayjs().unix();
-    const now = dayjs();
-    // const applicationDate = dayjs(now).format('M月D日(ddd)');
-    const applicationDate = dayjs(now).format('YYYY-MM-DD HH:mm:ss');
+    try {
+      dayjs.locale('ja');
+      const id = dayjs().unix();
+      const now = dayjs();
+      // const applicationDate = dayjs(now).format('M月D日(ddd)');
+      const applicationDate = dayjs(now).format('YYYY-MM-DD HH:mm:ss');
 
-    const residentInputDate: ResidentInputFormType = {
-      id,
-      fullName: input.fullName,
-      fullNameFurigana: input.fullNameFurigana,
-      address: input.address,
-      addressRegistDate: input.addressRegistDate,
-      addressRegistYear: input.addressRegistYear,
-      addressRegistMonth: input.addressRegistMonth,
-      permanentAddress: input.permanentAddress,
-      applicationDate,
-      verifyStatus: false,
-      approvalStatus: false,
-    };
+      const residentInputDate: ResidentInputFormType = {
+        id,
+        fullName: input.fullName,
+        fullNameFurigana: input.fullNameFurigana,
+        address: input.address,
+        addressRegistDate: input.addressRegistDate,
+        addressRegistYear: input.addressRegistYear,
+        addressRegistMonth: input.addressRegistMonth,
+        permanentAddress: input.permanentAddress,
+        applicationDate,
+        verifyStatus: false,
+        approvalStatus: false,
+      };
 
-    setInput(() => ({ ...residentInputDate }));
-    if (!!holderDidAccountGlobal && !!issuerDidAccountGlobal) {
-      setList((items) => [...items, createVerifiableMessage(
-        holderDidAccountGlobal,
-        issuerDidAccountGlobal.did,
-        residentInputDate,
-        holderPw
-      )]);
+      setInput(() => ({ ...residentInputDate }));
+      if (!!holderDidAccountGlobal && !!issuerDidAccountGlobal) {
+        setList((items) => [...items, createVerifiableMessage(
+          holderDidAccountGlobal,
+          issuerDidAccountGlobal.did,
+          residentInputDate,
+          holderPw
+        )]);
+      }
+
+      router.push('/13_resident-done');
+    } catch (e) {
+      errorHandler(e);
     }
-
-    router.push('/13_resident-done');
   };
 
   return (
     <>
       <Header />
       <main className="bg-color-background">
-        <Progress status='confirm'/>
+        <Progress status='confirm' />
         <div className="mt-[9px] py-0 px-[53px]">
           <div className="input-form-label">氏名</div>
           <input
