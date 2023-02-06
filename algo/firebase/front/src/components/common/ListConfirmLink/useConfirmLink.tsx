@@ -51,7 +51,7 @@ const useConfirmLink = (actor: string, type: string) => {
                     case "application":
                         return urls.subsidyList
                     case "VC":
-                        return urls.mainMenu;
+                        return urls.subsidyVCList;
                     default:
                         return "";
                 }

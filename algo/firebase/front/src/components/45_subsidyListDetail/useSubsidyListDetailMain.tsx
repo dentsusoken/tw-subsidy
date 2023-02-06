@@ -1,6 +1,6 @@
 import { Algodv2 } from 'algosdk';
 import { useForm } from 'react-hook-form';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { useRouter } from 'next/router';
 
 import { SubsidyInputFormType, VPContent } from '@/lib/types/mockApp/Form';
@@ -8,17 +8,26 @@ import { subsidyInputState } from '@/lib/states/mockApp/subsidyInputState';
 import { subsidyListState } from '@/lib/states/mockApp/subsidyListState';
 
 import { getAlgod } from '@/lib/algo/algod/algods';
-import { verifyVerifiablePresentation } from '@/lib/algosbt';
+import { createVerifiableCredential, verifyVerifiablePresentation } from '@/lib/algosbt';
 import chainState from '@/lib/states/chainState';
 import { VerifiableMessage } from '@/lib/algosbt/types';
 import { useErrorHandler } from 'react-error-boundary';
+import { issuerPw } from '@/lib/algo/account/accounts';
+import holderDidAccountState from '@/lib/states/holderDidAccountState';
+import issuerDidAccountState from '@/lib/states/issuerDidAccountState';
+import { VCListState } from '@/lib/states/mockApp';
+import { useState } from 'react';
 
 const useSubsidyListDetailMain = () => {
     const [input, setInput] = useRecoilState(subsidyInputState);
     const [listState, setListState] = useRecoilState(subsidyListState);
+    const [isIssuing, setIsIssuing] = useState(false);
+    const setVCList = useSetRecoilState(VCListState);
     const router = useRouter();
     const errorHandler = useErrorHandler();
     const [chain] = useRecoilState(chainState);
+    const [holderDidAccountGlobal] = useRecoilState(holderDidAccountState);
+    const [issuerDidAccountGlobal] = useRecoilState(issuerDidAccountState);
 
     const methods = useForm<SubsidyInputFormType>({
         defaultValues: {
@@ -79,28 +88,42 @@ const useSubsidyListDetailMain = () => {
     }
 
     const onSubmit = async () => {
-        if (!input.approvalStatus) {
+        try {
+            setIsIssuing(() => true);
+            const algod = getAlgod(chain);
+            if (!input.approvalStatus && issuerDidAccountGlobal && holderDidAccountGlobal) {
 
-            if (input.verifyStatus) {
-                const replaceData: SubsidyInputFormType = { ...input, approvalStatus: true }
-                setInput(replaceData)
+                if (input.verifyStatus) {
+                    const replaceData: SubsidyInputFormType = { ...input, approvalStatus: true }
+                    setInput(replaceData)
 
-                const updateData = listState.map((item) => {
-                    if (item.id === replaceData.id) {
-                        return replaceData;
-                    }
-                    else {
-                        return item;
-                    }
-                })
-                setListState(updateData);
+                    const updateData = listState.map((item) => {
+                        if (item.id === replaceData.id) {
+                            return replaceData;
+                        }
+                        else {
+                            return item;
+                        }
+                    })
+                    const vc = await createVerifiableCredential(
+                        algod,
+                        issuerDidAccountGlobal,
+                        holderDidAccountGlobal.did,
+                        replaceData,
+                        issuerPw
+                    );
+                    setListState(updateData);
+                    setVCList((items) => ({ ...items, subsidy: [...items.subsidy, vc] }));
+                }
             }
+            setIsIssuing(() => false);
+            router.push({
+                pathname: '/46_subsidyListDone',
+                query: { proc: "approve" }
+            }, '/46_subsidyListDone');
+        } catch (e) {
+            errorHandler(e);
         }
-
-        router.push({
-            pathname: '/46_subsidyListDone',
-            query: { proc: "approve" }
-        }, '/46_subsidyListDone');
     };
 
     const reject = () => {
@@ -110,7 +133,11 @@ const useSubsidyListDetailMain = () => {
         }, '/46_subsidyListDone')
     };
 
-    return { methods, input, onSubmit, reject, verifyHandler }
+    const back = () => {
+        router.push('/44_subsidyList')
+    };
+
+    return { methods, input, onSubmit, reject, verifyHandler, back, isIssuing}
 };
 
 export default useSubsidyListDetailMain;

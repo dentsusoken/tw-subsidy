@@ -52,6 +52,10 @@
   @apply inline-block text-center py-4 px-7 rounded-lg border border-solid border-color-green bg-color-green text-color-white text-button-text font-bold font-sans;
 }
 
+.input-form-button-orange {
+  @apply inline-block text-center py-4 px-7 rounded-lg border border-solid border-color-subsidy-main bg-color-subsidy-main text-color-white text-button-text font-bold font-sans;
+}
+
 .input-form-button-gray {
   @apply inline-block text-center py-4 px-7 rounded-lg border-solid bg-white text-black border border-color-gray text-button-text font-bold font-sans;
 }

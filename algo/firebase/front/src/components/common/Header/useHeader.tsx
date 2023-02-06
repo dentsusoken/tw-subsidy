@@ -87,6 +87,8 @@ const useHeader = () => {
             case urls.subsidyList:
             case urls.subsidyListDetail:
             case urls.subsidyListDone:
+            case urls.subsidyVCList:
+            case urls.subsidyVCListDetail:
                 return colors.subsidy;
             default:
                 return "";
@@ -141,6 +143,8 @@ const useHeader = () => {
             case urls.subsidyList:
             case urls.subsidyListDetail:
             case urls.subsidyListDone:
+            case urls.subsidyVCList:
+            case urls.subsidyVCListDetail:
                 return Headings.subsidyMenu;
             default:
                 return "不正なURL";
@@ -193,6 +197,8 @@ const useHeader = () => {
             case urls.subsidyList:
             case urls.subsidyListDetail:
             case urls.subsidyListDone:
+            case urls.subsidyVCList:
+            case urls.subsidyVCListDetail:
                 return icons.subsidy;
             default:
                 return "";
@@ -246,6 +252,8 @@ const useHeader = () => {
             case urls.subsidyList:
             case urls.subsidyListDetail:
             case urls.subsidyListDone:
+            case urls.subsidyVCList:
+            case urls.subsidyVCListDetail:
                 return { url: urls.subsidyMenu, label: "menu" };
             default:
                 return { url: "", label: "" };
@@ -298,6 +306,8 @@ const useHeader = () => {
             case urls.subsidyList:
             case urls.subsidyListDetail:
             case urls.subsidyListDone:
+            case urls.subsidyVCList:
+            case urls.subsidyVCListDetail:
                 return Titles.subsidyMenu;
             default:
                 return "";

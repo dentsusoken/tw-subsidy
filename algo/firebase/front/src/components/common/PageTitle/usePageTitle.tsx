@@ -28,7 +28,7 @@ const usePageTitle = () => {
         taxMenu: "税務署メニュー",
         subsidyMenu: "申請先メニュー",
         applicationList: "申請一覧",
-        VCRevoke:"デジタル証明書(VC)取消完了",
+        VCRevoke: "デジタル証明書(VC)取消完了",
     } as const;
 
     const getTitle = () => {
@@ -86,6 +86,7 @@ const usePageTitle = () => {
             case urls.accountVCList:
             case urls.taxVCList:
             case urls.VCList:
+            case urls.subsidyVCList:
                 return title.VCList;
             case urls.applicationListDetail:
             case urls.VCInquiry:
@@ -93,6 +94,7 @@ const usePageTitle = () => {
             case urls.residentVCListDetail:
             case urls.accountVCListDetail:
             case urls.taxVCListDetail:
+            case urls.subsidyVCListDetail:
                 return title.VCInquiry;
             case urls.accountVCListDone:
                 return title.VCRevoke;

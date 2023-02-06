@@ -39,13 +39,15 @@ export const urls = {
     VCInquiry: "/62_VCInquiry",
     applicationList: "/71_applicationList",
     applicationListDetail: "/72_applicationListDetail",
-    residentVCList:"/81_residentVCList",
-    residentVCListDetail:"/82_residentVCListDetail",
-    accountVCList:"/91_accountVCList",
-    accountVCListDetail:"/92_accountVCListDetail",
-    accountVCListDone:"/93_accountVCListDone",
-    taxVCList:"/101_taxVCList",
-    taxVCListDetail:"/102_taxVCListDetail"
+    residentVCList: "/81_residentVCList",
+    residentVCListDetail: "/82_residentVCListDetail",
+    accountVCList: "/91_accountVCList",
+    accountVCListDetail: "/92_accountVCListDetail",
+    accountVCListDone: "/93_accountVCListDone",
+    taxVCList: "/101_taxVCList",
+    taxVCListDetail: "/102_taxVCListDetail",
+    subsidyVCList: "/111_subsidyVCList",
+    subsidyVCListDetail: "/112_subsidyVCListDetail"
 } as const;
 
 export const icons = {

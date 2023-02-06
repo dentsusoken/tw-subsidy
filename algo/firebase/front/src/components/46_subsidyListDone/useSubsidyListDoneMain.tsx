@@ -13,15 +13,11 @@ const useSubsidyListDoneMain = () => {
     useEffect(() => {
         if (router.query.proc === "approve") {
             setTitle("処理完了")
-            setMsg(input.fullName + " 様の承認処理が完了しました。")
+            setMsg("承認処理が完了しました。")
         }
         else if (router.query.proc === "reject") {
             setTitle("処理完了")
-            setMsg(input.fullName + " 様の却下処理が完了しました。")
-        }
-        else if (router.query.proc === "delete") {
-            setTitle("承認取消完了")
-            setMsg(input.fullName + " 様の承認を取り消しました。")
+            setMsg("却下処理が完了しました。")
         }
     })
 
