@@ -75,6 +75,7 @@ const useHeader = () => {
             case urls.accountListDone:
             case urls.accountVCList:
             case urls.accountVCListDetail:
+            case urls.accountVCListDone:
             case urls.taxMenu:
             case urls.taxList:
             case urls.taxListDetail:
@@ -127,6 +128,7 @@ const useHeader = () => {
             case urls.accountListDone:
             case urls.accountVCList:
             case urls.accountVCListDetail:
+            case urls.accountVCListDone:
                 return Headings.accountMenu;
             case urls.taxMenu:
             case urls.taxList:
@@ -178,6 +180,7 @@ const useHeader = () => {
             case urls.accountListDone:
             case urls.accountVCList:
             case urls.accountVCListDetail:
+            case urls.accountVCListDone:
                 return icons.account;
             case urls.taxMenu:
             case urls.taxList:
@@ -232,6 +235,7 @@ const useHeader = () => {
             case urls.accountListDone:
             case urls.accountVCList:
             case urls.accountVCListDetail:
+            case urls.accountVCListDone:
                 return { url: urls.accountMenu, label: "menu" };
             case urls.taxList:
             case urls.taxListDetail:
@@ -281,6 +285,7 @@ const useHeader = () => {
             case urls.accountListDone:
             case urls.accountVCList:
             case urls.accountVCListDetail:
+            case urls.accountVCListDone:
                 return Titles.accountMenu;
             case urls.taxMenu:
             case urls.taxList:

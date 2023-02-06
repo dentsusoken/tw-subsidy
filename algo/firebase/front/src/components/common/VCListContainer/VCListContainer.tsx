@@ -30,7 +30,7 @@ const VCListContainer = ({ type, items }: VCListContainerTypes) => {
                                 <span className={"w-fit text-color-gray"}>{index + 1}.</span>
                                 <span className={"w-fit text-xs text-color-gray mr-3"}>{dayjs(item.issueDate).format("YY/MM/DD")}</span>
                                 <span className={"w-35 text-xs font-bold"}>{type} - VC{items.length - index}</span>
-                                <span className={"text-xs mr-2 " + (item.revokeStatus ? "text-color-gray" : "text-color-warnig")}>{item.revokeStatus ? "承認済" : "取消済"}</span>
+                                <span className={"text-xs mr-2 text-color-gray"}>{item.revokeStatus ? "承認済" : "取消済"}</span>
                                 <button className={"w-16 h-7 border rounded-lg"} onClick={() => onInquiry(type, item.id, items.length - index)}>照会</button>
                             </li>
                         ))

@@ -1,10 +1,11 @@
+import { issuerPw } from "@/lib/algo/account/accounts";
 import { getAlgod } from "@/lib/algo/algod/algods";
-import { verifyVerifiableCredential } from "@/lib/algosbt";
+import { revokeVerifiableCredential, verifyVerifiableCredential } from "@/lib/algosbt";
 import chainState from "@/lib/states/chainState";
 import holderDidAccountState from "@/lib/states/holderDidAccountState";
 import issuerDidAccountState from "@/lib/states/issuerDidAccountState";
 import { accountVCListState } from "@/lib/states/mockApp";
-import { AccountInputFormType } from "@/lib/types/mockApp";
+import { AccountInputFormType, AccountVCType } from "@/lib/types/mockApp";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -18,9 +19,14 @@ const AccountVCListDetailMain = () => {
   const router = useRouter();
   const AccountVCListGlobal = useRecoilValue(accountVCListState);
   const [input, setInput] = useState<AccountInputFormType>();
+  const [vc, setVC] = useState<AccountVCType>();
   const [revokeStatus, setRevokeStatus] = useState(true);
   const chain = useRecoilValue(chainState);
   const [isLoading, setIsLoading] = useState(true);
+  const [isRevoking, setIsRevoking] = useState(false);
+  const [chainType] = useRecoilState(chainState);
+  const [holderDidAccountGlobal] = useRecoilState(holderDidAccountState);
+  const [issuerDidAccountGlobal] = useRecoilState(issuerDidAccountState);
 
   useEffect(() => {
     (async () => {
@@ -30,6 +36,7 @@ const AccountVCListDetailMain = () => {
       const ResidentVC = AccountVCListGlobal.find((v) => v.message.content.content.id === Number(id));
       if (ResidentVC) {
         const revoke = await verifyVerifiableCredential(algod, ResidentVC);
+        setVC(ResidentVC);
         setInput(ResidentVC.message.content.content);
         setRevokeStatus(revoke);
       }
@@ -38,9 +45,21 @@ const AccountVCListDetailMain = () => {
     })();
   }, [AccountVCListGlobal, router.query])
 
-  const [chainType] = useRecoilState(chainState);
-  const [holderDidAccountGlobal] = useRecoilState(holderDidAccountState);
-  const [issuerDidAccountGlobal] = useRecoilState(issuerDidAccountState);
+  const revoke = async () => {
+    setIsRevoking(() => true);
+    const algod = getAlgod(chain);
+    if (issuerDidAccountGlobal && vc) {
+      await revokeVerifiableCredential(
+        algod,
+        issuerDidAccountGlobal,
+        vc,
+        issuerPw
+      );
+    }
+    setIsRevoking(() => false);
+    router.push("/93_accountVCListDone");
+  }
+
 
   return (
     <>
@@ -57,6 +76,12 @@ const AccountVCListDetailMain = () => {
               </div>
             </section>
             <AccountInquiry input={input} />
+            <div className={"relative"}>
+              {isRevoking
+                ? <span className={"absolute right-0 -translate-y-1/2 text-sm leading-relaxed text-yellow-500"}>VC発行中...</span>
+                : null
+              }
+            </div>
             <div className="py-0 px-[53px]">
               <div className="pt-4 pb-2 flex justify-between">
                 <button
@@ -65,10 +90,19 @@ const AccountVCListDetailMain = () => {
                 >
                   戻る
                 </button>
+                {revokeStatus &&
+                  <button
+                    onClick={revoke}
+                    className="input-form-button-red"
+                  >
+                    発行取消
+                  </button>
+                }
               </div>
+
             </div>
           </>}
-          <Loading isLoading={isLoading}/>
+        <Loading isLoading={isLoading} />
       </main>
     </>
   );

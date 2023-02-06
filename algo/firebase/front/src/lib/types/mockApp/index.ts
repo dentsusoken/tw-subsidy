@@ -43,6 +43,7 @@ export const urls = {
     residentVCListDetail:"/82_residentVCListDetail",
     accountVCList:"/91_accountVCList",
     accountVCListDetail:"/92_accountVCListDetail",
+    accountVCListDone:"/93_accountVCListDone",
     taxVCList:"/101_taxVCList",
     taxVCListDetail:"/102_taxVCListDetail"
 } as const;
