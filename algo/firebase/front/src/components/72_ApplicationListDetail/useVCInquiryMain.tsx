@@ -134,11 +134,26 @@ const useVCInquiryMain = () => {
 
     }, [residentRequestGlobal, VCListGlobal]);
 
+    const getVCType = () => {
+        switch (type) {
+            case "resident":
+                return "住民票紐付申請"
+            case "account":
+                return "口座実在証明申請"
+            case "tax":
+                return "納税証明書交付申請"
+            case "subsidy":
+                return "補助金申請"
+            default:
+                return ""
+        }
+    }
+
     const back = () => {
         router.push("/71_applicationList")
     }
 
-    return { type, residentInput, accountInput, taxInput, subsidyInput, back, reqItem, isLoading }
+    return { type, residentInput, accountInput, taxInput, subsidyInput, back, reqItem, isLoading, getVCType }
 };
 
 export default useVCInquiryMain;
