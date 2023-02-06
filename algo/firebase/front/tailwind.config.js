@@ -55,7 +55,8 @@ module.exports = {
         "color-subsidy-main": "rgba(240, 182, 33, 1)",
         "color-subsidy-shadow": "rgba(240, 182, 33, 0.5)",
         "color-vcheader": "#EBEAEA",
-        "color-vc-apply": "#5E8AE0"
+        "color-vc-apply": "#5E8AE0",
+        "color-step-icon": "rgba(167, 151, 146, 1)"
       },
       width: {
         "15": "3.75rem",

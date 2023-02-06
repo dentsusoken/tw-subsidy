@@ -10,7 +10,7 @@ const StepLink = ({ step }: StepLinkParams) => {
     return (
         <>
             <div className="flex justify-center items-start w-fit h-fit mx-auto">
-                <div className="flex justify-center items-center w-[53px] h-[53px] rounded-full bg-color-applier-accent z-10">
+                <div className="flex justify-center items-center w-[53px] h-[53px] rounded-full bg-color-step-icon z-10">
                     <span className="text-[13px] text-color-white font-bold">STEP{step}</span>
                 </div>
                 <Link href={getUrl()}>
