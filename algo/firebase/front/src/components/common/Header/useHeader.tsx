@@ -25,6 +25,14 @@ const useHeader = () => {
         VCInquiry: "デジタル証明書(VC)内容照会"
     } as const;
 
+    const Titles = {
+        applierMenu: "申請者メニュー",
+        residentMenu: "自治体メニュー",
+        accountMenu: "銀行メニュー",
+        taxMenu: "税務署メニュー",
+        subsidyMenu: "申請先メニュー",
+    } as const;
+
     const colors = {
         mainMenu: "bg-color-gray",
         applier: "bg-color-applier-main",
@@ -240,7 +248,58 @@ const useHeader = () => {
         }
     }
 
-    return { heading, color, getHeading, getBgColor, getIcon, getLink }
+    const getTitle = () => {
+        switch (router.pathname) {
+            case urls.applierMenu:
+            case urls.residentInput:
+            case urls.residentConfirm:
+            case urls.residentDone:
+            case urls.accountInput:
+            case urls.accountConfirm:
+            case urls.accountDone:
+            case urls.taxInput:
+            case urls.taxConfirm:
+            case urls.taxDone:
+            case urls.subsidyInput:
+            case urls.subsidyConfirm:
+            case urls.subsidyDone:
+            case urls.VCList:
+            case urls.VCInquiry:
+            case urls.applicationList:
+            case urls.applicationListDetail:
+                return Titles.applierMenu;
+            case urls.residentMenu:
+            case urls.residentList:
+            case urls.residentListDetail:
+            case urls.residentListDone:
+            case urls.residentVCList:
+            case urls.residentVCListDetail:
+                return Titles.residentMenu;
+            case urls.accountMenu:
+            case urls.accountList:
+            case urls.accountListDetail:
+            case urls.accountListDone:
+            case urls.accountVCList:
+            case urls.accountVCListDetail:
+                return Titles.accountMenu;
+            case urls.taxMenu:
+            case urls.taxList:
+            case urls.taxListDetail:
+            case urls.taxListDone:
+            case urls.taxVCList:
+            case urls.taxVCListDetail:
+                return Titles.taxMenu;
+            case urls.subsidyMenu:
+            case urls.subsidyList:
+            case urls.subsidyListDetail:
+            case urls.subsidyListDone:
+                return Titles.subsidyMenu;
+            default:
+                return "";
+        }
+    }
+
+    return { heading, color, getHeading, getBgColor, getIcon, getLink, getTitle }
 };
 
 export default useHeader;

@@ -1,17 +1,24 @@
 import Link from "next/link";
 import PageTitle from "../PageTitle";
 import useHeader from "./useHeader";
+import Head from 'next/head';
 
 const Header = () => {
-    const { getHeading, getBgColor, getIcon, getLink } = useHeader()
+    const { getHeading, getBgColor, getIcon, getLink, getTitle } = useHeader()
 
     const heading = getHeading();
     const bgColor = getBgColor();
     const icon = getIcon();
     const { url, label } = getLink();
+    const title = getTitle();
 
     return (
         <>
+            {title &&
+                <Head>
+                    <title>{title}</title>
+                </Head>
+            }
             <header>
                 <div className={`flex w-full h-16 py-5 px-5 ${bgColor}`}>
                     {icon && <img src={icon} alt="アイコン" className={"pr-2"} />}
