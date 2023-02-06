@@ -1,4 +1,4 @@
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { VCListState } from '@/lib/states/mockApp';
@@ -6,6 +6,9 @@ import { AccountInputFormType, ResidentInputFormType } from '@/lib/types/mockApp
 import { TaxInputFormType } from '@/lib/types/mockApp/Form';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ja';
+import { getAlgod } from '@/lib/algo/algod/algods';
+import chainState from '@/lib/states/chainState';
+import { verifyVerifiableCredential } from '@/lib/algosbt';
 
 const useVCInquiryMain = () => {
     const router = useRouter();
@@ -14,62 +17,58 @@ const useVCInquiryMain = () => {
     const [applicationDate, setApplicationDate] = useState("");
     const [issueDate, setIssueDate] = useState("");
     const [acceptDate, setAcceptDate] = useState("");
-    const [isEnabled, setIsEnabled] = useState(true);
+    const [revokeStatus, setRevokeStatus] = useState(true);
+    const [isLoading, setIsLoading] = useState(true);
     const [VCListGlobal, setVCListGlobal] = useRecoilState(VCListState);
     const [residentInput, setResidentInput] = useState<ResidentInputFormType>()
     const [accountInput, setAccountInput] = useState<AccountInputFormType>()
     const [taxInput, setTaxInput] = useState<TaxInputFormType>()
+    const chain = useRecoilValue(chainState);
 
     useEffect(() => {
-        if (typeof router.query.idx === "string" && typeof router.query.type === "string") {
-            setType(router.query.type)
-            setIdx(parseInt(router.query.idx))
-            if (router.query.type === "住民票") {
-                setResidentInput(VCListGlobal.resident[parseInt(router.query.idx) - 1].message.content.content);
-                setApplicationDate(dayjs(VCListGlobal.resident[parseInt(router.query.idx) - 1].message.content.content.applicationDate).format("YY/MM/DD HH:mm"));
-                setIssueDate(dayjs(VCListGlobal.resident[parseInt(router.query.idx) - 1].message.content.content.issueDate).format("YY/MM/DD HH:mm"));
+        (async () => {
+            setIsLoading(() => true);
 
-            }
-            else if (router.query.type === "口座実在証明書") {
-                setAccountInput(VCListGlobal.account[parseInt(router.query.idx) - 1].message.content.content);
-                setApplicationDate(dayjs(VCListGlobal.account[parseInt(router.query.idx) - 1].message.content.content.applicationDate).format("YY/MM/DD HH:mm"));
-                setIssueDate(dayjs(VCListGlobal.account[parseInt(router.query.idx) - 1].message.content.content.issueDate).format("YY/MM/DD HH:mm"));
+            const algod = getAlgod(chain);
 
+            if (typeof router.query.idx === "string" && typeof router.query.type === "string") {
+                setType(router.query.type)
+                setIdx(parseInt(router.query.idx))
+                if (router.query.type === "住民票") {
+                    const VC = VCListGlobal.resident[parseInt(router.query.idx) - 1];
+                    setResidentInput(VC.message.content.content);
+                    setApplicationDate(dayjs(VC.message.content.content.applicationDate).format("YY/MM/DD HH:mm"));
+                    setIssueDate(dayjs(VC.message.content.content.issueDate).format("YY/MM/DD HH:mm"));
+                    const revoke = await verifyVerifiableCredential(algod, VC);
+                    setRevokeStatus(revoke);
+                }
+                else if (router.query.type === "口座実在証明書") {
+                    const VC = VCListGlobal.account[parseInt(router.query.idx) - 1];
+                    setAccountInput(VC.message.content.content);
+                    setApplicationDate(dayjs(VC.message.content.content.applicationDate).format("YY/MM/DD HH:mm"));
+                    setIssueDate(dayjs(VC.message.content.content.issueDate).format("YY/MM/DD HH:mm"));
+                    const revoke = await verifyVerifiableCredential(algod, VC);
+                    setRevokeStatus(revoke);
+                }
+                else if (router.query.type === "納税証明書") {
+                    const VC = VCListGlobal.tax[parseInt(router.query.idx) - 1];
+                    setTaxInput(VC.message.content.content);
+                    setApplicationDate(dayjs(VC.message.content.content.applicationDate).format("YY/MM/DD HH:mm"));
+                    setIssueDate(dayjs(VC.message.content.content.issueDate).format("YY/MM/DD HH:mm"));
+                    const revoke = await verifyVerifiableCredential(algod, VC);
+                    setRevokeStatus(revoke);
+                }
             }
-            else if (router.query.type === "納税証明書") {
-                setTaxInput(VCListGlobal.tax[parseInt(router.query.idx) - 1].message.content.content);
-                setApplicationDate(dayjs(VCListGlobal.tax[parseInt(router.query.idx) - 1].message.content.content.applicationDate).format("YY/MM/DD HH:mm"));
-                setIssueDate(dayjs(VCListGlobal.tax[parseInt(router.query.idx) - 1].message.content.content.issueDate).format("YY/MM/DD HH:mm"));
 
-            }
-        }
-    });
+            setIsLoading(() => false);
+        })();
+    }, [VCListGlobal, router.query]);
 
     const back = () => {
         router.push("/61_VCList")
     }
 
-    const accept = async () => {
-        dayjs.locale('ja');
-        const now = dayjs();
-        const acceptDate = dayjs(now).format('YYYY-MM-DD HH:mm:ss');
-        setIsEnabled(!isEnabled);
-        if (type === "住民票") {
-            const replaceData = VCListGlobal.resident.map((value, index) => index === idx - 1 ?  value : value)
-            setVCListGlobal((items) => (items.resident ? { ...items, resident: replaceData } : items));
-        }
-        else if (type === "口座実在証明書") {
-            const replaceData = VCListGlobal.account.map((value, index) => index === idx - 1 ? value: value)
-            setVCListGlobal((items) => (items.account ? { ...items, account: replaceData } : items));
-        }
-        else if (type === "納税証明書") {
-            const replaceData = VCListGlobal.tax.map((value, index) => index === idx - 1 ? value : value)
-            setVCListGlobal((items) => (items.tax ? { ...items, tax: replaceData } : items));
-        }
-        setAcceptDate(now.format("YY/MM/DD HH:mm"));
-    }
-
-    return { type, idx, applicationDate, issueDate, acceptDate, isEnabled, residentInput, accountInput, taxInput, back, accept }
+    return { type, idx, applicationDate, issueDate, acceptDate, revokeStatus, residentInput, accountInput, taxInput, isLoading, back }
 };
 
 export default useVCInquiryMain;

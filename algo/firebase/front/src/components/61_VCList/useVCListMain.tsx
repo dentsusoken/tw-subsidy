@@ -3,44 +3,70 @@ import { useRecoilValue } from 'recoil';
 import { VCListState } from '@/lib/states/mockApp';
 import { useState, useEffect } from 'react';
 import { VCListType } from '@/lib/types/mockApp/Form';
-import { VCListItems } from '../common/VCListContainer/VCListContainer';
+import { VCListItem } from '../common/VCListContainer/VCListContainer';
 import dayjs from 'dayjs';
+import chainState from '@/lib/states/chainState';
+import { getAlgod } from '@/lib/algo/algod/algods';
+import { verifyVerifiableCredential } from '@/lib/algosbt';
 
 const useVCListMain = () => {
     const VCListGlobal = useRecoilValue(VCListState);
     const [VCList, setVCList] = useState<VCListType>()
-    const [residentVCList, setResidentVCList] = useState<VCListItems>();
-    const [accountVCList, setAccountVCList] = useState<VCListItems>();
-    const [taxVCList, setTaxVCList] = useState<VCListItems>();
+    const [residentList, setResidentList] = useState<VCListItem[]>([]);
+    const [accountList, setAccountList] = useState<VCListItem[]>([]);
+    const [taxList, setTaxList] = useState<VCListItem[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+
+    const chain = useRecoilValue(chainState);
 
     useEffect(() => {
-        setVCList(VCListGlobal);
-        if (VCListGlobal) {
-            const residentList: VCListItems = VCListGlobal.resident.map((item) => {
-                return {
-                    id: item.message.content.content.id,
-                    issueDate: item.message.content.content.issueDate,
-                }
-            });
-            const accountList: VCListItems = VCListGlobal.account.map((item) => {
-                return {
-                    id: item.message.content.content.id,
-                    issueDate: item.message.content.content.issueDate,
-                }
-            });
-            const taxList: VCListItems = VCListGlobal.tax.map((item) => {
-                return {
-                    id: item.message.content.content.id,
-                    issueDate: item.message.content.content.issueDate,
-                }
-            });
-            setResidentVCList(sortList(residentList));
-            setAccountVCList(sortList(accountList));
-            setTaxVCList(sortList(taxList));
-        }
+        (async () => {
+            setIsLoading(() => true);
+
+            const algod = getAlgod(chain);
+
+            setVCList(VCListGlobal);
+            if (VCListGlobal.resident) {
+                const residentList: VCListItem[] = await Promise.all(VCListGlobal.resident.map(async (item) => {
+                    const revokeStatus = await verifyVerifiableCredential(algod, item);
+                    return {
+                        id: item.message.content.content.id,
+                        applicationDate: item.message.content.content.applicationDate,
+                        issueDate: item.message.content.content.issueDate,
+                        revokeStatus: revokeStatus,
+                    }
+                }));
+                setResidentList(residentList);
+            }
+            if (VCListGlobal.account) {
+                const accountList: VCListItem[] = await Promise.all(VCListGlobal.account.map(async (item) => {
+                    const revokeStatus = await verifyVerifiableCredential(algod, item);
+                    return {
+                        id: item.message.content.content.id,
+                        applicationDate: item.message.content.content.applicationDate,
+                        issueDate: item.message.content.content.issueDate,
+                        revokeStatus: revokeStatus,
+                    }
+                }));
+                setAccountList(accountList);
+            }
+            if (VCListGlobal.tax) {
+                const taxList: VCListItem[] = await Promise.all(VCListGlobal.tax.map(async (item) => {
+                    const revokeStatus = await verifyVerifiableCredential(algod, item);
+                    return {
+                        id: item.message.content.content.id,
+                        applicationDate: item.message.content.content.applicationDate,
+                        issueDate: item.message.content.content.issueDate,
+                        revokeStatus: revokeStatus,
+                    }
+                }));
+                setTaxList(taxList);
+            }
+            setIsLoading(() => false);
+        })();
     }, [VCList]);
 
-    const sortList = (list: VCListItems) => {
+    const sortList = (list: VCListItem[]) => {
         list.sort((a, b) => {
             if (dayjs(b.issueDate).isBefore(dayjs(a.issueDate))) {
                 return -1;
@@ -55,7 +81,7 @@ const useVCListMain = () => {
         return list;
     }
 
-    return { residentVCList, accountVCList, taxVCList }
+    return { residentList, accountList, taxList, isLoading }
 };
 
 export default useVCListMain;

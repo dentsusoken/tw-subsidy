@@ -39,7 +39,7 @@ const ApplicationListContainer = ({ type, items }: ApplicationListContainerParam
                                 <li key={index} className={"flex items-center h-11 pl-3 pr-4 my-1 w-full border-b text-sm last:border-b-0"}>
                                     <span className={"w-14 text-xs mr-3"}>{dayjs(item.applicationDate).format("YY/MM/DD")}</span>
                                     <span className={"w-32"}>{msg}</span>
-                                    <span className={"ml-auto mr-2 text-xs " + (item.issuedStatus ? "text-color-gray" : "text-color-warnig")}>{item.issuedStatus ? item.revokeStatus ? "承認済み" : "取消済" : "承認待ち"}</span>
+                                    <span className={"ml-auto mr-2 text-xs " + (item.issuedStatus ? "text-color-gray" : "text-color-warnig")}>{item.issuedStatus ? item.revokeStatus ? "承認済" : "取消済" : "承認待ち"}</span>
                                     <button className={"w-16 h-7 ml-auto border rounded-lg"} onClick={() => onInquiry(type, item.id)}>照会</button>
                                 </li>
                             ))

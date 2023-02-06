@@ -1,18 +1,24 @@
 import Header from '@/components/common/Header';
 import useVCListMain from './useVCListMain';
 import VCListContainer from '../common/VCListContainer';
+import Loading from '../common/Loading';
 
 
 const VCListMain = () => {
-    const { residentVCList, accountVCList, taxVCList } = useVCListMain()
+    const { residentList, accountList, taxList, isLoading } = useVCListMain()
 
     return (
         <>
             <Header />
-            <main className={"mx-auto"}>
-                <VCListContainer type={"住民票"} items={residentVCList} />
-                <VCListContainer type={"口座実在証明書"} items={accountVCList} />
-                <VCListContainer type={"納税証明書"} items={taxVCList} />
+            <main className={""}>
+                {!isLoading &&
+                    <>
+                        <VCListContainer type={"住民票"} items={residentList} />
+                        <VCListContainer type={"口座実在証明書"} items={accountList} />
+                        <VCListContainer type={"納税証明書"} items={taxList} />
+                    </>
+                }
+                <Loading isLoading={isLoading} />
             </main>
         </>
     )

@@ -84,8 +84,10 @@ const usePageTitle = () => {
             case urls.residentVCList:
             case urls.accountVCList:
             case urls.taxVCList:
+            case urls.VCList:
                 return title.VCList;
             case urls.applicationListDetail:
+            case urls.VCInquiry:
                 return title.ApplyInquiry;
             case urls.residentVCListDetail:
             case urls.accountVCListDetail:

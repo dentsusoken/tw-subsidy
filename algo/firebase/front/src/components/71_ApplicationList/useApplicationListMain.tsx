@@ -29,7 +29,7 @@ const useApplicationListMain = () => {
             const algod = getAlgod(chain);
 
             if (residentRequestGlobal) {
-                const residentList = await Promise.all(residentRequestGlobal.map(async (item) => {
+                const residentList:RequestItem[] = await Promise.all(residentRequestGlobal.map(async (item) => {
                     let issuedStatus = false;
                     let revokeStatus = false;
                     if (VCList.resident) {
