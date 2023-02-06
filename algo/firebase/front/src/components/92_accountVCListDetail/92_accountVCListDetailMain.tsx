@@ -1,3 +1,5 @@
+import { getAlgod } from "@/lib/algo/algod/algods";
+import { verifyVerifiableCredential } from "@/lib/algosbt";
 import chainState from "@/lib/states/chainState";
 import holderDidAccountState from "@/lib/states/holderDidAccountState";
 import issuerDidAccountState from "@/lib/states/issuerDidAccountState";
@@ -9,21 +11,31 @@ import { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { AccountInquiry } from "../common/Forms";
 import Header from "../common/Header";
+import Loading from "../common/Loading";
 
 
 const AccountVCListDetailMain = () => {
   const router = useRouter();
   const AccountVCListGlobal = useRecoilValue(accountVCListState);
   const [input, setInput] = useState<AccountInputFormType>();
+  const [revokeStatus, setRevokeStatus] = useState(true);
+  const chain = useRecoilValue(chainState);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const id = router.query.id;
+    (async () => {
+      setIsLoading(() => true);
+      const algod = getAlgod(chain);
+      const id = router.query.id;
+      const ResidentVC = AccountVCListGlobal.find((v) => v.message.content.content.id === Number(id));
+      if (ResidentVC) {
+        const revoke = await verifyVerifiableCredential(algod, ResidentVC);
+        setInput(ResidentVC.message.content.content);
+        setRevokeStatus(revoke);
+      }
 
-    const AccountVC = AccountVCListGlobal.find((v) => v.message.content.content.id === Number(id));
-
-    if (AccountVC) {
-      setInput(AccountVC.message.content.content);
-    }
+      setIsLoading(() => false);
+    })();
   }, [AccountVCListGlobal, router.query])
 
   const [chainType] = useRecoilState(chainState);
@@ -34,28 +46,29 @@ const AccountVCListDetailMain = () => {
     <>
       <Header />
       <main className="bg-color-background">
-        {input &&
+        {input && !isLoading &&
           <>
             <section className={`mb-4`}>
               <div className={"w-72 mx-auto p-4 border-b text-center"}>
                 <p className={"text-base font-bold"}>{`口座実在証明書 VC${router.query.idx}`}</p>
-                <p className={"text-xs leading-11 text-color-gray-search"}>受入済</p>
+                <p className={"text-xs leading-11 text-color-gray-search"}>{revokeStatus ? "発行済" : "取消済"}</p>
                 <p className={"text-xs text-color-gray-search"}>申請日 {dayjs(input.applicationDate).format("YY/MM/DD HH:mm")}</p>
                 <p className={"text-xs text-color-gray-search"}>発行日 {dayjs(input.issueDate).format("YY/MM/DD HH:mm")}</p>
               </div>
             </section>
             <AccountInquiry input={input} />
+            <div className="py-0 px-[53px]">
+              <div className="pt-4 pb-2 flex justify-between">
+                <button
+                  onClick={() => router.push("/91_accountVCList")}
+                  className="input-form-button-white"
+                >
+                  戻る
+                </button>
+              </div>
+            </div>
           </>}
-        <div className="py-0 px-[53px]">
-          <div className="pt-4 flex justify-between">
-            <button
-              onClick={() => router.push("/91_accountVCList")}
-              className="input-form-button-white"
-            >
-              戻る
-            </button>
-          </div>
-        </div>
+          <Loading isLoading={isLoading}/>
       </main>
     </>
   );

@@ -3,32 +3,53 @@ import { useErrorHandler } from 'react-error-boundary';
 import { useRecoilValue } from 'recoil';
 
 import Header from '../common/Header';
-import { ResidentInputFormType } from '@/lib/types/mockApp/inputForm';
 import { residentVCListState } from '@/lib/states/mockApp';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ja';
 import SearchArea from '../common/SearchArea';
 import VCListItem from '../common/VCListItem';
+import { verifyVerifiableCredential } from '@/lib/algosbt';
+import { getAlgod } from '@/lib/algo/algod/algods';
+import chainState from '@/lib/states/chainState';
+import { VCInfo } from '../common/VCListItem/VCListItem';
+import Loading from '../common/Loading';
+
+
 
 const ResidentVCListMain = () => {
   const [listCount, setListCount] = useState(0);
   const [query, setQuery] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   const VClistState = useRecoilValue(residentVCListState);
-  const [listState, setListState] = useState<ResidentInputFormType[]>([]);
+  const chain = useRecoilValue(chainState);
+  const [listState, setListState] = useState<VCInfo[]>([]);
 
   const errorHandler = useErrorHandler();
 
   useEffect(() => {
-    try {
-      const verifiedList: ResidentInputFormType[] = VClistState.map((item) => item.message.content.content);
-      setListState(verifiedList)
-      setListCount(VClistState.length);
-      dayjs.locale("ja")
-    } catch (e) {
-      errorHandler(e);
-    }
-  }, [VClistState.length, errorHandler]);
+    (async () => {
+      setIsLoading(() => true);
+      const algod = getAlgod(chain);
+      try {
+        const verifiedList = await Promise.all(VClistState.map(async (item) => {
+          const revokeStatus = await verifyVerifiableCredential(algod, item)
+          return {
+            id: item.message.content.content.id,
+            name: item.message.content.content.fullName,
+            issueDate: item.message.content.content.issueDate,
+            revoked: revokeStatus
+          }
+        }));
+        setListState(verifiedList)
+        setListCount(VClistState.length);
+        dayjs.locale("ja")
+      } catch (e) {
+        errorHandler(e);
+      }
+      setIsLoading(() => false);
+    })();
+  }, [VClistState, errorHandler]);
 
   // [id]の降順で表示
   const listForSort = [...listState];
@@ -42,13 +63,16 @@ const ResidentVCListMain = () => {
         <div className="py-3 px-0 bg-color-gray-count text-center h-[46px] font-sans">
           {listCount} 件中 - {listCount} 件を表示
         </div>
-        <ul>
-          {listForSort.map((item: ResidentInputFormType, index) => {
-            return (
-              <VCListItem key={index} name={item.fullName} revoked={true} url={{ pathname: "/82_residentVCListDetail", query: { id: item.id, idx: listForSort.length - index } }} />
-            );
-          })}
-        </ul>
+        {!isLoading &&
+          <ul>
+            {listForSort.map((item, index) => {
+              return (
+                <VCListItem key={index} item={item} url={{ pathname: "/82_residentVCListDetail", query: { id: item.id, idx: listForSort.length - index } }} />
+              );
+            })}
+          </ul>
+        }
+        <Loading isLoading={isLoading} />
       </main>
     </>
   );
