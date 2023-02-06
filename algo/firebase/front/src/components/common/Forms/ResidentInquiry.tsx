@@ -25,11 +25,11 @@ const ResidentInquiry = ({ input }: ResidentInquiryParams) => {
     <>
       <FormProvider {...methods} >
         <section>
-          <InputArea<ResidentInputFormType> label={"申請年度"} name={"fullName"} isEnabled={false} />
-          <InputArea<ResidentInputFormType> label={"法人名称"} name={"fullNameFurigana"} isEnabled={false} />
-          <InputArea<ResidentInputFormType> label={"所在地"} name={"address"} isEnabled={false} />
-          <InputArea<ResidentInputFormType> label='申請者名' name='addressRegistDate' placeholder='' isEnabled={false} />
-          <InputArea<ResidentInputFormType> label='申請者住所' name="permanentAddress" placeholder='' isEnabled={false} />
+          <InputArea<ResidentInputFormType> label={"氏名"} name={"fullName"} isEnabled={false} />
+          <InputArea<ResidentInputFormType> label={"氏名フリガナ"} name={"fullNameFurigana"} isEnabled={false} />
+          <InputArea<ResidentInputFormType> label={"住所"} name={"address"} isEnabled={false} />
+          <InputArea<ResidentInputFormType> label='住民となった年月' name='addressRegistDate' placeholder='' isEnabled={false} />
+          <InputArea<ResidentInputFormType> label='本籍地' name="permanentAddress" placeholder='' isEnabled={false} />
         </section>
       </FormProvider>
     </>

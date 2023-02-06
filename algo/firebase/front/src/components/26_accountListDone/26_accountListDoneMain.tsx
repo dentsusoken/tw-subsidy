@@ -3,6 +3,9 @@ import { useRecoilValue } from 'recoil';
 
 import Header from '../common/Header';
 import { accountVCListState } from '@/lib/states/mockApp';
+import Container from '../common/Container';
+import ChangeUserButton from '../common/ChangeUserButton';
+import { urls } from '@/lib/types/mockApp';
 
 const AccountListDoneMain = () => {
   const router = useRouter();
@@ -12,37 +15,22 @@ const AccountListDoneMain = () => {
   const selectDetail = listState.find((v) => v.message.content.content.id === Number(router.query.id));
 
   const onSubmit = () => {
-    router.push("/27_VCAccept");
+    router.push("/27_VCapprove");
   };
 
   return (
     <>
       <Header />
       <main className="bg-color-background">
-        <div className="pt-[31px] px-[27px] pb-[41px] text-input-form-text font-bold">
-          <h2>処理完了</h2>
-        </div>
-        <div className="py-0 px-[53px]">
+        <Container>
           <p className="py-16 text-center text-[14px] leading-relaxed">
-            {selectDetail ? selectDetail.message.content.content.applicantName + ' ' : ' '}
-            様の承認処理が完了しました。
+            {router.query.proc === "approve" ? "承認" : "却下"}処理が完了しました。
           </p>
-          <div className="pt-4 flex justify-between">
-            <button
-              onClick={() => {
-                router.push({
-                  pathname: '/24_account-list',
-                });
-              }}
-              className="input-form-button-white-done"
-            >
-              申請一覧へ戻る
-            </button>
-            <button onClick={onSubmit} className="input-form-button-green-done">
-              申請者の画面へ
-            </button>
+          <div className={"flex flex-col justify-between gap-4"}>
+            <ChangeUserButton text={"申請一覧へ"} currentUser={"applicant"} onClick={() => router.push(urls.accountList)} />
+            <ChangeUserButton text={"銀行メニューへ"} currentUser={"applicant"} onClick={() => router.push(urls.accountMenu)} />
           </div>
-        </div>
+        </Container>
       </main>
     </>
   );

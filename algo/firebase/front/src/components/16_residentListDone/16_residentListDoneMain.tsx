@@ -3,6 +3,9 @@ import { useRecoilValue } from 'recoil';
 
 import Header from '../common/Header';
 import { residentVCListState } from '@/lib/states/mockApp';
+import Container from '../common/Container';
+import ChangeUserButton from '../common/ChangeUserButton';
+import { urls } from '@/lib/types/mockApp';
 
 const ResidentListDoneMain = () => {
   const router = useRouter();
@@ -13,7 +16,7 @@ const ResidentListDoneMain = () => {
 
   const onSubmit = () => {
     router.push({
-      pathname: '/17_vc-accept',
+      pathname: '/17_vc-approve',
       query: { application: '住民票', message: '住民票紐付' },
     });
   };
@@ -22,30 +25,15 @@ const ResidentListDoneMain = () => {
     <>
       <Header />
       <main className="bg-color-background">
-        <div className="pt-[31px] px-[27px] pb-[41px] text-input-form-text font-bold">
-          <h2>処理完了</h2>
-        </div>
-        <div className="py-0 px-[53px]">
+        <Container>
           <p className="py-16 text-center text-[14px] leading-relaxed">
-            {selectDetail ? selectDetail.message.content.content.fullName + ' ' : ' '}
-            様の承認処理が完了しました。
+            {router.query.proc === "approve" ? "承認" : "却下"}処理が完了しました。
           </p>
-          <div className="pt-4 flex justify-between">
-            <button
-              onClick={() => {
-                router.push({
-                  pathname: '/14_resident-list',
-                });
-              }}
-              className="input-form-button-white-done"
-            >
-              申請一覧へ戻る
-            </button>
-            <button onClick={onSubmit} className="input-form-button-green-done">
-              申請者の画面へ
-            </button>
+          <div className={"flex flex-col justify-between gap-4"}>
+            <ChangeUserButton text={"申請一覧へ"} currentUser={"applicant"} onClick={() => router.push(urls.residentList)} />
+            <ChangeUserButton text={"自治体メニューへ"} currentUser={"applicant"} onClick={() => router.push(urls.residentMenu)} />
           </div>
-        </div>
+        </Container>
       </main>
     </>
   );
