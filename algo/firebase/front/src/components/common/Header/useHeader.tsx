@@ -11,7 +11,7 @@ const useHeader = () => {
     const Headings = {
         mainMenu: "DEMO MENU",
         applierMenu: "申請者",
-        residentMenu: "区役所",
+        residentMenu: "自治体",
         accountMenu: "銀行",
         taxMenu: "税務署",
         subsidyMenu: "申請先",
@@ -59,14 +59,20 @@ const useHeader = () => {
             case urls.residentList:
             case urls.residentListDetail:
             case urls.residentListDone:
+            case urls.residentVCList:
+            case urls.residentVCListDetail:
             case urls.accountMenu:
             case urls.accountList:
             case urls.accountListDetail:
             case urls.accountListDone:
+            case urls.accountVCList:
+            case urls.accountVCListDetail:
             case urls.taxMenu:
             case urls.taxList:
             case urls.taxListDetail:
             case urls.taxListDone:
+            case urls.taxVCList:
+            case urls.taxVCListDetail:
                 return colors.issuer;
             case urls.subsidyMenu:
             case urls.subsidyList:
@@ -104,16 +110,22 @@ const useHeader = () => {
             case urls.residentList:
             case urls.residentListDetail:
             case urls.residentListDone:
+            case urls.residentVCList:
+            case urls.residentVCListDetail:
                 return Headings.residentMenu;
             case urls.accountMenu:
             case urls.accountList:
             case urls.accountListDetail:
             case urls.accountListDone:
+            case urls.accountVCList:
+            case urls.accountVCListDetail:
                 return Headings.accountMenu;
             case urls.taxMenu:
             case urls.taxList:
             case urls.taxListDetail:
             case urls.taxListDone:
+            case urls.taxVCList:
+            case urls.taxVCListDetail:
                 return Headings.taxMenu;
             case urls.subsidyMenu:
             case urls.subsidyList:
@@ -149,16 +161,22 @@ const useHeader = () => {
             case urls.residentList:
             case urls.residentListDetail:
             case urls.residentListDone:
+            case urls.residentVCList:
+            case urls.residentVCListDetail:
                 return icons.resident;
             case urls.accountMenu:
             case urls.accountList:
             case urls.accountListDetail:
             case urls.accountListDone:
+            case urls.accountVCList:
+            case urls.accountVCListDetail:
                 return icons.account;
             case urls.taxMenu:
             case urls.taxList:
             case urls.taxListDetail:
             case urls.taxListDone:
+            case urls.taxVCList:
+            case urls.taxVCListDetail:
                 return icons.tax;
             case urls.subsidyMenu:
             case urls.subsidyList:
@@ -198,14 +216,20 @@ const useHeader = () => {
             case urls.residentList:
             case urls.residentListDetail:
             case urls.residentListDone:
+            case urls.residentVCList:
+            case urls.residentVCListDetail:
                 return { url: urls.residentMenu, label: "menu" };
             case urls.accountList:
             case urls.accountListDetail:
             case urls.accountListDone:
+            case urls.accountVCList:
+            case urls.accountVCListDetail:
                 return { url: urls.accountMenu, label: "menu" };
             case urls.taxList:
             case urls.taxListDetail:
             case urls.taxListDone:
+            case urls.taxVCList:
+            case urls.taxVCListDetail:
                 return { url: urls.taxMenu, label: "menu" };
             case urls.subsidyList:
             case urls.subsidyListDetail:

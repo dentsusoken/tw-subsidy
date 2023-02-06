@@ -13,8 +13,8 @@ const usePageTitle = () => {
         ApplyList: "申請一覧",
         ApplyInquiry: "申請内容照会",
         VCList: "デジタル証明書(VC)一覧",
-        VCInquiry: "デジタル証明書(VC)照会",
-        residentMenu: "区役所メニュー",
+        VCInquiry: "デジタル証明書(VC)内容照会",
+        residentMenu: "自治体メニュー",
         residentList: "住民票紐付申請一覧",
         residentListDetail: "住民票紐付申請内容照会",
         accountList: "口座実在証明申請一覧",
@@ -81,6 +81,15 @@ const usePageTitle = () => {
                 return title.issueDone;
             case urls.applicationList:
                 return title.applicationList
+
+            case urls.residentVCList:
+            case urls.accountVCList:
+            case urls.taxVCList:
+                return title.VCList;
+            case urls.residentVCListDetail:
+            case urls.accountVCListDetail:
+            case urls.taxVCListDetail:
+                return title.VCInquiry;
         }
     }
 

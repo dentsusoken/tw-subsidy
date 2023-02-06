@@ -24,7 +24,7 @@ const useConfirmLink = (actor: string, type: string) => {
                     case "application":
                         return urls.residentList;
                     case "VC":
-                        return urls.mainMenu;
+                        return urls.residentVCList;
                     default:
                         return "";
                 }
@@ -33,7 +33,7 @@ const useConfirmLink = (actor: string, type: string) => {
                     case "application":
                         return urls.accountList;
                     case "VC":
-                        return urls.mainMenu;
+                        return urls.accountVCList;
                     default:
                         return "";
                 }
@@ -42,7 +42,7 @@ const useConfirmLink = (actor: string, type: string) => {
                     case "application":
                         return urls.taxList;
                     case "VC":
-                        return urls.mainMenu;
+                        return urls.taxVCList;
                     default:
                         return "";
                 }

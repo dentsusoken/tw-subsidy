@@ -39,6 +39,12 @@ export const urls = {
     VCInquiry: "/62_VCInquiry",
     applicationList: "/71_applicationList",
     applicationListDetail: "/72_applicationListDetail",
+    residentVCList:"/81_residentVCList",
+    residentVCListDetail:"/82_residentVCListDetail",
+    accountVCList:"/91_accountVCList",
+    accountVCListDetail:"/92_accountVCListDetail",
+    taxVCList:"/101_taxVCList",
+    taxVCListDetail:"/102_taxVCListDetail"
 } as const;
 
 export const icons = {
