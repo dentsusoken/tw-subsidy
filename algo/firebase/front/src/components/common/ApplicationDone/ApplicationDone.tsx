@@ -3,22 +3,29 @@ import Header from '@/components/common/Header';
 import Progress from '@/components/common/Progress';
 import ChangeUserButton from '@/components/common/ChangeUserButton';
 import useApplicationDone from './useApplicaitonDone';
+import { useRouter } from 'next/router';
+import { urls } from '@/lib/types/mockApp';
 
 
 const ApplicationDone = () => {
-    const { getMsg, backMenu } = useApplicationDone()
+    const { getMsg, backMenu } = useApplicationDone();
+    const router = useRouter();
 
     return (
         <>
             <Header />
             <main>
-            <Progress status={"done"} />
+                <Progress status={"done"} />
                 <Container className='mt-16'>
                     <div className={"text-center text-sm mb-[50px]"}>
                         <p>{getMsg()}が完了しました。</p>
                         <p>承認されるまでお待ちください。</p>
                     </div>
-                    <ChangeUserButton text={"申請者メニューへ"} currentUser={"applicant"} onClick={backMenu}/>
+                    <div className={"flex flex-col justify-between gap-4"}>
+                        <ChangeUserButton text={"申請者メニューへ"} currentUser={"applicant"} onClick={backMenu} />
+                        {router.pathname === urls.taxDone && <ChangeUserButton text={"申請者メニューへ"} currentUser={"applicant"} onClick={() => router.push(urls.taxMenu)} />}
+                        {router.pathname === urls.subsidyDone && <ChangeUserButton text={"申請者メニューへ"} currentUser={"applicant"} onClick={() => router.push(urls.subsidyMenu)} />}
+                    </div>
                 </Container>
             </main>
 
