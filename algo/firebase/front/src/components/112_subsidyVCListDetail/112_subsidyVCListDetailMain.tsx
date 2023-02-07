@@ -45,7 +45,7 @@ const SubsidyVCListDetailMain = () => {
           <>
             <section className={`mb-4`}>
               <div className={"w-72 mx-auto p-4 border-b text-center"}>
-                <p className={"text-base font-bold"}>{`納税証明書 VC${router.query.idx}`}</p>
+                <p className={"text-base font-bold"}>{`補助金申請 VC${router.query.idx}`}</p>
                 <p className={"text-xs leading-11 text-color-gray-search"}>{revokeStatus ? "発行済" : "取消済"}</p>
                 <p className={"text-xs text-color-gray-search"}>申請日 {dayjs(input.applicationDate).format("YY/MM/DD HH:mm")}</p>
                 <p className={"text-xs text-color-gray-search"}>発行日 {dayjs(input.issueDate).format("YY/MM/DD HH:mm")}</p>

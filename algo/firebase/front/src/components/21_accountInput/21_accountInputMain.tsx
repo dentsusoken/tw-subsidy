@@ -4,7 +4,7 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 
 import Header from '../common/Header';
 import { AccountInputFormType, ResidentInputFormType } from '@/lib/types/mockApp/inputForm';
-import { accountInputState, VCListState } from '@/lib/states/mockApp';
+import { accountInputState, VCListState, residentVCListState } from '@/lib/states/mockApp';
 import { useEffect, useState } from 'react';
 import Progress from '../common/Progress';
 
@@ -13,7 +13,7 @@ const AccountInputMain = () => {
 
   const [input, setInput] = useRecoilState(accountInputState);
 
-  const VCListGlobal = useRecoilValue(VCListState);
+  const VCListGlobal = useRecoilValue(residentVCListState);
   const [residentVC, setResidentVC] = useState<ResidentInputFormType>();
 
   const {
@@ -33,10 +33,11 @@ const AccountInputMain = () => {
   });
 
   useEffect(() => {
-    if (VCListGlobal && VCListGlobal.resident.length > 0) {
-      setResidentVC(VCListGlobal.resident[VCListGlobal.resident.length - 1].message.content.content);
-      setValue("applicantName", VCListGlobal.resident[VCListGlobal.resident.length - 1].message.content.content.fullName);
-      setValue("applicantAddress", VCListGlobal.resident[VCListGlobal.resident.length - 1].message.content.content.address);
+    if (VCListGlobal && VCListGlobal.length > 0) {
+      const idx = VCListGlobal.length - 1
+      setResidentVC(VCListGlobal[idx].message.content.content);
+      setValue("applicantName", VCListGlobal[idx].message.content.content.fullName);
+      setValue("applicantAddress", VCListGlobal[idx].message.content.content.address);
     }
   }, [VCListGlobal, setValue])
 
