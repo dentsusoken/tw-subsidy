@@ -50,7 +50,8 @@ const TaxListDetailMain = () => {
                             </button>
                             {
                                 VCRequest && VCRequest.message.content.verifyStatus
-                                    ? <>
+                                    ? !VCRequest.message.content.approvalStatus&&
+                                    <>
                                         <button
                                             onClick={reject}
                                             className="input-form-button-white"
