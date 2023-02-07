@@ -20,8 +20,9 @@ const useSubsidyInputMain = () => {
         setVCListSelect(VCListGlobal);
         if (VCListGlobal && VCListGlobal.resident.length > 0) {
             setResidentVC(VCListGlobal.resident[VCListGlobal.resident.length - 1].message.content.content);
-            methods.setValue("fullName", VCListGlobal.resident[VCListGlobal.resident.length - 1].message.content.content.fullName)
-            methods.setValue("address", VCListGlobal.resident[VCListGlobal.resident.length - 1].message.content.content.address)
+            methods.setValue("resident", (VCListGlobal.resident.length - 1).toString());
+            methods.setValue("fullName", VCListGlobal.resident[VCListGlobal.resident.length - 1].message.content.content.fullName);
+            methods.setValue("address", VCListGlobal.resident[VCListGlobal.resident.length - 1].message.content.content.address);
         }
         else {
             setIsEnable(true);
@@ -30,9 +31,9 @@ const useSubsidyInputMain = () => {
 
     const methods = useForm<SubsidyInputFormType>({
         defaultValues: {
-            resident: input.resident,
-            account: input.account,
-            tax: input.tax,
+            resident: "0",
+            account: "0",
+            tax: "0",
             fullName: input.fullName,
             // fullName: "山田太郎",
             address: input.address,

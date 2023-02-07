@@ -17,7 +17,7 @@ const VCSelect = <T extends FieldValues>({ name, label, items, validation = unde
     const [select, SetSelect] = useState("")
 
     useEffect(() => {
-        if (typeof currentVal === "string" && currentVal !== "") {
+        if (typeof currentVal === "string" && currentVal !== "" && currentVal !== "0") {
             SetSelect(currentVal);
         }
     }, [currentVal, select])
