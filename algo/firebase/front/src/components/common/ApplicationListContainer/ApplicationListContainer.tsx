@@ -1,8 +1,3 @@
-import { residentListState, taxInputState, taxInputListState, taxVCListState, taxVCRequestListState, residentInputState, residentVCRequestListState, accountInputState } from '@/lib/states/mockApp';
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import ApplicationListItem from "../ApplicationListItem";
-import { AccountInputFormType, ResidentInputFormType } from "@/lib/types/mockApp/inputForm";
-import { TaxInputFormType } from '@/lib/types/mockApp/Form';
 import useApplicationListContainer from './useApplicationListContainer';
 import dayjs from 'dayjs';
 
@@ -22,8 +17,7 @@ export type ApplicationListContainerParams = {
 
 const ApplicationListContainer = ({ type, items }: ApplicationListContainerParams) => {
     const { getMsg, onInquiry } = useApplicationListContainer(type);
-
-
+    dayjs.locale('ja');
     const msg = getMsg();
 
     return (

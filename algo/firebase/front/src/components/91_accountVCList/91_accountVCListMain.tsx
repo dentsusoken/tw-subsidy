@@ -3,7 +3,6 @@ import { useErrorHandler } from 'react-error-boundary';
 import { useRecoilValue } from 'recoil';
 
 import Header from '../common/Header';
-import { AccountInputFormType } from '@/lib/types/mockApp/inputForm';
 import { accountVCListState } from '@/lib/states/mockApp';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ja';
@@ -25,6 +24,7 @@ const AccountVCListMain = () => {
   const [listState, setListState] = useState<VCInfo[]>([]);
 
   const errorHandler = useErrorHandler();
+  dayjs.locale('ja');
 
   useEffect(() => {
     (async () => {
@@ -48,7 +48,7 @@ const AccountVCListMain = () => {
       }
       setIsLoading(() => false);
     })();
-  }, [VClistState, errorHandler]);
+  }, [VClistState, chain, errorHandler]);
 
   // [id]の降順で表示
   const listForSort = [...listState];

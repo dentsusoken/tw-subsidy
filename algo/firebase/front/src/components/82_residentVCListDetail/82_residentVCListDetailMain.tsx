@@ -1,14 +1,12 @@
 import { getAlgod } from "@/lib/algo/algod/algods";
 import { verifyVerifiableCredential } from "@/lib/algosbt";
 import chainState from "@/lib/states/chainState";
-import holderDidAccountState from "@/lib/states/holderDidAccountState";
-import issuerDidAccountState from "@/lib/states/issuerDidAccountState";
 import { residentVCListState } from "@/lib/states/mockApp";
 import { ResidentInputFormType } from "@/lib/types/mockApp";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
 import { ResidentInquiry } from "../common/Forms";
 import Header from "../common/Header";
 import Loading from "../common/Loading";
@@ -21,6 +19,7 @@ const ResidentVCListDetailMain = () => {
   const [revokeStatus, setRevokeStatus] = useState(true);
   const chain = useRecoilValue(chainState);
   const [isLoading, setIsLoading] = useState(true);
+  dayjs.locale('ja');
 
   useEffect(() => {
     (async () => {
@@ -33,13 +32,10 @@ const ResidentVCListDetailMain = () => {
         setInput(ResidentVC.message.content.content);
         setRevokeStatus(revoke);
       }
-      
+
       setIsLoading(() => false);
     })();
-  }, [ResidentVCListGlobal, router.query])
-
-  const [holderDidAccountGlobal] = useRecoilState(holderDidAccountState);
-  const [issuerDidAccountGlobal] = useRecoilState(issuerDidAccountState);
+  }, [ResidentVCListGlobal, router.query, chain])
 
   return (
     <>

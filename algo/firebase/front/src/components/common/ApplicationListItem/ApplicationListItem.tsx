@@ -3,7 +3,8 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/ja';
 
 const ApplicationListItem = (params: useApplicationListItemParams) => {
-    const { info, approve, revoke } = useApplicationListItem(params);
+    const { info, approve } = useApplicationListItem(params);
+    dayjs.locale('ja');
 
     return (
         <>
@@ -17,10 +18,11 @@ const ApplicationListItem = (params: useApplicationListItemParams) => {
                             {info.verifyStatus ? (<img src="/authenticated.svg" alt="" className="inline-block" />) : ""}
                         </div>
                         <span className={"text-center w-18 " + (info.approvalStatus ? "text-color-gray-accepted" : "text-color-warnig")}>{info.approvalStatus ? "承認済" : "未承認"}</span>
-                        <button onClick={info.approvalStatus ? revoke : approve} className={"w-18 h-7 leading-7 border border-color-gray rounded-lg block ml-auto text-base text-center font-bold"}>照会</button>
+                        <button onClick={approve} className={"w-18 h-7 leading-7 border border-color-gray rounded-lg block ml-auto text-base text-center font-bold"}>照会</button>
                     </div>
                 </li>
-            ) : null}
+            ) : null
+            }
         </>
     )
 };

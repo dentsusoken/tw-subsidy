@@ -6,7 +6,7 @@ import 'dayjs/locale/ja';
 
 import { TaxInputFormType } from '@/lib/types/mockApp/Form';
 import { taxInputState, taxVCRequestListState, taxVCListState, VCListState } from '@/lib/states/mockApp';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { verifyVerifiableMessage, createVerifiableCredential, createVerifiableMessage } from '@/lib/algosbt';
 import { getAlgod } from '@/lib/algo/algod/algods';
@@ -22,21 +22,16 @@ const useTaxListDetailMain = () => {
     const [listState, setListState] = useRecoilState(taxVCRequestListState);
     const setVCList = useSetRecoilState(taxVCListState);
     const setIssuedVCList = useSetRecoilState(VCListState);
-    const [pathname, setPathName] = useState("")
     const [isIssuing, setIsIssuing] = useState(false)
     const router = useRouter();
     const errorHandler = useErrorHandler();
+    dayjs.locale('ja');
 
     const [chainType] = useRecoilState(chainState);
     const [holderDidAccountGlobal] = useRecoilState(holderDidAccountState);
     const [issuerDidAccountGlobal] = useRecoilState(issuerDidAccountState);
 
     const VCRequest = listState.find((v) => v.message.content.id === input.id);
-
-    useEffect(() => {
-        setPathName(router.pathname);
-    })
-
 
     const methods = useForm<TaxInputFormType>({
         defaultValues: {

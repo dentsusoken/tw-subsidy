@@ -1,11 +1,10 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { taxInputState } from '@/lib/states/mockApp';
-import { useRecoilValue, useResetRecoilState } from 'recoil';
+import { useResetRecoilState } from 'recoil';
 
 
 const useTaxListDoneMain = () => {
-    const input = useRecoilValue(taxInputState);
     const [msg, setMsg] = useState("");
     const router = useRouter();
     const reset = useResetRecoilState(taxInputState);
@@ -17,7 +16,7 @@ const useTaxListDoneMain = () => {
         else if (router.query.proc === "reject") {
             setMsg("却下処理が完了しました。")
         }
-    })
+    }, [router.query])
 
 
     const onSubmit = () => {

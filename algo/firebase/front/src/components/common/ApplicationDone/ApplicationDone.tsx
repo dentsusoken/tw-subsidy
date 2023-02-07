@@ -22,9 +22,9 @@ const ApplicationDone = () => {
                         <p>承認されるまでお待ちください。</p>
                     </div>
                     <div className={"flex flex-col justify-between gap-4"}>
-                        <ChangeUserButton text={"申請者メニューへ"} currentUser={"applicant"} onClick={backMenu} />
-                        {router.pathname === urls.taxDone && <ChangeUserButton text={"申請者メニューへ"} currentUser={"applicant"} onClick={() => router.push(urls.taxMenu)} />}
-                        {router.pathname === urls.subsidyDone && <ChangeUserButton text={"申請者メニューへ"} currentUser={"applicant"} onClick={() => router.push(urls.subsidyMenu)} />}
+                        {router.pathname === urls.taxDone && <ChangeUserButton text={"承認者メニューへ"} onClick={() => router.push(urls.taxMenu)} />}
+                        {router.pathname === urls.subsidyDone && <ChangeUserButton text={"申請先メニューへ"} onClick={() => router.push(urls.subsidyMenu)} />}
+                        <ChangeUserButton text={"申請者メニューへ"} onClick={backMenu} />
                     </div>
                 </Container>
             </main>

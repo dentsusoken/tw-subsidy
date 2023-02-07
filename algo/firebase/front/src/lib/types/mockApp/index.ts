@@ -1,7 +1,3 @@
-import { RequestItem } from "@/components/common/ApplicationListContainer/ApplicationListContainer";
-import AlgodClient from "algosdk/dist/types/src/client/v2/algod/algod";
-import { AccountVCRequestType, AccountVCType, ResidentVCRequestType, ResidentVCType, TaxVCRequestType } from "./Form";
-
 export const urls = {
     mainMenu: "/00_menu",
     applierMenu: "/011_applierMenu",
@@ -69,4 +65,3 @@ export const msg = {
 export * from "./Form"
 export * from "./inputForm"
 
-export type getRequestListType = (algod: AlgodClient, reqList: Array<ResidentVCRequestType | AccountVCRequestType | TaxVCRequestType>, VCList: Array<ResidentVCType | AccountVCType | TaxVCRequestType>) => Promise<RequestItem>; 

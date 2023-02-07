@@ -3,8 +3,6 @@ import { FormProvider } from 'react-hook-form';
 import Container from '@/components/common/Container';
 import Header from '@/components/common/Header';
 import InputArea from '@/components/common/InputArea';
-import TransitionButton from '@/components/common/TransitionButton';
-import TransitionArea from '@/components/common/TransitionArea';
 import CheckBox from '@/components/common/CheckBox';
 
 import { SubsidyInputFormType } from '@/lib/types/mockApp/Form';
@@ -13,6 +11,7 @@ import dayjs from 'dayjs';
 
 const SubsidyListDetailMain = () => {
     const { methods, input, onSubmit, reject, verifyHandler, back, isIssuing } = useSubsidyListDetailMain()
+    dayjs.locale('ja');
 
     return (
         <>

@@ -3,7 +3,6 @@ import { useErrorHandler } from 'react-error-boundary';
 import { useRecoilValue } from 'recoil';
 
 import Header from '../common/Header';
-import { TaxInputFormType } from '@/lib/types/mockApp';
 import { taxVCListState } from '@/lib/states/mockApp';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ja';
@@ -25,6 +24,8 @@ const TaxVCListMain = () => {
   const [listState, setListState] = useState<VCInfo[]>([]);
 
   const errorHandler = useErrorHandler();
+  
+  dayjs.locale("ja")
 
   useEffect(() => {
     (async () => {
@@ -42,13 +43,12 @@ const TaxVCListMain = () => {
         }));
         setListState(verifiedList)
         setListCount(VClistState.length);
-        dayjs.locale("ja")
       } catch (e) {
         errorHandler(e);
       }
       setIsLoading(() => false);
     })();
-  }, [VClistState, errorHandler]);
+  }, [VClistState, chain, errorHandler]);
 
   // [id]の降順で表示
   const listForSort = [...listState];

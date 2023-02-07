@@ -55,7 +55,7 @@ const MenuMain = () => {
     else {
       setHaveDid(false);
     }
-  })
+  }, [holderDidAccountGlobal, issuerDidAccountGlobal, verifierDidAccountGlobal]);
 
   const handleClearInputState = () => {
     clearResidentInputState(() => ({

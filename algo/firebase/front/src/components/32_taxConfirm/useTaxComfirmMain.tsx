@@ -22,6 +22,7 @@ const useTaxComfirmMain = () => {
     const reset = useResetRecoilState(taxInputState);
     const router = useRouter();
     const errorHandler = useErrorHandler();
+    dayjs.locale('ja');
 
     const [holderDidAccountGlobal] = useRecoilState(holderDidAccountState);
     const [issuerDidAccountGlobal] = useRecoilState(issuerDidAccountState);
@@ -41,7 +42,6 @@ const useTaxComfirmMain = () => {
 
     const onSubmit = () => {
         try {
-            dayjs.locale('ja');
             const id = dayjs().unix();
             const now = dayjs();
             const applicationDate = dayjs(now).format('YYYY-MM-DD HH:mm:ss');

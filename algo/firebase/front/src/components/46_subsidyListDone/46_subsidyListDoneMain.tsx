@@ -1,14 +1,12 @@
 import Header from '@/components/common/Header';
 import Container from '@/components/common/Container';
-import TransitionButton from '@/components/common/TransitionButton';
-import TransitionArea from '@/components/common/TransitionArea';
 import useSubsidyListDoneMain from './useSubsidyListDoneMain';
 import ChangeUserButton from '../common/ChangeUserButton';
 import { useRouter } from 'next/router';
 import { urls } from '@/lib/types/mockApp';
 
 const SubsidyListDoneMain = () => {
-    const { title, msg, onSubmit, back } = useSubsidyListDoneMain();
+    const { msg } = useSubsidyListDoneMain();
     const router = useRouter();
 
     return (
@@ -20,8 +18,8 @@ const SubsidyListDoneMain = () => {
                         {msg}
                     </p>
                     <div className={"flex flex-col justify-between gap-4"}>
-                        <ChangeUserButton text={"申請一覧へ"} currentUser={"applicant"} onClick={() => router.push(urls.subsidyList)} />
-                        <ChangeUserButton text={"申請先メニューへ"} currentUser={"applicant"} onClick={() => router.push(urls.subsidyMenu)} />
+                        <ChangeUserButton text={"申請一覧へ"} onClick={() => router.push(urls.subsidyList)} />
+                        <ChangeUserButton text={"申請先メニューへ"} onClick={() => router.push(urls.subsidyMenu)} />
                     </div>
                 </Container>
             </main>

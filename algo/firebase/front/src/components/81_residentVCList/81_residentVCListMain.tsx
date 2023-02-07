@@ -26,6 +26,7 @@ const ResidentVCListMain = () => {
   const [listState, setListState] = useState<VCInfo[]>([]);
 
   const errorHandler = useErrorHandler();
+  dayjs.locale('ja');
 
   useEffect(() => {
     (async () => {
@@ -49,7 +50,7 @@ const ResidentVCListMain = () => {
       }
       setIsLoading(() => false);
     })();
-  }, [VClistState, errorHandler]);
+  }, [VClistState, chain, errorHandler]);
 
   // [id]の降順で表示
   const listForSort = [...listState];

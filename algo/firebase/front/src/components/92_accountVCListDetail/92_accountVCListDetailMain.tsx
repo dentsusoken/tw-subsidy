@@ -2,7 +2,6 @@ import { issuerPw } from "@/lib/algo/account/accounts";
 import { getAlgod } from "@/lib/algo/algod/algods";
 import { revokeVerifiableCredential, verifyVerifiableCredential } from "@/lib/algosbt";
 import chainState from "@/lib/states/chainState";
-import holderDidAccountState from "@/lib/states/holderDidAccountState";
 import issuerDidAccountState from "@/lib/states/issuerDidAccountState";
 import { accountVCListState } from "@/lib/states/mockApp";
 import { AccountInputFormType, AccountVCType } from "@/lib/types/mockApp";
@@ -24,9 +23,8 @@ const AccountVCListDetailMain = () => {
   const chain = useRecoilValue(chainState);
   const [isLoading, setIsLoading] = useState(true);
   const [isRevoking, setIsRevoking] = useState(false);
-  const [chainType] = useRecoilState(chainState);
-  const [holderDidAccountGlobal] = useRecoilState(holderDidAccountState);
   const [issuerDidAccountGlobal] = useRecoilState(issuerDidAccountState);
+  dayjs.locale('ja');
 
   useEffect(() => {
     (async () => {
@@ -43,7 +41,7 @@ const AccountVCListDetailMain = () => {
 
       setIsLoading(() => false);
     })();
-  }, [AccountVCListGlobal, router.query])
+  }, [AccountVCListGlobal, chain, router.query])
 
   const revoke = async () => {
     setIsRevoking(() => true);
@@ -76,9 +74,9 @@ const AccountVCListDetailMain = () => {
               </div>
             </section>
             <AccountInquiry input={input} />
-            <div className={"relative"}>
+            <div className={"relative w-80 mx-auto"}>
               {isRevoking
-                ? <span className={"absolute right-0 -translate-y-1/2 text-sm leading-relaxed text-yellow-500"}>VC発行中...</span>
+                ? <span className={"absolute right-0 -translate-y-1/2 text-sm leading-relaxed text-yellow-500"}>VC取消中...</span>
                 : null
               }
             </div>

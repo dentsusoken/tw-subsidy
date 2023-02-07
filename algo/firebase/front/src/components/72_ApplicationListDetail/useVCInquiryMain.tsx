@@ -13,7 +13,6 @@ import chainState from '@/lib/states/chainState';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ja';
 import { useErrorHandler } from 'react-error-boundary';
-import { subsidyVCRequestListState } from '@/lib/states/mockApp/subsidyVCRequestList';
 
 const useVCInquiryMain = () => {
     const router = useRouter();
@@ -37,6 +36,7 @@ const useVCInquiryMain = () => {
 
     const chain = useRecoilValue(chainState);
     const errorHandler = useErrorHandler()
+    dayjs.locale('ja');
 
     useEffect(() => {
         try {
@@ -131,7 +131,7 @@ const useVCInquiryMain = () => {
             errorHandler(e);
         }
 
-    }, [residentRequestGlobal, VCListGlobal, router.query]);
+    }, [residentRequestGlobal, accountRequestGlobal, taxRequestGlobal, subsidyRequestGlobal, chain, VCListGlobal, router.query, errorHandler]);
 
     const getVCType = () => {
         switch (type) {

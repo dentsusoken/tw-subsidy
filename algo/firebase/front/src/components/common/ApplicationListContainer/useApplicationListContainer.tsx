@@ -1,8 +1,3 @@
-import { residentListState, taxInputState, taxInputListState, taxVCListState, taxVCRequestListState, residentInputState, residentVCRequestListState, accountInputState } from '@/lib/states/mockApp';
-import { SetterOrUpdater, useRecoilValue, useSetRecoilState } from "recoil";
-import ApplicationListItem from "../ApplicationListItem";
-import { AccountInputFormType, ResidentInputFormType } from "@/lib/types/mockApp/inputForm";
-import { TaxInputFormType } from '@/lib/types/mockApp/Form';
 import { useRouter } from 'next/router';
 
 const useApplicationListContainer = (type: string) => {

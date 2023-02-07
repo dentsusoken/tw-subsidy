@@ -24,6 +24,7 @@ const SubsidyVCListMain = () => {
   const [listState, setListState] = useState<VCInfo[]>([]);
 
   const errorHandler = useErrorHandler();
+  dayjs.locale("ja")
 
   useEffect(() => {
     (async () => {
@@ -40,14 +41,13 @@ const SubsidyVCListMain = () => {
           }
         }));
         setListState(verifiedList)
-        setListCount(VClistState.subsidy.length);
-        dayjs.locale("ja")
+        setListCount(VClistState.subsidy.length);        
       } catch (e) {
         errorHandler(e);
       }
       setIsLoading(() => false);
     })();
-  }, [VClistState, errorHandler]);
+  }, [VClistState, chain, errorHandler]);
 
   // [id]の降順で表示
   const listForSort = [...listState];

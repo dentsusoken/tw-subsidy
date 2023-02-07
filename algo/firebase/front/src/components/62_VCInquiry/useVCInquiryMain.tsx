@@ -1,4 +1,4 @@
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { VCListState } from '@/lib/states/mockApp';
@@ -16,14 +16,14 @@ const useVCInquiryMain = () => {
     const [idx, setIdx] = useState(0);
     const [applicationDate, setApplicationDate] = useState("");
     const [issueDate, setIssueDate] = useState("");
-    const [acceptDate, setAcceptDate] = useState("");
     const [revokeStatus, setRevokeStatus] = useState(true);
     const [isLoading, setIsLoading] = useState(true);
-    const [VCListGlobal, setVCListGlobal] = useRecoilState(VCListState);
+    const VCListGlobal = useRecoilValue(VCListState);
     const [residentInput, setResidentInput] = useState<ResidentInputFormType>()
     const [accountInput, setAccountInput] = useState<AccountInputFormType>()
     const [taxInput, setTaxInput] = useState<TaxInputFormType>()
     const chain = useRecoilValue(chainState);
+    dayjs.locale('ja');
 
     useEffect(() => {
         (async () => {
@@ -62,13 +62,13 @@ const useVCInquiryMain = () => {
 
             setIsLoading(() => false);
         })();
-    }, [VCListGlobal, router.query]);
+    }, [VCListGlobal, router.query, chain]);
 
     const back = () => {
         router.push("/61_VCList")
     }
 
-    return { type, idx, applicationDate, issueDate, acceptDate, revokeStatus, residentInput, accountInput, taxInput, isLoading, back }
+    return { type, idx, applicationDate, issueDate, revokeStatus, residentInput, accountInput, taxInput, isLoading, back }
 };
 
 export default useVCInquiryMain;

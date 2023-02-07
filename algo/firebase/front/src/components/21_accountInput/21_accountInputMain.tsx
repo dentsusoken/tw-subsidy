@@ -16,16 +16,6 @@ const AccountInputMain = () => {
   const VCListGlobal = useRecoilValue(VCListState);
   const [residentVC, setResidentVC] = useState<ResidentInputFormType>();
 
-  useEffect(() => {
-    if (VCListGlobal && VCListGlobal.resident.length > 0) {
-      VCListGlobal.resident.map((value) => {
-        setResidentVC(VCListGlobal.resident[VCListGlobal.resident.length - 1].message.content.content);
-        setValue("applicantName", VCListGlobal.resident[VCListGlobal.resident.length - 1].message.content.content.fullName);
-        setValue("applicantAddress", VCListGlobal.resident[VCListGlobal.resident.length - 1].message.content.content.address);
-      })
-    }
-  })
-
   const {
     register,
     handleSubmit,
@@ -41,6 +31,16 @@ const AccountInputMain = () => {
       applicantAddress: residentVC?.address,
     },
   });
+
+  useEffect(() => {
+    if (VCListGlobal && VCListGlobal.resident.length > 0) {
+      setResidentVC(VCListGlobal.resident[VCListGlobal.resident.length - 1].message.content.content);
+      setValue("applicantName", VCListGlobal.resident[VCListGlobal.resident.length - 1].message.content.content.fullName);
+      setValue("applicantAddress", VCListGlobal.resident[VCListGlobal.resident.length - 1].message.content.content.address);
+    }
+  }, [VCListGlobal, setValue])
+
+
 
   const onSubmit = handleSubmit((data: AccountInputFormType) => {
     setInput(() => ({

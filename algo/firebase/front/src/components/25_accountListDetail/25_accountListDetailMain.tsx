@@ -30,6 +30,7 @@ const AccountListDetailMain = () => {
   const [chainType] = useRecoilState(chainState);
   const [holderDidAccountGlobal] = useRecoilState(holderDidAccountState);
   const [issuerDidAccountGlobal] = useRecoilState(issuerDidAccountState);
+  dayjs.locale("ja")
 
 
   const verify = () => {
@@ -65,7 +66,6 @@ const AccountListDetailMain = () => {
 
         if (selectDetail.message.content.verifyStatus) {
           const algod = getAlgod(chainType);
-          dayjs.locale('ja');
           const now = dayjs();
           const content = selectDetail.message.content;
           const vcContent = {

@@ -1,6 +1,5 @@
 import { atom } from 'recoil';
 
-import { VerifiableMessage, VerifiableCredentialContent } from '@/lib/algosbt/types';
 import persistAtom from '../persistAtom';
 import { TaxVCType } from '@/lib/types/mockApp';
 

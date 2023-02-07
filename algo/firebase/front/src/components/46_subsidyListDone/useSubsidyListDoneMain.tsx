@@ -1,10 +1,9 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { subsidyInputState } from '@/lib/states/mockApp';
-import { useRecoilValue, useResetRecoilState } from 'recoil';
+import { useResetRecoilState } from 'recoil';
 
 const useSubsidyListDoneMain = () => {
-    const input = useRecoilValue(subsidyInputState)
     const router = useRouter();
     const [title, setTitle] = useState("");
     const [msg, setMsg] = useState("");
@@ -19,7 +18,7 @@ const useSubsidyListDoneMain = () => {
             setTitle("処理完了")
             setMsg("却下処理が完了しました。")
         }
-    })
+    }, [router.query])
 
     const onSubmit = () => {
         reset();

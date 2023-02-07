@@ -17,7 +17,7 @@ const useSubsidyListMain = () => {
         setList(subsidyList);
         setListCount(subsidyList.length)
         setfilterCount(subsidyList.length)
-    }, [subsidyList.length]);
+    }, [subsidyList]);
 
     const filterList = useMemo(() => {
         let tmp = subsidyList.filter(item => item.fullName.includes(query))

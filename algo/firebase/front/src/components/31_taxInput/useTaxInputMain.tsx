@@ -15,18 +15,6 @@ const useTaxInputMain = () => {
     const VCListGlobal = useRecoilValue(VCListState);
     const [residentVC, setResidentVC] = useState<ResidentInputFormType>();
     const [isEnable, setIsEnable] = useState<boolean>(false);
-
-    useEffect(() => {
-        if (VCListGlobal && VCListGlobal.resident.length > 0) {
-            setResidentVC(VCListGlobal.resident[VCListGlobal.resident.length - 1].message.content.content);
-            methods.setValue("fullName", VCListGlobal.resident[VCListGlobal.resident.length - 1].message.content.content.fullName)
-            methods.setValue("address", VCListGlobal.resident[VCListGlobal.resident.length - 1].message.content.content.address)
-        }
-        else {
-            setIsEnable(true);
-        }
-    })
-
     const methods = useForm<TaxInputFormType>({
         defaultValues: {
             applicationYear: input.applicationYear,
@@ -41,6 +29,18 @@ const useTaxInputMain = () => {
             applicationDate: ""
         },
     });
+
+    useEffect(() => {
+        if (VCListGlobal && VCListGlobal.resident.length > 0) {
+            setResidentVC(VCListGlobal.resident[VCListGlobal.resident.length - 1].message.content.content);
+            methods.setValue("fullName", VCListGlobal.resident[VCListGlobal.resident.length - 1].message.content.content.fullName)
+            methods.setValue("address", VCListGlobal.resident[VCListGlobal.resident.length - 1].message.content.content.address)
+        }
+        else {
+            setIsEnable(true);
+        }
+    }, [VCListGlobal, methods])
+
 
     const onSubmit = (data: TaxInputFormType) => {
 

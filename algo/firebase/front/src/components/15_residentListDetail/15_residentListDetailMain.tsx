@@ -25,17 +25,17 @@ const ResidentListDetailMain = () => {
   const setVCList = useSetRecoilState(residentVCListState);
   const setIssuedVCList = useSetRecoilState(VCListState);
   const [isIssuing, setIsIssuing] = useState(false);
-  const [isVerified, setIsVerified] = useState(false);
   const [selectDetail, SetSelectDetail] = useState<ResidentVCRequestType>();
 
   const chainType = useRecoilValue(chainState);
   const holderDidAccountGlobal = useRecoilValue(holderDidAccountState);
   const issuerDidAccountGlobal = useRecoilValue(issuerDidAccountState);
+  dayjs.locale("ja")
 
   useEffect(() => {
     const select = listState.find((v) => v.message.content.id === Number(router.query.id));
     SetSelectDetail(() => select)
-  }, [listState]);
+  }, [listState, router.query]);
 
   const verify = () => {
     try {
@@ -169,7 +169,7 @@ const ResidentListDetailMain = () => {
                 </button>
             }
           </div>
-          </div>
+        </div>
       </main>
     </>
   );

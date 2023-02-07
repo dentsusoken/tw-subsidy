@@ -17,6 +17,7 @@ import holderDidAccountState from '@/lib/states/holderDidAccountState';
 import issuerDidAccountState from '@/lib/states/issuerDidAccountState';
 import { VCListState } from '@/lib/states/mockApp';
 import { useState } from 'react';
+import dayjs from 'dayjs';
 
 const useSubsidyListDetailMain = () => {
     const [input, setInput] = useRecoilState(subsidyInputState);
@@ -28,6 +29,8 @@ const useSubsidyListDetailMain = () => {
     const [chain] = useRecoilState(chainState);
     const [holderDidAccountGlobal] = useRecoilState(holderDidAccountState);
     const [issuerDidAccountGlobal] = useRecoilState(issuerDidAccountState);
+    
+    dayjs.locale('ja');
 
     const methods = useForm<SubsidyInputFormType>({
         defaultValues: {
@@ -94,7 +97,7 @@ const useSubsidyListDetailMain = () => {
             if (!input.approvalStatus && issuerDidAccountGlobal && holderDidAccountGlobal) {
 
                 if (input.verifyStatus) {
-                    const replaceData: SubsidyInputFormType = { ...input, approvalStatus: true }
+                    const replaceData: SubsidyInputFormType = { ...input, approvalStatus: true, issueDate: dayjs().format('YYYY-MM-DD HH:mm:ss') }
                     setInput(replaceData)
 
                     const updateData = listState.map((item) => {
@@ -137,7 +140,7 @@ const useSubsidyListDetailMain = () => {
         router.push('/44_subsidyList')
     };
 
-    return { methods, input, onSubmit, reject, verifyHandler, back, isIssuing}
+    return { methods, input, onSubmit, reject, verifyHandler, back, isIssuing }
 };
 
 export default useSubsidyListDetailMain;

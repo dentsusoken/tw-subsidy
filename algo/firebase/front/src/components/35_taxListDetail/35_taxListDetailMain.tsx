@@ -3,8 +3,6 @@ import { FormProvider } from 'react-hook-form';
 import Container from '@/components/common/Container';
 import Header from '@/components/common/Header';
 import InputArea from '@/components/common/InputArea';
-import TransitionButton from '@/components/common/TransitionButton';
-import TransitionArea from '@/components/common/TransitionArea';
 
 import { TaxInputFormType } from '@/lib/types/mockApp/Form';
 import useTaxListDetailMain from './useTaxListDetailMain';
@@ -12,6 +10,7 @@ import dayjs from 'dayjs';
 
 const TaxListDetailMain = () => {
     const { VCRequest, methods, isIssuing, approve, back, verify, reject } = useTaxListDetailMain();
+    dayjs.locale('ja');
 
     return (
         <>

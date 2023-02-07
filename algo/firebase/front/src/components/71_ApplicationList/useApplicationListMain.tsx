@@ -5,7 +5,6 @@ import { useRecoilValue } from "recoil";
 import { RequestItem } from "../common/ApplicationListContainer/ApplicationListContainer";
 import chainState from '@/lib/states/chainState';
 import { getAlgod } from "@/lib/algo/algod/algods";
-import { subsidyVCRequestListState } from "@/lib/states/mockApp/subsidyVCRequestList";
 
 const useApplicationListMain = () => {
     const [residentList, setResidentList] = useState<RequestItem[]>([]);
@@ -29,7 +28,7 @@ const useApplicationListMain = () => {
             const algod = getAlgod(chain);
 
             if (residentRequestGlobal) {
-                const residentList:RequestItem[] = await Promise.all(residentRequestGlobal.map(async (item) => {
+                const residentList: RequestItem[] = await Promise.all(residentRequestGlobal.map(async (item) => {
                     let issuedStatus = false;
                     let revokeStatus = false;
                     if (VCList.resident) {
@@ -113,7 +112,7 @@ const useApplicationListMain = () => {
             setIsLoading(() => false);
         })();
 
-    }, [residentRequestGlobal, VCList]);
+    }, [residentRequestGlobal, accountRequestGlobal, taxRequestGlobal, subsidyRequestGlobal, VCList, chain]);
 
     return { residentList, accountList, taxList, subsidyList, isLoading }
 };

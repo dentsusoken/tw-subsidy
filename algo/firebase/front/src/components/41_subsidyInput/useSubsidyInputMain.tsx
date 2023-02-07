@@ -16,6 +16,19 @@ const useSubsidyInputMain = () => {
     const [residentVC, setResidentVC] = useState<ResidentInputFormType>();
     const [isEnable, setIsEnable] = useState<boolean>(false);
 
+    const methods = useForm<SubsidyInputFormType>({
+        defaultValues: {
+            resident: input.resident,
+            account: input.account,
+            tax: input.tax,
+            fullName: input.fullName,
+            address: input.address,
+            verifyStatus: false,
+            approvalStatus: false,
+            applicationDate: ""
+        },
+    });
+
     useEffect(() => {
         setVCListSelect(VCListGlobal);
         if (VCListGlobal && VCListGlobal.resident.length > 0) {
@@ -27,22 +40,8 @@ const useSubsidyInputMain = () => {
         else {
             setIsEnable(true);
         }
-    }, [VCListGlobal])
+    }, [VCListGlobal, methods])
 
-    const methods = useForm<SubsidyInputFormType>({
-        defaultValues: {
-            resident: "0",
-            account: "0",
-            tax: "0",
-            fullName: input.fullName,
-            // fullName: "山田太郎",
-            address: input.address,
-            // address: "東京都渋谷区xxxxxx",
-            verifyStatus: false,
-            approvalStatus: false,
-            applicationDate: ""
-        },
-    });
 
     const onSubmit = (data: SubsidyInputFormType) => {
 

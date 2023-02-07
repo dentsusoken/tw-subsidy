@@ -9,7 +9,7 @@ import Loading from "../common/Loading";
 
 const VCInquiryMain = () => {
 
-    const { type, idx, applicationDate, issueDate, acceptDate, revokeStatus, residentInput, accountInput, taxInput, isLoading, back } = useVCInquiryMain()
+    const { type, idx, applicationDate, issueDate, revokeStatus, residentInput, accountInput, taxInput, isLoading, back } = useVCInquiryMain()
     return (
         <>
             <Header />
@@ -20,10 +20,9 @@ const VCInquiryMain = () => {
                             <div className={"w-full h-11 px-4 bg-color-vcheader text-lg leading-11 font-bold"}>{type}</div>
                             <div className={"w-72 mx-auto p-4 border-b text-center"}>
                                 <p className={"text-base font-bold"}>{type} - VC{idx}</p>
-                                <p className={"text-xs leading-11 text-color-gray-search"}>{revokeStatus ? "受入済" : "取消済"}</p>
+                                <p className={"text-xs leading-11 text-color-gray-search"}>{revokeStatus ? "発行済" : "取消済"}</p>
                                 <p className={"text-xs text-color-gray-search"}>申請日 {applicationDate}</p>
                                 <p className={"text-xs text-color-gray-search"}>発行日 {issueDate}</p>
-                                {acceptDate !== "" && <p className={"text-xs text-color-gray-search"}>受入日 {acceptDate}</p>}
                             </div>
                         </section>
                         <section className={"pt-2"}>

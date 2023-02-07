@@ -6,7 +6,7 @@ import { TaxInputFormType } from "@/lib/types/mockApp";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
 import { TaxInquiry } from "../common/Forms";
 import Header from "../common/Header";
 import Loading from "../common/Loading";
@@ -19,6 +19,8 @@ const TaxVCListDetailMain = () => {
   const [revokeStatus, setRevokeStatus] = useState(true);
   const chain = useRecoilValue(chainState);
   const [isLoading, setIsLoading] = useState(true);
+  
+  dayjs.locale("ja");
 
   useEffect(() => {
     (async () => {
@@ -34,7 +36,7 @@ const TaxVCListDetailMain = () => {
 
       setIsLoading(() => false);
     })();
-  }, [TaxVCListGlobal, router.query])
+  }, [TaxVCListGlobal, chain, router.query])
 
   return (
     <>

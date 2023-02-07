@@ -1,11 +1,7 @@
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
 import { urls, icons } from "@/lib/types/mockApp";
 
 const useHeader = () => {
-    const [heading, setHeading] = useState("");
-    const [color, setColor] = useState("");
-    const [isMainMenu, setIsMainMenu] = useState(false);
     const router = useRouter()
 
     const Headings = {
@@ -314,7 +310,7 @@ const useHeader = () => {
         }
     }
 
-    return { heading, color, getHeading, getBgColor, getIcon, getLink, getTitle }
+    return { getHeading, getBgColor, getIcon, getLink, getTitle }
 };
 
 export default useHeader;

@@ -5,7 +5,7 @@ import { useRecoilValue } from 'recoil';
 
 import Header from '../common/Header';
 import { ResidentInputFormType } from '@/lib/types/mockApp/inputForm';
-import { residentVCListState, residentVCRequestListState } from '@/lib/states/mockApp';
+import { residentVCRequestListState } from '@/lib/states/mockApp';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ja';
 import SearchArea from '../common/SearchArea';
@@ -16,21 +16,20 @@ const ResidentListMain = () => {
   const [listCount, setListCount] = useState(0);
   const [query, setQuery] = useState("");
   const VCRequestlistState = useRecoilValue(residentVCRequestListState);
-  const VClistState = useRecoilValue(residentVCListState);
   const [listState, setListState] = useState<ResidentInputFormType[]>([]);
 
   const errorHandler = useErrorHandler();
+  dayjs.locale("ja")
 
   useEffect(() => {
     try {
       const requestList: ResidentInputFormType[] = VCRequestlistState.map((item) => item.message.content)
       setListState(requestList)
       setListCount(requestList.length);
-      dayjs.locale("ja")
     } catch (e) {
       errorHandler(e);
     }
-  }, [VClistState.length, errorHandler]);
+  }, [VCRequestlistState, errorHandler]);
 
   // [id]の降順で表示
   const listForSort = [...listState];

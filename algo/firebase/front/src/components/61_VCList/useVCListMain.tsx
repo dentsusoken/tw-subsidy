@@ -2,7 +2,6 @@ import { useRecoilValue } from 'recoil';
 
 import { VCListState } from '@/lib/states/mockApp';
 import { useState, useEffect } from 'react';
-import { VCListType } from '@/lib/types/mockApp/Form';
 import { VCListItem } from '../common/VCListContainer/VCListContainer';
 import dayjs from 'dayjs';
 import chainState from '@/lib/states/chainState';
@@ -11,13 +10,13 @@ import { verifyVerifiableCredential } from '@/lib/algosbt';
 
 const useVCListMain = () => {
     const VCListGlobal = useRecoilValue(VCListState);
-    const [VCList, setVCList] = useState<VCListType>()
     const [residentList, setResidentList] = useState<VCListItem[]>([]);
     const [accountList, setAccountList] = useState<VCListItem[]>([]);
     const [taxList, setTaxList] = useState<VCListItem[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
     const chain = useRecoilValue(chainState);
+    dayjs.locale('ja');
 
     useEffect(() => {
         (async () => {
@@ -25,7 +24,6 @@ const useVCListMain = () => {
 
             const algod = getAlgod(chain);
 
-            setVCList(VCListGlobal);
             if (VCListGlobal.resident) {
                 const residentList: VCListItem[] = await Promise.all(VCListGlobal.resident.map(async (item) => {
                     const revokeStatus = await verifyVerifiableCredential(algod, item);
@@ -64,7 +62,7 @@ const useVCListMain = () => {
             }
             setIsLoading(() => false);
         })();
-    }, [VCList]);
+    }, [VCListGlobal, chain]);
 
     const sortList = (list: VCListItem[]) => {
         list.sort((a, b) => {

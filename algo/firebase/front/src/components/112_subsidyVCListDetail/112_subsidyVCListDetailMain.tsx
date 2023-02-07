@@ -6,7 +6,7 @@ import { SubsidyInputFormType } from "@/lib/types/mockApp";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
 import { SubsidyInquiry } from "../common/Forms";
 import Header from "../common/Header";
 import Loading from "../common/Loading";
@@ -19,6 +19,7 @@ const SubsidyVCListDetailMain = () => {
   const [revokeStatus, setRevokeStatus] = useState(true);
   const chain = useRecoilValue(chainState);
   const [isLoading, setIsLoading] = useState(true);
+  dayjs.locale("ja")
 
   useEffect(() => {
     (async () => {
@@ -34,7 +35,7 @@ const SubsidyVCListDetailMain = () => {
 
       setIsLoading(() => false);
     })();
-  }, [VCListGlobal, router.query])
+  }, [VCListGlobal, chain, router.query])
 
   return (
     <>

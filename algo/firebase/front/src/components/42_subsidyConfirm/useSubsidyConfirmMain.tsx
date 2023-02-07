@@ -25,6 +25,7 @@ const useSubsidyConfirmMain = () => {
     const [verifierDidAccountGlobal] = useRecoilState(verifierDidAccountState);
     const router = useRouter();
     const errorHandler = useErrorHandler();
+    dayjs.locale('ja');
 
     const methods = useForm<SubsidyInputFormType>({
         defaultValues: {
@@ -64,7 +65,7 @@ const useSubsidyConfirmMain = () => {
                 dayjs.locale('ja');
                 const id = dayjs().unix();
                 const now = dayjs();
-                const applicationDate = dayjs(now).format('YYYY-MM-DD');
+                const applicationDate = dayjs(now).format('YYYY-MM-DD HH:mm:ss');
 
                 const subsidyInput: SubsidyInputFormType = {
                     ...input,
