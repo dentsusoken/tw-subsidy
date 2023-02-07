@@ -10,6 +10,7 @@ export type ResidentInputFormType = {
   applicationDate?: string; // 申請日
   verifyStatus?: boolean; // 検証ステータス
   approvalStatus?: boolean; // 承認ステータス
+  issueDate?: string 
 };
 
 export type AccountInputFormType = {
@@ -23,4 +24,5 @@ export type AccountInputFormType = {
   applicationDate?: string; // 申請日
   verifyStatus?: boolean; // 検証ステータス
   approvalStatus?: boolean; // 承認ステータス
+  issueDate?: string 
 };

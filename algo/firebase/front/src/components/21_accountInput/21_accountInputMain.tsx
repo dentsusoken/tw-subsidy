@@ -1,12 +1,12 @@
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import InputArea from '@/components/common/InputArea';
 
-import Header from '@/components/Header';
+import Header from '../common/Header';
 import { AccountInputFormType, ResidentInputFormType } from '@/lib/types/mockApp/inputForm';
 import { accountInputState, VCListState } from '@/lib/states/mockApp';
 import { useEffect, useState } from 'react';
+import Progress from '../common/Progress';
 
 const AccountInputMain = () => {
   const router = useRouter();
@@ -15,18 +15,6 @@ const AccountInputMain = () => {
 
   const VCListGlobal = useRecoilValue(VCListState);
   const [residentVC, setResidentVC] = useState<ResidentInputFormType>();
-
-  useEffect(() => {
-    if (VCListGlobal && VCListGlobal.resident.length > 0) {
-      VCListGlobal.resident.map((value) => {
-        if (value.acceptStatus) {
-          setResidentVC(VCListGlobal.resident[VCListGlobal.resident.length - 1].VC.message.content.content);
-          setValue("applicantName", VCListGlobal.resident[VCListGlobal.resident.length - 1].VC.message.content.content.fullName)
-          setValue("applicantAddress", VCListGlobal.resident[VCListGlobal.resident.length - 1].VC.message.content.content.address)
-        }
-      })
-    }
-  })
 
   const {
     register,
@@ -43,6 +31,16 @@ const AccountInputMain = () => {
       applicantAddress: residentVC?.address,
     },
   });
+
+  useEffect(() => {
+    if (VCListGlobal && VCListGlobal.resident.length > 0) {
+      setResidentVC(VCListGlobal.resident[VCListGlobal.resident.length - 1].message.content.content);
+      setValue("applicantName", VCListGlobal.resident[VCListGlobal.resident.length - 1].message.content.content.fullName);
+      setValue("applicantAddress", VCListGlobal.resident[VCListGlobal.resident.length - 1].message.content.content.address);
+    }
+  }, [VCListGlobal, setValue])
+
+
 
   const onSubmit = handleSubmit((data: AccountInputFormType) => {
     setInput(() => ({
@@ -62,21 +60,15 @@ const AccountInputMain = () => {
 
   return (
     <>
-      <Header menuType={1} menuTitle={'口座実在証明申請'} />
+      <Header />
       <main className="bg-color-background">
-        <div className="step">
-          <ul className="step-list">
-            <li className="active">入力</li>
-            <li>確認</li>
-            <li>完了</li>
-          </ul>
-        </div>
+        <Progress status='input' />
         {
           !residentVC
             ? <div className={"relative w-full text-center"}><span className={"absolute w-full left-0 -top-8 text-sm text-color-warnig"}>住民票紐付申請を実施してください。</span></div>
             : null
         }
-        <div className="py-0 px-[53px]">
+        <div className="mt-[9px] py-0 px-[53px]">
           <form onSubmit={onSubmit}>
             <div className="input-form-label">
               銀行コード
@@ -90,10 +82,6 @@ const AccountInputMain = () => {
               maxLength={4}
               className="input-form-text-box-half"
               {...register('bankCode', {
-                required: {
-                  value: true,
-                  message: '入力必須項目です',
-                },
                 pattern: {
                   value: /\d{4}/,
                   message: '半角数字で4桁です',
@@ -112,10 +100,6 @@ const AccountInputMain = () => {
               maxLength={3}
               className="input-form-text-box-half"
               {...register('branchNumber', {
-                required: {
-                  value: true,
-                  message: '入力必須項目です',
-                },
                 pattern: {
                   value: /\d{3}/,
                   message: '半角数字で3桁です',
@@ -134,10 +118,6 @@ const AccountInputMain = () => {
               maxLength={8}
               className="input-form-text-box-half"
               {...register('accountNumber', {
-                required: {
-                  value: true,
-                  message: '入力必須項目です',
-                },
                 pattern: {
                   value: /\d{7}|\d{8}/,
                   message: '半角数字で7桁または8桁です',
@@ -154,30 +134,25 @@ const AccountInputMain = () => {
             <input
               type="text"
               className="input-form-text-box"
-              {...register('corporateName', {
-                required: {
-                  value: true,
-                  message: '入力必須項目です',
-                },
-              })}
+              {...register('corporateName')}
             />
             <div className="input-form-label">
               申請者名
             </div>
             <input
               type="text"
-              className="input-form-text-box-confirm"
+              className={`${!!residentVC ? "input-form-text-box-confirm" : "input-form-text-box"}`}
               {...register('applicantName')}
-              disabled={true}
+              disabled={!!residentVC}
             />
             <div className="input-form-label">
               申請住所
             </div>
             <input
               type="text"
-              className="input-form-text-box-confirm"
+              className={`${!!residentVC ? "input-form-text-box-confirm" : "input-form-text-box"}`}
               {...register('applicantAddress')}
-              disabled={true}
+              disabled={!!residentVC}
             />
             <div className="pt-4 text-right">
               <button type="submit" className="input-form-button-green">

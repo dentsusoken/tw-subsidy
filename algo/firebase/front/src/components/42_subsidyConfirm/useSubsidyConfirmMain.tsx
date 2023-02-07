@@ -14,6 +14,7 @@ import { VCListState } from '@/lib/states/mockApp';
 import { holderPw } from '@/lib/algo/account/accounts';
 import holderDidAccountState from '@/lib/states/holderDidAccountState';
 import verifierDidAccountState from '@/lib/states/verifierDidAccountState';
+import { useErrorHandler } from 'react-error-boundary';
 
 const useSubsidyConfirmMain = () => {
     const input = useRecoilValue(subsidyInputState);
@@ -23,16 +24,16 @@ const useSubsidyConfirmMain = () => {
     const [holderDidAccountGlobal] = useRecoilState(holderDidAccountState);
     const [verifierDidAccountGlobal] = useRecoilState(verifierDidAccountState);
     const router = useRouter();
+    const errorHandler = useErrorHandler();
+    dayjs.locale('ja');
 
     const methods = useForm<SubsidyInputFormType>({
         defaultValues: {
             resident: input.resident,
             account: input.account,
             tax: input.tax,
-            // fullName: input.fullName,
-            fullName: "山田太郎",
-            // address: input.address,
-            address: "東京都渋谷区xxxxxx",
+            fullName: input.fullName,
+            address: input.address,
             verifyStatus: false,
             approvalStatus: false,
         },
@@ -59,50 +60,54 @@ const useSubsidyConfirmMain = () => {
     };
 
     const onSubmit = async () => {
-        if (holderDidAccountGlobal && verifierDidAccountGlobal) {
-            dayjs.locale('ja');
-            const id = dayjs().unix();
-            const now = dayjs();
-            const applicationDate = dayjs(now).format('M月D日(ddd)');
+        try {
+            if (holderDidAccountGlobal && verifierDidAccountGlobal) {
+                dayjs.locale('ja');
+                const id = dayjs().unix();
+                const now = dayjs();
+                const applicationDate = dayjs(now).format('YYYY-MM-DD HH:mm:ss');
 
-            const subsidyInput: SubsidyInputFormType = {
-                ...input,
-                id: id,
-                applicationDate: applicationDate,
-            }
+                const subsidyInput: SubsidyInputFormType = {
+                    ...input,
+                    id: id,
+                    applicationDate: applicationDate,
+                }
 
-            if (VCListGlobal.resident) {
-                const content = createVPContent(VCListGlobal.resident[parseInt(input.resident)].VC);
-                const vm = createVPMessage(
-                    content,
-                    holderDidAccountGlobal,
-                    verifierDidAccountGlobal.did
-                );
+                if (VCListGlobal.resident) {
+                    const content = createVPContent(VCListGlobal.resident[parseInt(input.resident)]);
+                    const vm = createVPMessage(
+                        content,
+                        holderDidAccountGlobal,
+                        verifierDidAccountGlobal.did
+                    );
 
-                subsidyInput.residentVP = vm;
-            }
-            if (VCListGlobal.account) {
-                const content = createVPContent(VCListGlobal.account[parseInt(input.account)].VC);
-                const vm = createVPMessage(
-                    content,
-                    holderDidAccountGlobal,
-                    verifierDidAccountGlobal.did
-                );
-                subsidyInput.accountVP = vm;
-            }
-            if (VCListGlobal.tax) {
-                const content = createVPContent(VCListGlobal.tax[parseInt(input.tax)].VC);
-                const vm = createVPMessage(
-                    content,
-                    holderDidAccountGlobal,
-                    verifierDidAccountGlobal.did
-                );
-                subsidyInput.taxVP = vm;
-            }
-            setList((items) => [...items, subsidyInput]);
-            reset();
+                    subsidyInput.residentVP = vm;
+                }
+                if (VCListGlobal.account) {
+                    const content = createVPContent(VCListGlobal.account[parseInt(input.account)]);
+                    const vm = createVPMessage(
+                        content,
+                        holderDidAccountGlobal,
+                        verifierDidAccountGlobal.did
+                    );
+                    subsidyInput.accountVP = vm;
+                }
+                if (VCListGlobal.tax) {
+                    const content = createVPContent(VCListGlobal.tax[parseInt(input.tax)]);
+                    const vm = createVPMessage(
+                        content,
+                        holderDidAccountGlobal,
+                        verifierDidAccountGlobal.did
+                    );
+                    subsidyInput.taxVP = vm;
+                }
+                setList((items) => [...items, subsidyInput]);
+                reset();
 
-            router.push('/43_subsidyDone', '/43_subsidyDone');
+                router.push('/43_subsidyDone', '/43_subsidyDone');
+            }
+        } catch (e) {
+            errorHandler(e);
         }
     };
 

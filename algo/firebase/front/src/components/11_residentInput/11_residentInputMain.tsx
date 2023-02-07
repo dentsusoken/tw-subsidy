@@ -3,10 +3,11 @@ import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { useRecoilState } from 'recoil';
 
-import Header from '@/components/Header';
+import Header from '../common/Header';
 import { ResidentInputFormType } from '@/lib/types/mockApp/inputForm';
 import { years, months } from '@/lib/types/mockApp/setDate';
 import { residentInputState } from '@/lib/states/mockApp';
+import Progress from '../common/Progress';
 
 const ResidentInputMain = () => {
   const router = useRouter();
@@ -68,16 +69,10 @@ const ResidentInputMain = () => {
 
   return (
     <>
-      <Header menuType={1} menuTitle={'住民票紐付申請'} />
+      <Header />
       <main className="bg-color-background">
-        <div className="step">
-          <ul className="step-list">
-            <li className="active">入力</li>
-            <li>確認</li>
-            <li>完了</li>
-          </ul>
-        </div>
-        <div className="py-0 px-[53px]">
+        <Progress status='input' />
+        <div className="mt-[9px] py-0 px-[53px]">
           <form onSubmit={onSubmit}>
             <div className="input-form-label">
               氏名<span className="input-form-label-required">（必須）</span>
@@ -88,12 +83,7 @@ const ResidentInputMain = () => {
             <input
               type="text"
               className="input-form-text-box"
-              {...register('fullName', {
-                required: {
-                  value: true,
-                  message: '入力必須項目です',
-                },
-              })}
+              {...register('fullName')}
             />
             <div className="input-form-label">
               氏名フリガナ
@@ -107,10 +97,6 @@ const ResidentInputMain = () => {
               type="text"
               className="input-form-text-box"
               {...register('fullNameFurigana', {
-                required: {
-                  value: true,
-                  message: '入力必須項目です',
-                },
                 pattern: {
                   value: /^[ァ-ヴー　]*$/,
                   message: '全角カナで入力してください',
@@ -126,12 +112,7 @@ const ResidentInputMain = () => {
             <input
               type="text"
               className="input-form-text-box"
-              {...register('address', {
-                required: {
-                  value: true,
-                  message: '入力必須項目です',
-                },
-              })}
+              {...register('address')}
             />
             <div className="input-form-label">
               住民となった年月
@@ -169,12 +150,7 @@ const ResidentInputMain = () => {
             <input
               type="text"
               className="input-form-text-box"
-              {...register('permanentAddress', {
-                required: {
-                  value: true,
-                  message: '入力必須項目です',
-                },
-              })}
+              {...register('permanentAddress')}
             />
             <div className="pt-4 text-right">
               <button type="submit" className="input-form-button-green">

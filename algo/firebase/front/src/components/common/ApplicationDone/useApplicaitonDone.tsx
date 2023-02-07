@@ -1,44 +1,35 @@
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { urls } from '@/lib/types/mockApp';
 
 const useApplicationDone = () => {
     const router = useRouter();
-    const [msg, SetMsg] = useState("");
-    const [url, SetUrl] = useState("");
     const msgs = {
-        address: "住民票紐付申請",
+        resident: "住民票紐付申請",
         account: "口座実在証明申請",
         tax: "納税証明書交付申請",
         subsidy: "補助金申請"
-    };
+    } as const;
 
-    useEffect(() => {
-        init();
-    });
-
-    const init = () => {
+    const getMsg = () => {
         switch (router.pathname) {
-            case "/33_taxDone":
-                SetUrl("/34_taxList");
-                SetMsg(msgs.tax);
-                break;
-            case "/43_subsidyDone":
-                SetUrl("/44_subsidyList");
-                SetMsg(msgs.subsidy);
-                break;
+            case urls.residentDone:
+                return msgs.resident;
+            case urls.accountDone:
+                return msgs.account;
+            case urls.taxDone:
+                return msgs.tax;
+            case urls.subsidyDone:
+                return msgs.subsidy;
             default:
-                SetUrl("")
-                SetMsg("");
+                return "";
         }
     }
 
-    const changeUser = () => {
-        router.push({
-            pathname: url
-        }, url);
-    };
+    const backMenu = () => {
+        router.push(urls.applierMenu);
+    }
 
-    return { msg, changeUser }
+    return { getMsg, backMenu }
 };
 
 export default useApplicationDone;

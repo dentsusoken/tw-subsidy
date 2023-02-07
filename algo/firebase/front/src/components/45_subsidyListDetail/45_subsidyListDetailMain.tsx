@@ -3,27 +3,32 @@ import { FormProvider } from 'react-hook-form';
 import Container from '@/components/common/Container';
 import Header from '@/components/common/Header';
 import InputArea from '@/components/common/InputArea';
-import TransitionButton from '@/components/common/TransitionButton';
-import TransitionArea from '@/components/common/TransitionArea';
 import CheckBox from '@/components/common/CheckBox';
 
 import { SubsidyInputFormType } from '@/lib/types/mockApp/Form';
 import useSubsidyListDetailMain from './useSubsidyListDetailMain';
+import dayjs from 'dayjs';
 
 const SubsidyListDetailMain = () => {
-    const { methods, input, onSubmit, reject, verifyHandler } = useSubsidyListDetailMain()
+    const { methods, input, onSubmit, reject, verifyHandler, back, isIssuing } = useSubsidyListDetailMain()
+    dayjs.locale('ja');
 
     return (
         <>
             <Header />
             <main>
                 <FormProvider {...methods} >
-                    <Container title={"申請内容照会"}>
-                        <div className={"text-center h-12"}>
-                            {
-                                input.verifyStatus
-                                    ? <p className={"text-sm pt-4"}><img src='/authenticated.svg' className={"inline -mx-2"} />検証済</p>
-                                    : <p className={"text-sm  pt-7"}><img src='/warning.svg' className={"inline"} /> 要検証</p>
+                    <Container>
+                        <div>
+                            {input &&
+                                <section className={"flex flex-col items-center gap-1 w-72 mx-auto mb-2 pb-4 border-b"}>
+                                    {input.verifyStatus
+                                        ? <p className={"relative text-sm leading-relaxed"}><img src='/authenticated.svg' className={"absolute top-0 -translate-y-3 -translate-x-full"} />検証済</p>
+                                        : <p className={"relative text-sm leading-relaxed"}><img src='/warning.svg' className={"absolute -translate-x-full pr-2"} /> 要検証</p>
+                                    }
+                                    <p className={"text-sm text-color-gray-search leading-relaxed"}>未承認</p>
+                                    <p className={"text-xs text-color-gray-search leading-relaxed"}>申請日 {dayjs(input.applicationDate).format("YY/MM/DD HH:mm")}</p>
+                                </section>
                             }
                         </div>
                         <Container title={"申請書類の選択"}>
@@ -45,11 +50,44 @@ const SubsidyListDetailMain = () => {
                                 <InputArea<SubsidyInputFormType> label='申請者住所' name="address" placeholder='' isEnabled={false} />
                             </div>
                         </Container>
-                        <TransitionArea>
-                            <TransitionButton text='却下' type={"prev"} currentUser={"approver"} onClick={reject} />
-                            {input.verifyStatus ? null : <TransitionButton text='検証' type={"verify"} currentUser={"approver"} onClick={verifyHandler} />}
-                            <TransitionButton text='承認' type={"next"} currentUser={"approver"} onClick={onSubmit} isEnabled={input.verifyStatus} />
-                        </TransitionArea>
+                        <div className={"relative"}>
+                            {isIssuing
+                                ? <span className={"absolute right-5 -translate-y-3 text-sm leading-relaxed text-yellow-500"}>承認中...</span>
+                                : null
+                            }
+                        </div>
+                        <div className="w-full pt-4 pb-2 px-5 flex justify-between">
+                            <button
+                                onClick={back}
+                                className="input-form-button-white"
+                            >
+                                戻る
+                            </button>
+                            {
+                                input && input.verifyStatus
+                                    ? <>
+                                        <button
+                                            onClick={reject}
+                                            className="input-form-button-white"
+                                        >
+                                            却下
+                                        </button>
+                                        <button
+                                            onClick={onSubmit}
+                                            className="input-form-button-orange"
+                                        >
+                                            承認
+                                        </button>
+                                    </>
+                                    :
+                                    <button
+                                        onClick={verifyHandler}
+                                        className="input-form-button-orange"
+                                    >
+                                        検証
+                                    </button>
+                            }
+                        </div>
                     </Container>
                 </FormProvider>
             </main>

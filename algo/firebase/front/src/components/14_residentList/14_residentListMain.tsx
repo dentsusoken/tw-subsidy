@@ -3,32 +3,33 @@ import { useErrorHandler } from 'react-error-boundary';
 import { useRouter } from 'next/router';
 import { useRecoilValue } from 'recoil';
 
-import Header from '@/components/Header';
+import Header from '../common/Header';
 import { ResidentInputFormType } from '@/lib/types/mockApp/inputForm';
-import { residentVCListState, residentVCRequestListState } from '@/lib/states/mockApp';
+import { residentVCRequestListState } from '@/lib/states/mockApp';
+import dayjs from 'dayjs';
+import 'dayjs/locale/ja';
+import SearchArea from '../common/SearchArea';
 
 const ResidentListMain = () => {
   const router = useRouter();
 
   const [listCount, setListCount] = useState(0);
-
+  const [query, setQuery] = useState("");
   const VCRequestlistState = useRecoilValue(residentVCRequestListState);
-  const VClistState = useRecoilValue(residentVCListState);
   const [listState, setListState] = useState<ResidentInputFormType[]>([]);
 
   const errorHandler = useErrorHandler();
+  dayjs.locale("ja")
 
   useEffect(() => {
     try {
-      const verifiedList: ResidentInputFormType[] = VClistState.map((item) => item.message.content.content);
       const requestList: ResidentInputFormType[] = VCRequestlistState.map((item) => item.message.content)
-      const mergeList: ResidentInputFormType[] = verifiedList.concat(requestList)
-      setListState(mergeList)
-      setListCount(listState.length);
+      setListState(requestList)
+      setListCount(requestList.length);
     } catch (e) {
       errorHandler(e);
     }
-  }, [listState.length, errorHandler]);
+  }, [VCRequestlistState, errorHandler]);
 
   // [id]の降順で表示
   const listForSort = [...listState];
@@ -36,18 +37,9 @@ const ResidentListMain = () => {
 
   return (
     <>
-      <Header menuType={2} menuTitle={'住民票紐付申請一覧'} />
+      <Header />
       <main className="bg-color-background">
-        <div className="main-search">
-          <svg className="fill-none w-5 h-6" viewBox="0 0 19 20">
-            <path
-              d="M8.23792 0.0247757C3.6953 0.0247757 0 3.91456 0 8.69627C0 13.478 3.6953 17.3678 8.23792 17.3678C9.6266 17.3678 10.9917 17.0209 12.145 16.352C12.2374 16.469 12.3399 16.5768 12.451 16.674L14.8047 19.1516C15.0221 19.409 15.2871 19.617 15.5835 19.7627C15.88 19.9084 16.2016 19.9888 16.5286 19.9989C16.8556 20.009 17.1812 19.9487 17.4852 19.8216C17.7893 19.6945 18.0655 19.5033 18.2968 19.2598C18.5282 19.0163 18.7098 18.7256 18.8305 18.4055C18.9513 18.0854 19.0086 17.7428 18.999 17.3985C18.9893 17.0543 18.913 16.7157 18.7746 16.4037C18.6361 16.0917 18.4386 15.8127 18.194 15.5839L15.8403 13.1063C15.7257 12.9856 15.5995 12.8777 15.4638 12.7843C16.0993 11.5703 16.4994 10.158 16.4994 8.67149C16.4994 3.88978 12.8041 0 8.26146 0L8.23792 0.0247757ZM8.23792 2.50235C11.5096 2.50235 14.1221 5.25245 14.1221 8.69627C14.1221 10.3315 13.5573 11.8428 12.5687 12.9577C12.5452 12.9825 12.5216 13.0072 12.4981 13.032C12.3869 13.1293 12.2845 13.2371 12.1921 13.3541C11.1565 14.3451 9.74428 14.915 8.21438 14.915C4.94275 14.915 2.33015 12.1649 2.33015 8.72104C2.33015 5.27722 4.94275 2.52712 8.21438 2.52712L8.23792 2.50235Z"
-              fill="#6179B8"
-              fillOpacity="0.65"
-            />
-          </svg>
-          <input type="text" placeholder="検索"></input>
-        </div>
+        <SearchArea value={query} onChange={(e) => setQuery(e.currentTarget.value)} />
         <div className="py-3 px-0 bg-color-gray-count text-center h-[46px] font-sans">
           {listCount} 件中 - {listCount} 件を表示
         </div>
@@ -56,7 +48,7 @@ const ResidentListMain = () => {
             {listForSort.map((items: ResidentInputFormType) => {
               return (
                 <tr key={items.id}>
-                  <td>{items.applicationDate}</td>
+                  <td>{dayjs(items.applicationDate).format("M月D日(ddd)")}</td>
                   <td>{items.fullName}</td>
                   <td>
                     {items.verifyStatus && (

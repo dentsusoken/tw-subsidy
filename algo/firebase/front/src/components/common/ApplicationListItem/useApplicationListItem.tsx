@@ -27,25 +27,19 @@ const useApplicationListItem = ({ taxInfo, subsidyInfo, setTaxInput, setSubsidyI
     };
 
     useEffect(() => {
-        getInfo();
-        getUrl();
+        (() => {
+            !!taxInfo && setInfo(taxInfo);
+            !!subsidyInfo && setInfo(subsidyInfo);
+        })();
+        (() => {
+            !!taxInfo && setApproveUrl(urls.taxApprove);
+            !!taxInfo && setRevokeUrl(urls.taxRevoke);
+            !!taxInfo && setQuery({ vc: "tax" });
+            !!subsidyInfo && setApproveUrl(urls.subsidyApprove);
+            !!subsidyInfo && setRevokeUrl(urls.subsidyRevoke);
+            !!subsidyInfo && setQuery({ vc: "subsidy" });
+        })();
     }, [taxInfo, subsidyInfo]);
-
-
-
-    const getInfo = () => {
-        !!taxInfo && setInfo(taxInfo);
-        !!subsidyInfo && setInfo(subsidyInfo);
-    };
-
-    const getUrl = () => {
-        !!taxInfo && setApproveUrl(urls.taxApprove);
-        !!taxInfo && setRevokeUrl(urls.taxRevoke);
-        !!taxInfo && setQuery({ vc: "tax" });
-        !!subsidyInfo && setApproveUrl(urls.subsidyApprove);
-        !!subsidyInfo && setRevokeUrl(urls.subsidyRevoke);
-        !!subsidyInfo && setQuery({ vc: "subsidy" });
-    };
 
     const setGlobalState = () => {
         !!setTaxInput && !!taxInfo && setTaxInput(taxInfo);

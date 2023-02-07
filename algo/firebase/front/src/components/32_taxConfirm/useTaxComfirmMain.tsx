@@ -14,12 +14,15 @@ import { createVerifiableMessage } from '@/lib/algosbt';
 import { holderPw } from '@/lib/algo/account/accounts';
 import holderDidAccountState from '@/lib/states/holderDidAccountState';
 import issuerDidAccountState from '@/lib/states/issuerDidAccountState';
+import { useErrorHandler } from 'react-error-boundary';
 
 const useTaxComfirmMain = () => {
     const input = useRecoilValue(taxInputState);
     const setList = useSetRecoilState(taxVCRequestListState);
     const reset = useResetRecoilState(taxInputState);
     const router = useRouter();
+    const errorHandler = useErrorHandler();
+    dayjs.locale('ja');
 
     const [holderDidAccountGlobal] = useRecoilState(holderDidAccountState);
     const [issuerDidAccountGlobal] = useRecoilState(issuerDidAccountState);
@@ -38,28 +41,30 @@ const useTaxComfirmMain = () => {
     });
 
     const onSubmit = () => {
+        try {
+            const id = dayjs().unix();
+            const now = dayjs();
+            const applicationDate = dayjs(now).format('YYYY-MM-DD HH:mm:ss');
 
-        dayjs.locale('ja');
-        const id = dayjs().unix();
-        const now = dayjs();
-        const applicationDate = dayjs(now).format('M月D日(ddd)');
+            const content: TaxInputFormType = {
+                ...input,
+                id: id,
+                applicationDate: applicationDate
+            }
+            if (!!holderDidAccountGlobal && !!issuerDidAccountGlobal) {
+                setList((items) => [...items, createVerifiableMessage(
+                    holderDidAccountGlobal,
+                    issuerDidAccountGlobal.did,
+                    content,
+                    holderPw
+                )]);
+                reset();
+            }
 
-        const content: TaxInputFormType = {
-            ...input,
-            id: id,
-            applicationDate: applicationDate
+            router.push('/33_taxDone', '/33_taxDone');
+        } catch (e) {
+            errorHandler(e);
         }
-        if (!!holderDidAccountGlobal && !!issuerDidAccountGlobal) {
-            setList((items) => [...items, createVerifiableMessage(
-                holderDidAccountGlobal,
-                issuerDidAccountGlobal.did,
-                content,
-                holderPw
-            )]);
-            reset();
-        }
-
-        router.push('/33_taxDone', '/33_taxDone');
     };
 
     const getBack = () => {

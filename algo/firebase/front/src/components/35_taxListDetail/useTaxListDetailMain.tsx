@@ -1,38 +1,37 @@
 import { useForm } from 'react-hook-form';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { useRouter } from 'next/router';
+import dayjs from 'dayjs';
+import 'dayjs/locale/ja';
 
 import { TaxInputFormType } from '@/lib/types/mockApp/Form';
 import { taxInputState, taxVCRequestListState, taxVCListState, VCListState } from '@/lib/states/mockApp';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
-import { verifyVerifiableMessage, createVerifiableCredential } from '@/lib/algosbt';
+import { verifyVerifiableMessage, createVerifiableCredential, createVerifiableMessage } from '@/lib/algosbt';
 import { getAlgod } from '@/lib/algo/algod/algods';
 import chainState from '@/lib/states/chainState';
 import holderDidAccountState from '@/lib/states/holderDidAccountState';
 import issuerDidAccountState from '@/lib/states/issuerDidAccountState';
 
-import { issuerPw } from '@/lib/algo/account/accounts';
+import { holderPw, issuerPw } from '@/lib/algo/account/accounts';
+import { useErrorHandler } from 'react-error-boundary';
 
 const useTaxListDetailMain = () => {
     const input = useRecoilValue(taxInputState);
     const [listState, setListState] = useRecoilState(taxVCRequestListState);
     const setVCList = useSetRecoilState(taxVCListState);
     const setIssuedVCList = useSetRecoilState(VCListState);
-    const [pathname, setPathName] = useState("")
     const [isIssuing, setIsIssuing] = useState(false)
     const router = useRouter();
+    const errorHandler = useErrorHandler();
+    dayjs.locale('ja');
 
     const [chainType] = useRecoilState(chainState);
     const [holderDidAccountGlobal] = useRecoilState(holderDidAccountState);
     const [issuerDidAccountGlobal] = useRecoilState(issuerDidAccountState);
 
     const VCRequest = listState.find((v) => v.message.content.id === input.id);
-
-    useEffect(() => {
-        setPathName(router.pathname);
-    })
-
 
     const methods = useForm<TaxInputFormType>({
         defaultValues: {
@@ -47,75 +46,91 @@ const useTaxListDetailMain = () => {
         },
     });
 
-    const approve = async () => {
-        if (VCRequest && holderDidAccountGlobal && issuerDidAccountGlobal) {
-            setIsIssuing(true);
-            const verified = verifyVerifiableMessage(VCRequest);
-            if (verified) {
-                const algod = getAlgod(chainType);
-                const content = VCRequest.message.content;
-                const vcContent = {
-                    ...content,
-                    verifyStatus: true,
-                    approvalStatus: true,
-                };
-                const vc = await createVerifiableCredential(
-                    algod,
-                    issuerDidAccountGlobal,
-                    holderDidAccountGlobal.did,
-                    vcContent,
-                    issuerPw
-                );
-                setListState((items) => items.filter((item) => item.message.content.id != content.id));
-                setVCList((items) => [...items, vc]);
-                setIssuedVCList((items) => ({ ...items, tax: [...items.tax, { VC: vc, acceptStatus: false }] }));
-                setIsIssuing(false);
-                router.push({
-                    pathname: '/36_taxListDone',
-                    query: { proc: "approve" }
-                }, '/36_taxListDone')
+    const verify = () => {
+        try {
+            if (VCRequest && holderDidAccountGlobal && issuerDidAccountGlobal) {
+                const verified = verifyVerifiableMessage(VCRequest);
+                const replaceData = { ...VCRequest.message.content, verifyStatus: verified }
+                const updateData = listState.map((item) => {
+                    if (item.message.content.id === replaceData.id) {
+                        return createVerifiableMessage(
+                            holderDidAccountGlobal,
+                            issuerDidAccountGlobal.did,
+                            replaceData,
+                            holderPw
+                        );
+                    }
+                    else {
+                        return item;
+                    }
+                });
+                setListState(() => updateData);
             }
+        } catch (e) {
+            errorHandler(e);
+        }
+    }
+
+
+    const approve = async () => {
+        try {
+            if (VCRequest && holderDidAccountGlobal && issuerDidAccountGlobal) {
+                setIsIssuing(true);
+
+                if (VCRequest.message.content.verifyStatus) {
+                    const algod = getAlgod(chainType);
+                    dayjs.locale('ja');
+                    const now = dayjs();
+                    const content = VCRequest.message.content;
+                    const vcContent = {
+                        ...content,
+                        approvalStatus: true,
+                        issueDate: dayjs(now).format('YYYY-MM-DD HH:mm:ss')
+                    };
+                    const vc = await createVerifiableCredential(
+                        algod,
+                        issuerDidAccountGlobal,
+                        holderDidAccountGlobal.did,
+                        vcContent,
+                        issuerPw
+                    );
+                    const updateData = listState.map((item) => {
+                        if (item.message.content.id === vcContent.id) {
+                            return createVerifiableMessage(
+                                holderDidAccountGlobal,
+                                issuerDidAccountGlobal.did,
+                                vcContent,
+                                holderPw
+                            );
+                        }
+                        else {
+                            return item;
+                        }
+                    });
+                    setListState(() => updateData);
+                    setVCList((items) => [...items, vc]);
+                    setIssuedVCList((items) => ({ ...items, tax: [...items.tax, vc] }));
+                    setIsIssuing(false);
+                    router.push({ pathname: "/36_taxListDone", query: { id: router.query.id, proc: "approve" } });
+                }
+            }
+        } catch (e) {
+            setIsIssuing(false);
+            errorHandler(e);
         }
     };
 
     const reject = () => {
-        // reset();
-
-        router.push({
-            pathname: '/36_taxListDone',
-            query: { proc: "reject" }
-        }, '/36_taxListDone')
-    };
+        router.push({ pathname: "/36_taxListDone", query: { id: router.query.id, proc: "reject" } });
+    }
 
     const back = () => {
         router.push('/34_taxList', '/34_taxList');
     }
 
-    const revoke = () => {
-        // const replaceData: TaxInputFormType = {
-        //     ...input,
-        //     approvalStatus: false,
-        //     verifyStatus: false
-        // }
-        // const updateData = listState.map((item) => {
-        //     if (item.message.content.id === replaceData.id) {
-        //         return replaceData;
-        //     }
-        //     else {
-        //         return item;
-        //     }
-        // })
 
-        // setListState(updateData);
-        // reset();
 
-        router.push({
-            pathname: "/52_taxListRevoked",
-            query: { vc: "tax", proc: "delete" }
-        }, "/52_taxListRevoked");
-    }
-
-    return { pathname, methods, isIssuing, approve, back, revoke, reject }
+    return { VCRequest, methods, isIssuing, approve, back, verify, reject }
 };
 
 export default useTaxListDetailMain;

@@ -1,22 +1,31 @@
+import dayjs from "dayjs";
 import { useRouter } from "next/router";
 import { UrlObject } from "url";
 
-export type VCListItemParams = {
-    vc: string;
-    accepted: boolean;
-    url: UrlObject;
+export type VCInfo = {
+    id: number;
+    name: string;
+    issueDate: string | undefined;
+    revoked: boolean;
 }
 
-const VCListItem = ({ vc, accepted, url }: VCListItemParams) => {
-    const router = useRouter()
+export type VCListItemParams = {
+    item: VCInfo;
+    url: string | UrlObject;
+}
+
+const VCListItem = ({ item, url }: VCListItemParams) => {
+    const router = useRouter();
+    dayjs.locale('ja');
 
     return (
         <>
             <li className={"flex w-full h-16 text-sm border-b border-color-gainsboro"}>
-                <div className={"flex mx-auto items-center"}>
-                    <span className={"w-40 text-base font-bold text-left"}>{vc}</span>
-                    <span className={"w-15 mr-10 " + (accepted ? "text-color-grey-accepted" : "text-color-warnig")}>{accepted ? "受入済" : "未受入"}</span>
-                    <button onClick={(() => { router.push(url) })} className={"w-18 h-7 leading-7 border border-color-grey rounded-lg block ml-auto text-base text-center font-bold"}>照会</button>
+                <div className={"flex justify-between mx-auto gap-4 items-center"}>
+                    <span className={"w-fit"}>{dayjs(item.issueDate).format("M月D日(ddd)")}</span>
+                    <span className={"w-24"}>{item.name}</span>
+                    <span className={"w-fit text-color-gray-accepted"}>{item.revoked ? "発行済" : "取消済"}</span>
+                    <button onClick={(() => { router.push(url) })} className={"w-18 h-7 leading-7 border border-color-gray rounded-lg block ml-auto text-base text-center font-bold"}>照会</button>
                 </div>
             </li>
         </>
