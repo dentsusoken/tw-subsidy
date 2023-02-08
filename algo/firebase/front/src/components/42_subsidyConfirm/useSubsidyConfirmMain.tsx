@@ -67,10 +67,17 @@ const useSubsidyConfirmMain = () => {
                 const now = dayjs();
                 const applicationDate = dayjs(now).format('YYYY-MM-DD HH:mm:ss');
 
+                const resident = input.resident ? input.resident : "0";
+                const account = input.account ? input.account : "0";
+                const tax = input.resident ? input.tax : "0";
+
                 const subsidyInput: SubsidyInputFormType = {
                     ...input,
                     id: id,
                     applicationDate: applicationDate,
+                    resident: resident,
+                    account: account,
+                    tax: tax,
                 }
 
                 if (VCListGlobal.resident) {

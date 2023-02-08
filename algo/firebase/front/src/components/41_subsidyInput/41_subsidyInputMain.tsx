@@ -32,15 +32,15 @@ const SubsidyInputMain = () => {
                                     <li className={"py-3 pl-4 pr-6 w-78 flex"}>
                                         {VCListSelect ?
                                             <div className={"relative w-[281px] h-[44px] px-2 border border-color-gray rounded-lg text-base"}>
-                                                <label className={"absolute left-0 top-1/2 translate-x-2 -translate-y-1/2"}>住民票</label>
+                                                <label className={"absolute left-0 top-1/2 translate-x-2 -translate-y-1/2"}>住民票 - VC{VCListSelect.resident.length}</label>
                                             </div>
                                             : null}
                                     </li>
                                     <li className={"py-3 pl-4 pr-6 w-78 flex"}>
-                                        {VCListSelect ? <VCSelect<SubsidyInputFormType> label={"口座実在証明書"} name={"account"} items={VCListSelect.account} currentVal={input.resident} /> : null}
+                                        {VCListSelect ? <VCSelect<SubsidyInputFormType> label={"口座実在証明書"} name={"account"} items={VCListSelect.account} currentVal={input.account} /> : null}
                                     </li>
                                     <li className={"py-3 pl-4 pr-6 w-78 flex"}>
-                                        {VCListSelect ? <VCSelect<SubsidyInputFormType> label={"納税証明書"} name={"tax"} items={VCListSelect.tax} currentVal={input.resident} /> : null}
+                                        {VCListSelect ? <VCSelect<SubsidyInputFormType> label={"納税証明書"} name={"tax"} items={VCListSelect.tax} currentVal={input.tax} /> : null}
                                     </li>
                                 </ul>
                             </Container>
