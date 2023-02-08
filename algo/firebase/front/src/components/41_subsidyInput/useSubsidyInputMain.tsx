@@ -45,12 +45,16 @@ const useSubsidyInputMain = () => {
 
     const onSubmit = (data: SubsidyInputFormType) => {
 
+        const resident = data.resident ? data.resident : "-1"
+        const account = data.account ? data.account : "-1"
+        const tax = data.resident ? data.tax : "-1"
+
         setInput(() => ({
             ...{
                 id: 0,
-                resident: data.resident,
-                account: data.account,
-                tax: data.tax,
+                resident: resident,
+                account: account,
+                tax: tax,
                 fullName: data.fullName,
                 address: data.address,
                 verifyStatus: false,

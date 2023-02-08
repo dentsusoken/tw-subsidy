@@ -19,7 +19,6 @@ import { useErrorHandler } from 'react-error-boundary';
 const useSubsidyConfirmMain = () => {
     const input = useRecoilValue(subsidyInputState);
     const setList = useSetRecoilState(subsidyListState);
-    const reset = useResetRecoilState(subsidyInputState);
     const VCListGlobal = useRecoilValue(VCListState);
     const [holderDidAccountGlobal] = useRecoilState(holderDidAccountState);
     const [verifierDidAccountGlobal] = useRecoilState(verifierDidAccountState);
@@ -109,7 +108,6 @@ const useSubsidyConfirmMain = () => {
                     subsidyInput.taxVP = vm;
                 }
                 setList((items) => [...items, subsidyInput]);
-                reset();
 
                 router.push('/43_subsidyDone', '/43_subsidyDone');
             }
