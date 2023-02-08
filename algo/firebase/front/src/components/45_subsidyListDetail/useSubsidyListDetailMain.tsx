@@ -29,7 +29,7 @@ const useSubsidyListDetailMain = () => {
     const [chain] = useRecoilState(chainState);
     const [holderDidAccountGlobal] = useRecoilState(holderDidAccountState);
     const [issuerDidAccountGlobal] = useRecoilState(issuerDidAccountState);
-    
+
     dayjs.locale('ja');
 
     const methods = useForm<SubsidyInputFormType>({
@@ -72,7 +72,13 @@ const useSubsidyListDetailMain = () => {
             taxVerifyStatus = await VPVerify(algod, input.taxVP);
 
             if (residentVerifyStatus && accountVerifyStatus && taxVerifyStatus) {
-                const replaceData: SubsidyInputFormType = { ...input, verifyStatus: true }
+                const replaceData: SubsidyInputFormType = {
+                    ...input,
+                    verifyStatus: true,
+                    residentVerifyStatus: residentVerifyStatus,
+                    accountVerifyStatus: accountVerifyStatus,
+                    taxVerifyStatus: taxVerifyStatus
+                }
                 setInput(replaceData)
 
                 const updateData = listState.map((item) => {
@@ -98,7 +104,6 @@ const useSubsidyListDetailMain = () => {
 
                 if (input.verifyStatus) {
                     const replaceData: SubsidyInputFormType = { ...input, approvalStatus: true, issueDate: dayjs().format('YYYY-MM-DD HH:mm:ss') }
-                    setInput(replaceData)
 
                     const updateData = listState.map((item) => {
                         if (item.id === replaceData.id) {
@@ -115,6 +120,7 @@ const useSubsidyListDetailMain = () => {
                         replaceData,
                         issuerPw
                     );
+                    setInput(replaceData)
                     setListState(updateData);
                     setVCList((items) => ({ ...items, subsidy: [...items.subsidy, vc] }));
                 }

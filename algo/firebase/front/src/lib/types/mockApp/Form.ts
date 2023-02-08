@@ -33,6 +33,9 @@ export type SubsidyInputFormType = {
     resident: string;
     account: string;
     tax: string;
+    residentVerifyStatus?: boolean;
+    accountVerifyStatus?: boolean;
+    taxVerifyStatus?: boolean;
     fullName: string;
     address: string;
     residentVP: VerifiableMessage<VPContent> | undefined;
