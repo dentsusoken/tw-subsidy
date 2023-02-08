@@ -1,8 +1,15 @@
 import { useRouter } from "next/router";
 import { urls, icons } from "@/lib/types/mockApp";
+import useDataClear from "@/components/util/useDataClear";
+import { useEffect } from "react";
 
 const useHeader = () => {
     const router = useRouter()
+    const { clearOldData } = useDataClear();
+
+    useEffect(() => {
+        clearOldData();
+    },)
 
     const Headings = {
         mainMenu: "DEMO MENU",
