@@ -3,16 +3,16 @@ import { ChangeEvent, useEffect, useState } from 'react';
 import { Path, FieldValues, useFormContext, RegisterOptions } from 'react-hook-form';
 
 
-export type CheckBoxParams<T> = {
+export type SelectParams<T> = {
     name: Path<T>
     label: string;
-    items: VerifiableMessage<VerifiableCredentialContent<unknown>>[];
+    items: boolean[];
     validation?: RegisterOptions;
     currentVal?: string;
 }
 
 
-const VCSelect = <T extends FieldValues>({ name, label, items, validation = undefined, currentVal }: CheckBoxParams<T>) => {
+const VCSelect = <T extends FieldValues>({ name, label, items, validation = undefined, currentVal }: SelectParams<T>) => {
     const { register } = useFormContext();
     const [select, SetSelect] = useState("")
 
@@ -35,7 +35,7 @@ const VCSelect = <T extends FieldValues>({ name, label, items, validation = unde
                 >
                     {items.length !== 0
                         ? items.map((value, index) => (
-                            <option value={index} key={index}>{label} - VC{index + 1}</option>
+                            value && <option value={index} key={index}>{label} - VC{index + 1}</option>
                         ))
                         : <option></option>
                     }
