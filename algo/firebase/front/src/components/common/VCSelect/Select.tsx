@@ -1,4 +1,3 @@
-import { VerifiableMessage, VerifiableCredentialContent } from '@/lib/algosbt/types';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { Path, FieldValues, useFormContext, RegisterOptions } from 'react-hook-form';
 

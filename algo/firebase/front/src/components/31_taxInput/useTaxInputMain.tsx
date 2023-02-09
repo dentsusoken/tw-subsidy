@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { TaxInputFormType } from '@/lib/types/mockApp/Form';
 import { ResidentInputFormType } from '@/lib/types/mockApp/inputForm';
 import { taxInputState } from '@/lib/states/mockApp/taxInputState';
-import { residentVCListState, VCListState } from '@/lib/states/mockApp';
+import { residentVCListState } from '@/lib/states/mockApp';
 import chainState from '@/lib/states/chainState';
 import { getAlgod } from '@/lib/algo/algod/algods';
 import { verifyVerifiableCredential } from '@/lib/algosbt';
@@ -54,7 +54,7 @@ const useTaxInputMain = () => {
             }
             setIsLoading(() => false);
         })();
-    }, [VCListGlobal, methods])
+    }, [VCListGlobal, methods, chain])
 
 
     const onSubmit = (data: TaxInputFormType) => {

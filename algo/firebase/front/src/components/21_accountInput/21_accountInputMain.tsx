@@ -4,7 +4,7 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 
 import Header from '../common/Header';
 import { AccountInputFormType, ResidentInputFormType } from '@/lib/types/mockApp/inputForm';
-import { accountInputState, VCListState, residentVCListState } from '@/lib/states/mockApp';
+import { accountInputState, residentVCListState } from '@/lib/states/mockApp';
 import { useEffect, useState } from 'react';
 import Progress from '../common/Progress';
 import { verifyVerifiableCredential } from '@/lib/algosbt';
@@ -56,7 +56,7 @@ const AccountInputMain = () => {
       }
       setIsLoading(() => false);
     })();
-  }, [VCListGlobal, setValue])
+  }, [VCListGlobal, setValue, chain])
 
 
 

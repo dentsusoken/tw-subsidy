@@ -4,12 +4,10 @@ import Progress from '@/components/common/Progress';
 import ChangeUserButton from '@/components/common/ChangeUserButton';
 import useApplicationDone from './useApplicaitonDone';
 import { useRouter } from 'next/router';
-import { urls } from '@/lib/types/mockApp';
 
 
 const ApplicationDone = () => {
     const { getMsg, backMenu } = useApplicationDone();
-    const router = useRouter();
 
     return (
         <>
