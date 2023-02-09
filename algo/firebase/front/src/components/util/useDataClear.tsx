@@ -119,17 +119,16 @@ const useDataClear = () => {
     };
 
     const clearOldData = () => {
-        if (VCList.resident[0] && Object.hasOwn(VCList.resident[0], "acceptStatus")) {
-            console.log("aaaa");
-            clearAllState();
-        }
-        if (VCList.account[0] && Object.hasOwn(VCList.account[0], "acceptStatus")) {
-            console.log("aaaa");
-            clearAllState();
-        }
-        if (VCList.tax[0] && Object.hasOwn(VCList.tax[0], "acceptStatus")) {
-            console.log("aaaa");
-            clearAllState();
+        if (VCList) {
+            if (VCList.resident && Array.isArray(VCList.resident) && VCList.resident.length > 0 && Object.hasOwn(VCList.resident[0], "acceptStatus")) {
+                clearAllState();
+            }
+            if (VCList.account && Array.isArray(VCList.account) && VCList.account.length > 0 && Object.hasOwn(VCList.account[0], "acceptStatus")) {
+                clearAllState();
+            }
+            if (VCList.tax && Array.isArray(VCList.tax) && VCList.tax.length > 0 && Object.hasOwn(VCList.tax[0], "acceptStatus")) {
+                clearAllState();
+            }
         }
     }
 
