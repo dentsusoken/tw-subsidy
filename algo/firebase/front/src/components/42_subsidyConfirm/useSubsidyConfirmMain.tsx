@@ -1,5 +1,5 @@
 import { useForm } from 'react-hook-form';
-import { useRecoilState, useSetRecoilState, useResetRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useSetRecoilState, useRecoilValue } from 'recoil';
 import { useRouter } from 'next/router';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ja';
@@ -19,7 +19,6 @@ import { useErrorHandler } from 'react-error-boundary';
 const useSubsidyConfirmMain = () => {
     const input = useRecoilValue(subsidyInputState);
     const setList = useSetRecoilState(subsidyListState);
-    const reset = useResetRecoilState(subsidyInputState);
     const VCListGlobal = useRecoilValue(VCListState);
     const [holderDidAccountGlobal] = useRecoilState(holderDidAccountState);
     const [verifierDidAccountGlobal] = useRecoilState(verifierDidAccountState);
@@ -67,10 +66,17 @@ const useSubsidyConfirmMain = () => {
                 const now = dayjs();
                 const applicationDate = dayjs(now).format('YYYY-MM-DD HH:mm:ss');
 
+                const resident = input.resident ? input.resident : "0";
+                const account = input.account ? input.account : "0";
+                const tax = input.resident ? input.tax : "0";
+
                 const subsidyInput: SubsidyInputFormType = {
                     ...input,
                     id: id,
                     applicationDate: applicationDate,
+                    resident: resident,
+                    account: account,
+                    tax: tax,
                 }
 
                 if (VCListGlobal.resident) {
@@ -102,7 +108,6 @@ const useSubsidyConfirmMain = () => {
                     subsidyInput.taxVP = vm;
                 }
                 setList((items) => [...items, subsidyInput]);
-                reset();
 
                 router.push('/43_subsidyDone', '/43_subsidyDone');
             }

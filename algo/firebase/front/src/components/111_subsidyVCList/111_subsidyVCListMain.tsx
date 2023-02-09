@@ -31,17 +31,18 @@ const SubsidyVCListMain = () => {
       setIsLoading(() => true);
       const algod = getAlgod(chain);
       try {
-        const verifiedList = await Promise.all(VClistState.subsidy.map(async (item) => {
+        const verifiedList = await Promise.all(VClistState.subsidy.map(async (item, index) => {
           const revokeStatus = await verifyVerifiableCredential(algod, item)
           return {
             id: item.message.content.content.id,
             name: item.message.content.content.fullName,
             issueDate: item.message.content.content.issueDate,
-            revoked: revokeStatus
+            revoked: revokeStatus,
+            VCName: `補助金申請 VC${index + 1}`
           }
         }));
         setListState(verifiedList)
-        setListCount(VClistState.subsidy.length);        
+        setListCount(VClistState.subsidy.length);
       } catch (e) {
         errorHandler(e);
       }
@@ -49,9 +50,21 @@ const SubsidyVCListMain = () => {
     })();
   }, [VClistState, chain, errorHandler]);
 
-  // [id]の降順で表示
-  const listForSort = [...listState];
-  listForSort.sort((a, b) => b.id - a.id);
+  const sortList = (list: VCInfo[]) => {
+    list.sort((a, b) => {
+      if (dayjs(b.issueDate).isBefore(dayjs(a.issueDate))) {
+        return -1;
+      }
+      else if (dayjs(b.issueDate).isAfter(dayjs(a.issueDate))) {
+        return 1
+      }
+      else {
+        return 0
+      }
+    });
+    return list;
+  }
+  const listForSort = sortList(listState);
 
   return (
     <>

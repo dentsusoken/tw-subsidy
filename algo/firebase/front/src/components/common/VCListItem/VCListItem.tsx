@@ -7,6 +7,7 @@ export type VCInfo = {
     name: string;
     issueDate: string | undefined;
     revoked: boolean;
+    VCName: string;
 }
 
 export type VCListItemParams = {
@@ -23,7 +24,10 @@ const VCListItem = ({ item, url }: VCListItemParams) => {
             <li className={"flex w-full h-16 text-sm border-b border-color-gainsboro"}>
                 <div className={"flex justify-between mx-auto gap-4 items-center"}>
                     <span className={"w-fit"}>{dayjs(item.issueDate).format("M月D日(ddd)")}</span>
-                    <span className={"w-24"}>{item.name}</span>
+                    <div className={`flex flex-col w-35 `}>
+                        <span>{item.name}</span>
+                        <span>{item.VCName}</span>
+                    </div>
                     <span className={"w-fit text-color-gray-accepted"}>{item.revoked ? "発行済" : "取消済"}</span>
                     <button onClick={(() => { router.push(url) })} className={"w-18 h-7 leading-7 border border-color-gray rounded-lg block ml-auto text-base text-center font-bold"}>照会</button>
                 </div>

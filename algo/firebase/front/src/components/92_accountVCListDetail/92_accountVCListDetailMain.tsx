@@ -8,7 +8,7 @@ import { AccountInputFormType, AccountVCType } from "@/lib/types/mockApp";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
 import { AccountInquiry } from "../common/Forms";
 import Header from "../common/Header";
 import Loading from "../common/Loading";
@@ -23,7 +23,7 @@ const AccountVCListDetailMain = () => {
   const chain = useRecoilValue(chainState);
   const [isLoading, setIsLoading] = useState(true);
   const [isRevoking, setIsRevoking] = useState(false);
-  const [issuerDidAccountGlobal] = useRecoilState(issuerDidAccountState);
+  const issuerDidAccountGlobal = useRecoilValue(issuerDidAccountState);
   dayjs.locale('ja');
 
   useEffect(() => {
@@ -31,11 +31,11 @@ const AccountVCListDetailMain = () => {
       setIsLoading(() => true);
       const algod = getAlgod(chain);
       const id = router.query.id;
-      const ResidentVC = AccountVCListGlobal.find((v) => v.message.content.content.id === Number(id));
-      if (ResidentVC) {
-        const revoke = await verifyVerifiableCredential(algod, ResidentVC);
-        setVC(ResidentVC);
-        setInput(ResidentVC.message.content.content);
+      const AccountVC = AccountVCListGlobal.find((v) => v.message.content.content.id === Number(id));
+      if (AccountVC) {
+        const revoke = await verifyVerifiableCredential(algod, AccountVC);
+        setVC(AccountVC);
+        setInput(AccountVC.message.content.content);
         setRevokeStatus(revoke);
       }
 

@@ -3,71 +3,11 @@ import Header from "../../common/Header";
 import ConfirmLink from "../../common/ListConfirmLink";
 import StepLink from "../../common/StepLink";
 import Arrow from "../../common/Arrow";
-import { useSetRecoilState } from "recoil";
-import { accountInputState, residentInputState, subsidyInputState, taxInputState } from "@/lib/states/mockApp";
+import useDataClear from "@/components/util/useDataClear";
 
 const ApplierMenuMain = () => {
-    const clearResidentInputState = useSetRecoilState(residentInputState);
-    const clearAccountInputState = useSetRecoilState(accountInputState);
-    const clearTaxInputState = useSetRecoilState(taxInputState);
-    const clearSubsidyInputState = useSetRecoilState(subsidyInputState);
 
-    const handleClearInputState = () => {
-        clearResidentInputState(() => ({
-            id: 0,
-            fullName: '',
-            fullNameFurigana: '',
-            address: '',
-            addressRegistDate: '',
-            addressRegistYear: '',
-            addressRegistMonth: '',
-            permanentAddress: '',
-            applicationDate: undefined,
-            issueDate: undefined,
-            verifyStatus: undefined,
-            approvalStatus: undefined
-        }))
-        clearAccountInputState(() => ({
-            id: 0,
-            bankCode: '',
-            branchNumber: '',
-            accountNumber: '',
-            corporateName: '',
-            applicantName: '',
-            applicantAddress: '',
-            applicationDate: undefined,
-            issueDate: undefined,
-            verifyStatus: undefined,
-            approvalStatus: undefined,
-        }))
-        clearTaxInputState(() => ({
-            id: 0,
-            applicationYear: "",
-            corporationName: "",
-            corporationAddress: "",
-            fullName: "",
-            address: "",
-            applicationDate: "",
-            issueDate: "",
-            verifyStatus: false,
-            approvalStatus: false,
-        }))
-        clearSubsidyInputState(() => ({
-            id: 0,
-            resident: "",
-            account: "",
-            tax: "",
-            fullName: "",
-            address: "",
-            applicationDate: "",
-            issueDate: "",
-            verifyStatus: false,
-            approvalStatus: false,
-            residentVP: undefined,
-            accountVP: undefined,
-            taxVP: undefined
-        }))
-    };
+    const { clearInputState } = useDataClear();
 
     return (
         <>
@@ -81,13 +21,13 @@ const ApplierMenuMain = () => {
                 </Container>
                 <Container>
                     <div className="flex flex-col justify-center items-center w-[294px] h-[416px] mx-auto bg-color-line-shadow">
-                        <StepLink step={1} onClick={handleClearInputState} />
+                        <StepLink step={1} onClick={clearInputState} />
                         <Arrow />
-                        <StepLink step={2} onClick={handleClearInputState} />
+                        <StepLink step={2} onClick={clearInputState} />
                         <Arrow />
-                        <StepLink step={3} onClick={handleClearInputState} />
+                        <StepLink step={3} onClick={clearInputState} />
                         <Arrow />
-                        <StepLink step={4} onClick={handleClearInputState} />
+                        <StepLink step={4} onClick={clearInputState} />
                     </div>
                 </Container>
             </main>

@@ -19,7 +19,7 @@ const ApplicationListDetailMain = () => {
                     <section>
                         <div className={"w-72 mx-auto px-4 pb-4 border-b text-center"}>
                             <p className={"text-sm font-bold"}>{getVCType()}</p>
-                            <p className={`text-xs leading-11 ${reqItem.issuedStatus ? "text-color-gray-search" : "text-color-required"}`}>{reqItem.issuedStatus ? reqItem.revokeStatus ? "承認済み" : "取消済" : "承認待ち"}</p>
+                            <p className={`text-xs leading-11 ${reqItem.issuedStatus ? "text-color-gray-search" : "text-color-required"}`}>{reqItem.issuedStatus ? reqItem.revokeStatus ? "承認済" : "取消済" : "承認待ち"}</p>
                             <p className={"text-xs text-color-gray-search"}>申請日 {reqItem.applicationDate}</p>
                         </div>
                     </section>

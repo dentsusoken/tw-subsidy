@@ -4,12 +4,10 @@ import Progress from '@/components/common/Progress';
 import ChangeUserButton from '@/components/common/ChangeUserButton';
 import useApplicationDone from './useApplicaitonDone';
 import { useRouter } from 'next/router';
-import { urls } from '@/lib/types/mockApp';
 
 
 const ApplicationDone = () => {
     const { getMsg, backMenu } = useApplicationDone();
-    const router = useRouter();
 
     return (
         <>
@@ -22,8 +20,6 @@ const ApplicationDone = () => {
                         <p>承認されるまでお待ちください。</p>
                     </div>
                     <div className={"flex flex-col justify-between gap-4"}>
-                        {router.pathname === urls.taxDone && <ChangeUserButton text={"承認者メニューへ"} onClick={() => router.push(urls.taxMenu)} />}
-                        {router.pathname === urls.subsidyDone && <ChangeUserButton text={"申請先メニューへ"} onClick={() => router.push(urls.subsidyMenu)} />}
                         <ChangeUserButton text={"申請者メニューへ"} onClick={backMenu} />
                     </div>
                 </Container>

@@ -96,7 +96,9 @@ const usePageTitle = () => {
             case urls.taxVCListDetail:
             case urls.subsidyVCListDetail:
                 return title.VCInquiry;
+            case urls.residentVCListDone:
             case urls.accountVCListDone:
+            case urls.taxVCListDone:
                 return title.VCRevoke;
         }
     }

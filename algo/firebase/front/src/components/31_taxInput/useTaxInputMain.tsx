@@ -6,14 +6,19 @@ import { useEffect, useState } from 'react';
 import { TaxInputFormType } from '@/lib/types/mockApp/Form';
 import { ResidentInputFormType } from '@/lib/types/mockApp/inputForm';
 import { taxInputState } from '@/lib/states/mockApp/taxInputState';
-import { VCListState } from '@/lib/states/mockApp';
+import { residentVCListState } from '@/lib/states/mockApp';
+import chainState from '@/lib/states/chainState';
+import { getAlgod } from '@/lib/algo/algod/algods';
+import { verifyVerifiableCredential } from '@/lib/algosbt';
 
 const useTaxInputMain = () => {
     const [input, setInput] = useRecoilState(taxInputState);
     const router = useRouter();
 
-    const VCListGlobal = useRecoilValue(VCListState);
+    const VCListGlobal = useRecoilValue(residentVCListState);
     const [residentVC, setResidentVC] = useState<ResidentInputFormType>();
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const chain = useRecoilValue(chainState);
     const [isEnable, setIsEnable] = useState<boolean>(false);
     const methods = useForm<TaxInputFormType>({
         defaultValues: {
@@ -31,15 +36,25 @@ const useTaxInputMain = () => {
     });
 
     useEffect(() => {
-        if (VCListGlobal && VCListGlobal.resident.length > 0) {
-            setResidentVC(VCListGlobal.resident[VCListGlobal.resident.length - 1].message.content.content);
-            methods.setValue("fullName", VCListGlobal.resident[VCListGlobal.resident.length - 1].message.content.content.fullName)
-            methods.setValue("address", VCListGlobal.resident[VCListGlobal.resident.length - 1].message.content.content.address)
-        }
-        else {
-            setIsEnable(true);
-        }
-    }, [VCListGlobal, methods])
+        (async () => {
+            setIsLoading(() => true);
+
+            const algod = getAlgod(chain);
+
+            if (VCListGlobal && VCListGlobal.length > 0) {
+                const idx = VCListGlobal.length - 1
+                const revoke = await verifyVerifiableCredential(algod, VCListGlobal[idx]);
+                if (revoke) {
+                    setResidentVC(VCListGlobal[idx].message.content.content);
+                    methods.setValue("fullName", VCListGlobal[VCListGlobal.length - 1].message.content.content.fullName)
+                    methods.setValue("address", VCListGlobal[VCListGlobal.length - 1].message.content.content.address)
+                } else {
+                    setIsEnable(true);
+                }
+            }
+            setIsLoading(() => false);
+        })();
+    }, [VCListGlobal, methods, chain])
 
 
     const onSubmit = (data: TaxInputFormType) => {
@@ -60,7 +75,7 @@ const useTaxInputMain = () => {
         router.push('/32_taxConfirm', '/32_taxConfirm');
     };
 
-    return { methods, residentVC, isEnable, onSubmit }
+    return { methods, residentVC, isEnable, onSubmit, isLoading }
 };
 
 export default useTaxInputMain;

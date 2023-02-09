@@ -26,21 +26,45 @@ const SubsidyListDetailMain = () => {
                                         ? <p className={"relative text-sm leading-relaxed"}><img src='/authenticated.svg' className={"absolute top-0 -translate-y-3 -translate-x-full"} />検証済</p>
                                         : <p className={"relative text-sm leading-relaxed"}><img src='/warning.svg' className={"absolute -translate-x-full pr-2"} /> 要検証</p>
                                     }
-                                    <p className={"text-sm text-color-gray-search leading-relaxed"}>未承認</p>
+                                    <p className={"text-sm text-color-gray-search leading-relaxed"}>{input.approvalStatus ? "承認済" : "未承認"}</p>
                                     <p className={"text-xs text-color-gray-search leading-relaxed"}>申請日 {dayjs(input.applicationDate).format("YY/MM/DD HH:mm")}</p>
                                 </section>
                             }
                         </div>
                         <Container title={"申請書類の選択"}>
-                            <ul className={"border-y border-color-gainsboro mt-7 ml-3"}>
-                                <li className={"py-3 pl-4 pr-6 w-78 flex"}>
-                                    <CheckBox<SubsidyInputFormType> label={"住民票"} name={"resident"} isEnabled={false} />
+                            <ul className={"mt-7 ml-3"}>
+                                <li className={"py-3 pl-4 pr-6 w-78 flex relative"}>
+                                    <input type="text"
+                                        className={"w-[281px] h-[44px] px-2 rounded-lg text-base bg-color-disabled"}
+                                        disabled={true}
+                                        value={`住民票 - VC${parseInt(input.resident) + 1}`}
+                                    />
+                                    {input.residentVerifyStatus
+                                        ? <img src='/authenticated.svg' className={"absolute top-0 right-0 -translate-x-1/2 translate-y-2"} />
+                                        : <img src='/warning.svg' className={"absolute top-0 right-0 -translate-x-full translate-y-full pr-2"} />
+                                    }
                                 </li>
-                                <li className={"py-3 pl-4 pr-6 w-78 flex border-y border-color-gainsboro"}>
-                                    <CheckBox<SubsidyInputFormType> label={"口座実在証明書"} name={"account"} isEnabled={false} />
+                                <li className={"py-3 pl-4 pr-6 w-78 flex relative"}>
+                                    <input type="text"
+                                        className={"w-[281px] h-[44px] px-2 rounded-lg text-base bg-color-disabled"}
+                                        disabled={true}
+                                        value={`口座実在証明証 - VC${parseInt(input.account) + 1}`}
+                                    />
+                                    {input.accountVerifyStatus
+                                        ? <img src='/authenticated.svg' className={"absolute top-0 right-0 -translate-x-1/2 translate-y-2"} />
+                                        : <img src='/warning.svg' className={"absolute top-0 right-0 -translate-x-full translate-y-full pr-2"} />
+                                    }
                                 </li>
-                                <li className={"py-3 pl-4 pr-6 w-78 flex"}>
-                                    <CheckBox<SubsidyInputFormType> label={"納税証明書"} name={"tax"} isEnabled={false} />
+                                <li className={"py-3 pl-4 pr-6 w-78 flex relative"}>
+                                    <input type="text"
+                                        className={"w-[281px] h-[44px] px-2 rounded-lg text-base bg-color-disabled"}
+                                        disabled={true}
+                                        value={`納税証明書 - VC${parseInt(input.tax) + 1}`}
+                                    />
+                                    {input.taxVerifyStatus
+                                        ? <img src='/authenticated.svg' className={"absolute top-0 right-0 -translate-x-1/2 translate-y-2"} />
+                                        : <img src='/warning.svg' className={"absolute top-0 right-0 -translate-x-full translate-y-full pr-2"} />
+                                    }
                                 </li>
                             </ul>
                         </Container>
@@ -65,7 +89,8 @@ const SubsidyListDetailMain = () => {
                             </button>
                             {
                                 input && input.verifyStatus
-                                    ? <>
+                                    ? !input.approvalStatus &&
+                                    <>
                                         <button
                                             onClick={reject}
                                             className="input-form-button-white"

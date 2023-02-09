@@ -37,11 +37,13 @@ export const urls = {
     applicationListDetail: "/72_applicationListDetail",
     residentVCList: "/81_residentVCList",
     residentVCListDetail: "/82_residentVCListDetail",
+    residentVCListDone: "/83_residentVCListDone",
     accountVCList: "/91_accountVCList",
     accountVCListDetail: "/92_accountVCListDetail",
     accountVCListDone: "/93_accountVCListDone",
     taxVCList: "/101_taxVCList",
     taxVCListDetail: "/102_taxVCListDetail",
+    taxVCListDone: "/103_taxVCListDone",
     subsidyVCList: "/111_subsidyVCList",
     subsidyVCListDetail: "/112_subsidyVCListDetail"
 } as const;
