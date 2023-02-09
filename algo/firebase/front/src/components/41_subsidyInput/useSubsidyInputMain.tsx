@@ -47,7 +47,7 @@ const useSubsidyInputMain = () => {
 
         const resident = data.resident ? data.resident : "-1"
         const account = data.account ? data.account : "-1"
-        const tax = data.resident ? data.tax : "-1"
+        const tax = data.tax ? data.tax : "-1"
 
         setInput(() => ({
             ...{
