@@ -34,7 +34,7 @@ const useVCListMain = () => {
                         revokeStatus: revokeStatus,
                     }
                 }));
-                setResidentList(residentList);
+                setResidentList(sortList(residentList));
             }
             if (VCListGlobal.account) {
                 const accountList: VCListItem[] = await Promise.all(VCListGlobal.account.map(async (item) => {
@@ -46,7 +46,7 @@ const useVCListMain = () => {
                         revokeStatus: revokeStatus,
                     }
                 }));
-                setAccountList(accountList);
+                setAccountList(sortList(accountList));
             }
             if (VCListGlobal.tax) {
                 const taxList: VCListItem[] = await Promise.all(VCListGlobal.tax.map(async (item) => {
@@ -58,7 +58,7 @@ const useVCListMain = () => {
                         revokeStatus: revokeStatus,
                     }
                 }));
-                setTaxList(taxList);
+                setTaxList(sortList(taxList));
             }
             setIsLoading(() => false);
         })();
