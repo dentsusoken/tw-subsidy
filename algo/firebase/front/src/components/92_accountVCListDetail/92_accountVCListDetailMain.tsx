@@ -74,13 +74,13 @@ const AccountVCListDetailMain = () => {
               </div>
             </section>
             <AccountInquiry input={input} />
-            <div className={"relative w-80 mx-auto"}>
+            <div className={"relative w-70 mx-auto"}>
               {isRevoking
                 ? <span className={"absolute right-0 -translate-y-1/2 text-sm leading-relaxed text-yellow-500"}>VC取消中...</span>
                 : null
               }
             </div>
-            <div className="py-0 px-[53px]">
+            <div className="w-70 mx-auto py-0">
               <div className="pt-4 pb-2 flex justify-between">
                 <button
                   onClick={() => router.push("/91_accountVCList")}

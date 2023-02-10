@@ -74,9 +74,9 @@ const SubsidyListDetailMain = () => {
                                 <InputArea<SubsidyInputFormType> label='申請者住所' name="address" placeholder='' isEnabled={false} />
                             </div>
                         </Container>
-                        <div className={"relative"}>
+                        <div className={"w-70 mx-auto relative"}>
                             {isIssuing
-                                ? <span className={"absolute right-5 -translate-y-3 text-sm leading-relaxed text-yellow-500"}>承認中...</span>
+                                ? <span className={"absolute right-0 -translate-y-1/2 text-sm leading-relaxed text-yellow-500"}>VC発行中...</span>
                                 : null
                             }
                         </div>

@@ -127,7 +127,7 @@ const AccountListDetailMain = () => {
         }
         <div className="py-0 px-[53px]">
           {selectDetail && <AccountInquiry input={selectDetail.message.content} />}
-          <div className={"relative"}>
+          <div className={"w-70 mx-auto relative"}>
             {isIssuing
               ? <span className={"absolute right-0 -translate-y-1/2 text-sm leading-relaxed text-yellow-500"}>VC発行中...</span>
               : null

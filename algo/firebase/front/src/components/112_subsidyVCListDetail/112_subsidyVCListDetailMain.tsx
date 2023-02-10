@@ -1,8 +1,10 @@
+import { issuerPw } from "@/lib/algo/account/accounts";
 import { getAlgod } from "@/lib/algo/algod/algods";
-import { verifyVerifiableCredential } from "@/lib/algosbt";
+import { revokeVerifiableCredential, verifyVerifiableCredential } from "@/lib/algosbt";
 import chainState from "@/lib/states/chainState";
+import issuerDidAccountState from "@/lib/states/issuerDidAccountState";
 import { VCListState } from "@/lib/states/mockApp";
-import { SubsidyInputFormType } from "@/lib/types/mockApp";
+import { SubsidyInputFormType, SubsidyVCType } from "@/lib/types/mockApp";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -18,7 +20,10 @@ const SubsidyVCListDetailMain = () => {
   const [input, setInput] = useState<SubsidyInputFormType>();
   const [revokeStatus, setRevokeStatus] = useState(true);
   const chain = useRecoilValue(chainState);
+  const [vc, setVC] = useState<SubsidyVCType>();
   const [isLoading, setIsLoading] = useState(true);
+  const [isRevoking, setIsRevoking] = useState(false);
+  const issuerDidAccountGlobal = useRecoilValue(issuerDidAccountState);
   dayjs.locale("ja")
 
   useEffect(() => {
@@ -26,16 +31,32 @@ const SubsidyVCListDetailMain = () => {
       setIsLoading(() => true);
       const algod = getAlgod(chain);
       const id = router.query.id;
-      const ResidentVC = VCListGlobal.subsidy.find((v) => v.message.content.content.id === Number(id));
-      if (ResidentVC) {
-        const revoke = await verifyVerifiableCredential(algod, ResidentVC);
-        setInput(ResidentVC.message.content.content);
+      const SubsidyVC = VCListGlobal.subsidy.find((v) => v.message.content.content.id === Number(id));
+      if (SubsidyVC) {
+        const revoke = await verifyVerifiableCredential(algod, SubsidyVC);
+        setVC(SubsidyVC);
+        setInput(SubsidyVC.message.content.content);
         setRevokeStatus(revoke);
       }
 
       setIsLoading(() => false);
     })();
   }, [VCListGlobal, chain, router.query])
+
+  const revoke = async () => {
+    setIsRevoking(() => true);
+    const algod = getAlgod(chain);
+    if (issuerDidAccountGlobal && vc) {
+      await revokeVerifiableCredential(
+        algod,
+        issuerDidAccountGlobal,
+        vc,
+        issuerPw
+      );
+    }
+    setIsRevoking(() => false);
+    router.push("/113_subsidyVCListDone");
+  }
 
   return (
     <>
@@ -52,7 +73,13 @@ const SubsidyVCListDetailMain = () => {
               </div>
             </section>
             <SubsidyInquiry input={input} />
-            <div className="py-0 px-[53px]">
+            <div className={"relative w-70 mx-auto"}>
+              {isRevoking
+                ? <span className={"absolute right-0 -translate-y-1/2 text-sm leading-relaxed text-yellow-500"}>VC取消中...</span>
+                : null
+              }
+            </div>
+            <div className="w-70 mx-auto py-0">
               <div className="pt-4 pb-2 flex justify-between">
                 <button
                   onClick={() => router.push("/111_subsidyVCList")}
@@ -60,11 +87,19 @@ const SubsidyVCListDetailMain = () => {
                 >
                   戻る
                 </button>
+                {revokeStatus &&
+                  <button
+                    onClick={revoke}
+                    className="input-form-button-red"
+                  >
+                    発行取消
+                  </button>
+                }
               </div>
             </div>
           </>}
-        <Loading isLoading={isLoading} />
-      </main>
+      <Loading isLoading={isLoading} />
+    </main>
     </>
   );
 };
