@@ -11,6 +11,10 @@ const useHeader = () => {
         clearOldData();
     }, [clearOldData])
 
+    const back = () => {
+        router.back();
+    }
+
     const Headings = {
         mainMenu: "DEMO MENU",
         applierMenu: "申請者",
@@ -332,7 +336,7 @@ const useHeader = () => {
         }
     }
 
-    return { getHeading, getBgColor, getIcon, getLink, getTitle }
+    return { getHeading, getBgColor, getIcon, getLink, getTitle, back }
 };
 
 export default useHeader;
