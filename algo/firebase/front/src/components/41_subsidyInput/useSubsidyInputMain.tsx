@@ -49,7 +49,7 @@ const useSubsidyInputMain = () => {
                     return await verifyVerifiableCredential(algod, item);
                 }));
                 if (residentList[residentList.length - 1]) {
-                    methods.setValue("resident", (VCListGlobal.resident.length - 1).toString());
+                    methods.setValue("residentVC", (VCListGlobal.resident.length - 1).toString());
                     methods.setValue("fullName", VCListGlobal.resident[VCListGlobal.resident.length - 1].message.content.content.fullName);
                     methods.setValue("address", VCListGlobal.resident[VCListGlobal.resident.length - 1].message.content.content.address);
                 } else {
