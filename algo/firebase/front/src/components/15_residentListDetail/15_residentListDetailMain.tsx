@@ -123,16 +123,19 @@ const ResidentListDetailMain = () => {
 
         <section className={"flex flex-col items-center gap-1 w-72 mx-auto mb-2 pb-4 border-b"}>
           {selectDetail.message.content.verifyStatus
-            ? <p className={"relative text-sm leading-relaxed"}><img src='/authenticated.svg' className={"absolute top-0 -translate-y-3 -translate-x-full"} />検証済</p>
+            ? <p className={"relative text-sm text-color-gray-search leading-relaxed"}><img src='/authenticated.svg' className={"absolute top-0 -translate-y-3 -translate-x-full"} />検証済</p>
             : <p className={"relative text-sm leading-relaxed"}><img src='/warning.svg' className={"absolute -translate-x-full pr-2"} /> 要検証</p>
           }
-          <p className={"text-sm text-color-gray-search leading-relaxed"}>{selectDetail.message.content.approvalStatus ? "承認済" : "未承認"}</p>
+          {selectDetail.message.content.approvalStatus
+            ? <p className={"relative text-sm text-color-gray-search leading-relaxed"}><img src='/authenticated.svg' className={"absolute top-0 -translate-y-3 -translate-x-full"} />承認済</p>
+            : <p className={"text-sm text-color-required leading-relaxed"}>未承認</p>
+          }
           <p className={"text-xs text-color-gray-search leading-relaxed"}>申請日 {dayjs(selectDetail.message.content.applicationDate).format("YY/MM/DD HH:mm")}</p>
         </section>
       }
         <div className="py-0 px-[53px]">
           {selectDetail && <ResidentInquiry input={selectDetail.message.content} />}
-          <div className={"w-70 mx-auto relative"}>          
+          <div className={"w-70 mx-auto relative"}>
             {isIssuing
               ? <span className={"absolute right-0 -translate-y-1/2 text-sm leading-relaxed text-yellow-500"}>VC発行中...</span>
               : null
