@@ -40,10 +40,10 @@ const SubsidyInputMain = () => {
                                             </div>
                                         </li>
                                         <li className={"py-3 pl-4 pr-6 w-78 flex"}>
-                                            <VCSelect<SubsidyInputFormType> label={"口座実在証明書"} name={"account"} items={accountList} currentVal={input.account} />
+                                            <VCSelect<SubsidyInputFormType> label={"口座実在証明書"} name={"accountVC"} items={accountList} currentVal={input.accountVC} />
                                         </li>
                                         <li className={"py-3 pl-4 pr-6 w-78 flex"}>
-                                            <VCSelect<SubsidyInputFormType> label={"納税証明書"} name={"tax"} items={taxList} currentVal={input.tax} />
+                                            <VCSelect<SubsidyInputFormType> label={"納税証明書"} name={"taxVC"} items={taxList} currentVal={input.taxVC} />
                                         </li>
                                     </ul>
                                 </Container>

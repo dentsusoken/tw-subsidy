@@ -80,9 +80,9 @@ const useDataClear = () => {
         }))
         clearSubsidyInputState(() => ({
             id: 0,
-            resident: "",
-            account: "",
-            tax: "",
+            residentVC: "",
+            accountVC: "",
+            taxVC: "",
             fullName: "",
             address: "",
             applicationDate: "",

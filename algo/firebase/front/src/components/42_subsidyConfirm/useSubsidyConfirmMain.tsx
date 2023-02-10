@@ -28,9 +28,9 @@ const useSubsidyConfirmMain = () => {
 
     const methods = useForm<SubsidyInputFormType>({
         defaultValues: {
-            resident: input.resident,
-            account: input.account,
-            tax: input.tax,
+            residentVC: input.residentVC,
+            accountVC: input.accountVC,
+            taxVC: input.taxVC,
             fullName: input.fullName,
             address: input.address,
             verifyStatus: false,
@@ -72,8 +72,8 @@ const useSubsidyConfirmMain = () => {
                     applicationDate: applicationDate,
                 }
 
-                if (VCListGlobal.resident && input.resident !== "-1") {
-                    const content = createVPContent(VCListGlobal.resident[parseInt(input.resident)]);
+                if (VCListGlobal.resident && input.residentVC !== "-1") {
+                    const content = createVPContent(VCListGlobal.resident[parseInt(input.residentVC)]);
                     const vm = createVPMessage(
                         content,
                         holderDidAccountGlobal,
@@ -82,8 +82,8 @@ const useSubsidyConfirmMain = () => {
 
                     subsidyInput.residentVP = vm;
                 }
-                if (VCListGlobal.account && input.account !== "-1") {
-                    const content = createVPContent(VCListGlobal.account[parseInt(input.account)]);
+                if (VCListGlobal.account && input.accountVC !== "-1") {
+                    const content = createVPContent(VCListGlobal.account[parseInt(input.accountVC)]);
                     const vm = createVPMessage(
                         content,
                         holderDidAccountGlobal,
@@ -91,8 +91,8 @@ const useSubsidyConfirmMain = () => {
                     );
                     subsidyInput.accountVP = vm;
                 }
-                if (VCListGlobal.tax && input.tax !== "-1") {
-                    const content = createVPContent(VCListGlobal.tax[parseInt(input.tax)]);
+                if (VCListGlobal.tax && input.taxVC !== "-1") {
+                    const content = createVPContent(VCListGlobal.tax[parseInt(input.taxVC)]);
                     const vm = createVPMessage(
                         content,
                         holderDidAccountGlobal,

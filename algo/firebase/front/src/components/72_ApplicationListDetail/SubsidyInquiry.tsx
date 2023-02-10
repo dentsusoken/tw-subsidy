@@ -12,9 +12,9 @@ export type SubsidyInquiryParams = {
 const SubsidyInquiry = ({ input }: SubsidyInquiryParams) => {
     const methods = useForm<SubsidyInputFormType>({
         defaultValues: {
-            resident: input.resident,
-            account: input.account,
-            tax: input.tax,
+            residentVC: input.residentVC,
+            accountVC: input.accountVC,
+            taxVC: input.taxVC,
             fullName: input.fullName,
             address: input.address,
             verifyStatus: false,
@@ -31,21 +31,21 @@ const SubsidyInquiry = ({ input }: SubsidyInquiryParams) => {
                             <input type="text"
                                 className={"w-[281px] h-[44px] px-2 rounded-lg text-base bg-color-disabled"}
                                 disabled={true}
-                                value={`住民票 - VC${parseInt(input.resident) + 1}`}
+                                value={`住民票 - VC${parseInt(input.residentVC) + 1}`}
                             />
                         </li>
                         <li className={"py-3 pl-4 pr-6 w-78 flex"}>
                             <input type="text"
                                 className={"w-[281px] h-[44px] px-2 rounded-lg text-base bg-color-disabled"}
                                 disabled={true}
-                                value={`口座実在証明証 - VC${parseInt(input.account) + 1}`}
+                                value={`口座実在証明証 - VC${parseInt(input.accountVC) + 1}`}
                             />
                         </li>
                         <li className={"py-3 pl-4 pr-6 w-78 flex"}>
                             <input type="text"
                                 className={"w-[281px] h-[44px] px-2 rounded-lg text-base bg-color-disabled"}
                                 disabled={true}
-                                value={`納税証明書 - VC${parseInt(input.tax) + 1}`}
+                                value={`納税証明書 - VC${parseInt(input.taxVC) + 1}`}
                             />
                         </li>
                     </ul>

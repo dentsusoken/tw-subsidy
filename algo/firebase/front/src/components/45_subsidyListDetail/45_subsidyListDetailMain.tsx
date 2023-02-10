@@ -41,7 +41,7 @@ const SubsidyListDetailMain = () => {
                                     <input type="text"
                                         className={"w-[281px] h-[44px] px-2 rounded-lg text-base bg-color-disabled"}
                                         disabled={true}
-                                        value={`住民票 - VC${parseInt(VCRequest.resident) + 1}`}
+                                        value={`住民票 - VC${parseInt(VCRequest.residentVC) + 1}`}
                                     />
                                     {VCRequest.residentVerifyStatus
                                         ? <img src='/authenticated.svg' className={"absolute top-0 right-0 -translate-x-1/2 translate-y-2"} />
@@ -52,7 +52,7 @@ const SubsidyListDetailMain = () => {
                                     <input type="text"
                                         className={"w-[281px] h-[44px] px-2 rounded-lg text-base bg-color-disabled"}
                                         disabled={true}
-                                        value={`口座実在証明証 - VC${parseInt(VCRequest.account) + 1}`}
+                                        value={`口座実在証明証 - VC${parseInt(VCRequest.accountVC) + 1}`}
                                     />
                                     {VCRequest.accountVerifyStatus
                                         ? <img src='/authenticated.svg' className={"absolute top-0 right-0 -translate-x-1/2 translate-y-2"} />
@@ -63,7 +63,7 @@ const SubsidyListDetailMain = () => {
                                     <input type="text"
                                         className={"w-[281px] h-[44px] px-2 rounded-lg text-base bg-color-disabled"}
                                         disabled={true}
-                                        value={`納税証明書 - VC${parseInt(VCRequest.tax) + 1}`}
+                                        value={`納税証明書 - VC${parseInt(VCRequest.taxVC) + 1}`}
                                     />
                                     {VCRequest.taxVerifyStatus
                                         ? <img src='/authenticated.svg' className={"absolute top-0 right-0 -translate-x-1/2 translate-y-2"} />

@@ -30,9 +30,9 @@ export type SubsidyVCType = VerifiableMessage<VerifiableCredentialContent<Subsid
 
 export type SubsidyInputFormType = {
     id: number;
-    resident: string;
-    account: string;
-    tax: string;
+    residentVC: string;
+    accountVC: string;
+    taxVC: string;
     residentVerifyStatus?: boolean;
     accountVerifyStatus?: boolean;
     taxVerifyStatus?: boolean;
