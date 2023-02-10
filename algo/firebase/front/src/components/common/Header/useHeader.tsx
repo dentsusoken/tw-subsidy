@@ -9,7 +9,7 @@ const useHeader = () => {
 
     useEffect(() => {
         clearOldData();
-    },)
+    },[clearOldData])
 
     const Headings = {
         mainMenu: "DEMO MENU",

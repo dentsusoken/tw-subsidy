@@ -1,4 +1,4 @@
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 
 import {
     residentInputState,
@@ -16,6 +16,7 @@ import {
 } from '@/lib/states/mockApp';
 import { useErrorHandler } from 'react-error-boundary';
 import { useState } from 'react';
+import { dataVerState } from '@/lib/states/mockApp/dataVersion';
 
 
 const useDataClear = () => {
@@ -30,7 +31,8 @@ const useDataClear = () => {
     const clearTaxVCRequestListState = useSetRecoilState(taxVCRequestListState);
     const clearSubsidyInputState = useSetRecoilState(subsidyInputState);
     const clearSubsidyListState = useSetRecoilState(subsidyListState);
-    const [VCList, clearVCListState] = useRecoilState(VCListState);
+    const clearVCListState = useSetRecoilState(VCListState);
+    const [dataVer,setDataVer] = useRecoilState(dataVerState);
 
     const [clearMsg, setclearMsg] = useState("")
 
@@ -119,16 +121,9 @@ const useDataClear = () => {
     };
 
     const clearOldData = () => {
-        if (VCList) {
-            if (VCList.resident && Array.isArray(VCList.resident) && VCList.resident.length > 0 && Object.hasOwn(VCList.resident[0], "acceptStatus")) {
-                clearAllState();
-            }
-            if (VCList.account && Array.isArray(VCList.account) && VCList.account.length > 0 && Object.hasOwn(VCList.account[0], "acceptStatus")) {
-                clearAllState();
-            }
-            if (VCList.tax && Array.isArray(VCList.tax) && VCList.tax.length > 0 && Object.hasOwn(VCList.tax[0], "acceptStatus")) {
-                clearAllState();
-            }
+        if(!dataVer || dataVer < 1){
+            clearAllState();
+            setDataVer(1);
         }
     }
 
