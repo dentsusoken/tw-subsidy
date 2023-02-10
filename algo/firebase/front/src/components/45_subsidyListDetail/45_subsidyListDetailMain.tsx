@@ -10,7 +10,7 @@ import useSubsidyListDetailMain from './useSubsidyListDetailMain';
 import dayjs from 'dayjs';
 
 const SubsidyListDetailMain = () => {
-    const { methods, input, onSubmit, reject, verifyHandler, back, isIssuing } = useSubsidyListDetailMain()
+    const { methods, VCRequest, onSubmit, reject, verifyHandler, back, isIssuing } = useSubsidyListDetailMain()
     dayjs.locale('ja');
 
     return (
@@ -20,30 +20,30 @@ const SubsidyListDetailMain = () => {
                 <FormProvider {...methods} >
                     <Container>
                         <div>
-                            {input &&
+                            {VCRequest &&
                                 <section className={"flex flex-col items-center gap-1 w-72 mx-auto mb-2 pb-4 border-b"}>
-                                    {input.verifyStatus
+                                    {VCRequest.verifyStatus
                                         ? <p className={"relative text-sm text-color-gray-search leading-relaxed"}><img src='/authenticated.svg' className={"absolute top-0 -translate-y-3 -translate-x-full"} />検証済</p>
                                         : <p className={"relative text-sm leading-relaxed"}><img src='/warning.svg' className={"absolute -translate-x-full pr-2"} /> 要検証</p>
                                     }
 
-                                    {input.approvalStatus
+                                    {VCRequest.approvalStatus
                                         ? <p className={"relative text-sm text-color-gray-search leading-relaxed"}><img src='/authenticated.svg' className={"absolute top-0 -translate-y-3 -translate-x-full"} />承認済</p>
                                         : <p className={"text-sm text-color-required leading-relaxed"}>未承認</p>
                                     }
-                                    <p className={"text-xs text-color-gray-search leading-relaxed"}>申請日 {dayjs(input.applicationDate).format("YY/MM/DD HH:mm")}</p>
+                                    <p className={"text-xs text-color-gray-search leading-relaxed"}>申請日 {dayjs(VCRequest.applicationDate).format("YY/MM/DD HH:mm")}</p>
                                 </section>
                             }
                         </div>
                         <Container title={"申請書類の選択"}>
-                            <ul className={"mt-7 ml-3"}>
+                            {VCRequest && <ul className={"mt-7 ml-3"}>
                                 <li className={"py-3 pl-4 pr-6 w-78 flex relative"}>
                                     <input type="text"
                                         className={"w-[281px] h-[44px] px-2 rounded-lg text-base bg-color-disabled"}
                                         disabled={true}
-                                        value={`住民票 - VC${parseInt(input.resident) + 1}`}
+                                        value={`住民票 - VC${parseInt(VCRequest.resident) + 1}`}
                                     />
-                                    {input.residentVerifyStatus
+                                    {VCRequest.residentVerifyStatus
                                         ? <img src='/authenticated.svg' className={"absolute top-0 right-0 -translate-x-1/2 translate-y-2"} />
                                         : <img src='/warning.svg' className={"absolute top-0 right-0 -translate-x-full translate-y-full pr-2"} />
                                     }
@@ -52,9 +52,9 @@ const SubsidyListDetailMain = () => {
                                     <input type="text"
                                         className={"w-[281px] h-[44px] px-2 rounded-lg text-base bg-color-disabled"}
                                         disabled={true}
-                                        value={`口座実在証明証 - VC${parseInt(input.account) + 1}`}
+                                        value={`口座実在証明証 - VC${parseInt(VCRequest.account) + 1}`}
                                     />
-                                    {input.accountVerifyStatus
+                                    {VCRequest.accountVerifyStatus
                                         ? <img src='/authenticated.svg' className={"absolute top-0 right-0 -translate-x-1/2 translate-y-2"} />
                                         : <img src='/warning.svg' className={"absolute top-0 right-0 -translate-x-full translate-y-full pr-2"} />
                                     }
@@ -63,14 +63,15 @@ const SubsidyListDetailMain = () => {
                                     <input type="text"
                                         className={"w-[281px] h-[44px] px-2 rounded-lg text-base bg-color-disabled"}
                                         disabled={true}
-                                        value={`納税証明書 - VC${parseInt(input.tax) + 1}`}
+                                        value={`納税証明書 - VC${parseInt(VCRequest.tax) + 1}`}
                                     />
-                                    {input.taxVerifyStatus
+                                    {VCRequest.taxVerifyStatus
                                         ? <img src='/authenticated.svg' className={"absolute top-0 right-0 -translate-x-1/2 translate-y-2"} />
                                         : <img src='/warning.svg' className={"absolute top-0 right-0 -translate-x-full translate-y-full pr-2"} />
                                     }
                                 </li>
                             </ul>
+                            }
                         </Container>
                         <Container title={"申請者情報"}>
                             <div className={"mt-7 ml-3"}>
@@ -92,8 +93,8 @@ const SubsidyListDetailMain = () => {
                                 戻る
                             </button>
                             {
-                                input && input.verifyStatus
-                                    ? !input.approvalStatus &&
+                                VCRequest && VCRequest.verifyStatus
+                                    ? !VCRequest.approvalStatus &&
                                     <>
                                         <button
                                             onClick={reject}

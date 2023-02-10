@@ -4,9 +4,9 @@ import { useRouter } from 'next/router';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ja';
 
-import { TaxInputFormType } from '@/lib/types/mockApp/Form';
+import { TaxInputFormType, TaxVCRequestType } from '@/lib/types/mockApp/Form';
 import { taxInputState, taxVCRequestListState, taxVCListState, VCListState } from '@/lib/states/mockApp';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { verifyVerifiableMessage, createVerifiableCredential, createVerifiableMessage } from '@/lib/algosbt';
 import { getAlgod } from '@/lib/algo/algod/algods';
@@ -23,6 +23,7 @@ const useTaxListDetailMain = () => {
     const setVCList = useSetRecoilState(taxVCListState);
     const setIssuedVCList = useSetRecoilState(VCListState);
     const [isIssuing, setIsIssuing] = useState(false)
+    const [VCRequest, setVCRequest] = useState<TaxVCRequestType>()
     const router = useRouter();
     const errorHandler = useErrorHandler();
     dayjs.locale('ja');
@@ -31,7 +32,12 @@ const useTaxListDetailMain = () => {
     const [holderDidAccountGlobal] = useRecoilState(holderDidAccountState);
     const [issuerDidAccountGlobal] = useRecoilState(issuerDidAccountState);
 
-    const VCRequest = listState.find((v) => v.message.content.id === input.id);
+    useEffect(() => {
+        const VCRequest = listState.find((v) => v.message.content.id === input.id);
+        if(VCRequest){
+            setVCRequest(VCRequest);
+        }
+    })
 
     const methods = useForm<TaxInputFormType>({
         defaultValues: {

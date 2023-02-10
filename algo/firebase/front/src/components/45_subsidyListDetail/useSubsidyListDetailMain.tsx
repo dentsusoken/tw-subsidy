@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { useRouter } from 'next/router';
 
-import { SubsidyInputFormType, VPContent } from '@/lib/types/mockApp/Form';
+import { SubsidyInputFormType, SubsidyVCRequestType, VPContent } from '@/lib/types/mockApp/Form';
 import { subsidyInputState } from '@/lib/states/mockApp/subsidyInputState';
 import { subsidyListState } from '@/lib/states/mockApp/subsidyListState';
 
@@ -16,7 +16,7 @@ import { issuerPw } from '@/lib/algo/account/accounts';
 import holderDidAccountState from '@/lib/states/holderDidAccountState';
 import issuerDidAccountState from '@/lib/states/issuerDidAccountState';
 import { VCListState } from '@/lib/states/mockApp';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 
 const useSubsidyListDetailMain = () => {
@@ -25,12 +25,20 @@ const useSubsidyListDetailMain = () => {
     const [isIssuing, setIsIssuing] = useState(false);
     const setVCList = useSetRecoilState(VCListState);
     const router = useRouter();
+    const [VCRequest, setVCRequest] = useState<SubsidyInputFormType>()
     const errorHandler = useErrorHandler();
     const [chain] = useRecoilState(chainState);
     const [holderDidAccountGlobal] = useRecoilState(holderDidAccountState);
     const [issuerDidAccountGlobal] = useRecoilState(issuerDidAccountState);
 
     dayjs.locale('ja');
+
+    useEffect(() => {
+        const VCRequest = listState.find((v) => v.id === input.id);
+        if (VCRequest) {
+            setVCRequest(VCRequest);
+        }
+    })
 
     const methods = useForm<SubsidyInputFormType>({
         defaultValues: {
@@ -146,7 +154,7 @@ const useSubsidyListDetailMain = () => {
         router.push('/44_subsidyList')
     };
 
-    return { methods, input, onSubmit, reject, verifyHandler, back, isIssuing }
+    return { methods, VCRequest, onSubmit, reject, verifyHandler, back, isIssuing }
 };
 
 export default useSubsidyListDetailMain;
