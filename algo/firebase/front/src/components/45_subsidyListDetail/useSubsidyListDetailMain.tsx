@@ -37,8 +37,11 @@ const useSubsidyListDetailMain = () => {
         const VCRequest = listState.find((v) => v.id === input.id);
         if (VCRequest) {
             setVCRequest(VCRequest);
+            if (!VCRequest.verifyStatus) {
+                verifyHandler();
+            }
         }
-    })
+    }, [VCRequest])
 
     const methods = useForm<SubsidyInputFormType>({
         defaultValues: {

@@ -93,28 +93,19 @@ const SubsidyListDetailMain = () => {
                                 戻る
                             </button>
                             {
-                                VCRequest && VCRequest.verifyStatus
-                                    ? !VCRequest.approvalStatus &&
-                                    <>
-                                        <button
-                                            onClick={reject}
-                                            className="input-form-button-white"
-                                        >
-                                            却下
-                                        </button>
-                                        <button
-                                            onClick={onSubmit}
-                                            className="input-form-button-orange"
-                                        >
-                                            承認
-                                        </button>
-                                    </>
-                                    :
-                                    <button
-                                        onClick={verifyHandler}
+                                VCRequest && VCRequest.verifyStatus && !VCRequest.approvalStatus
+                                    ? <button
+                                        onClick={onSubmit}
                                         className="input-form-button-orange"
                                     >
-                                        検証
+                                        承認
+                                    </button>
+                                    :
+                                    <button
+                                        onClick={reject}
+                                        className="input-form-button-white"
+                                    >
+                                        却下
                                     </button>
                             }
                         </div>
