@@ -16,6 +16,7 @@ import { useEffect, useState } from 'react';
 import { useErrorHandler } from 'react-error-boundary';
 import { ResidentVCRequestType } from '@/lib/types/mockApp';
 import { ResidentInquiry } from '../common/Forms';
+import Container from '../common/Container';
 
 const ResidentListDetailMain = () => {
   const router = useRouter();
@@ -137,39 +138,41 @@ const ResidentListDetailMain = () => {
               : null
             }
           </div>
-          <div className="pt-4 flex justify-between">
-            <button
-              onClick={() => router.push('/14_resident-list')}
-              className="input-form-button-white"
-            >
-              戻る
-            </button>
-            {
-              selectDetail && selectDetail.message.content.verifyStatus
-                ? !selectDetail.message.content.approvalStatus &&
-                <>
+          <Container>
+            <div className="w-full pt-4 pb-2 px-5 flex justify-between">
+              <button
+                onClick={() => router.push('/14_resident-list')}
+                className="input-form-button-white"
+              >
+                戻る
+              </button>
+              {
+                selectDetail && selectDetail.message.content.verifyStatus
+                  ? !selectDetail.message.content.approvalStatus &&
+                  <>
+                    <button
+                      onClick={reject}
+                      className="input-form-button-white"
+                    >
+                      却下
+                    </button>
+                    <button
+                      onClick={approve}
+                      className="input-form-button-blue"
+                    >
+                      承認
+                    </button>
+                  </>
+                  :
                   <button
-                    onClick={reject}
-                    className="input-form-button-white"
-                  >
-                    却下
-                  </button>
-                  <button
-                    onClick={approve}
+                    onClick={verify}
                     className="input-form-button-blue"
                   >
-                    承認
+                    検証
                   </button>
-                </>
-                :
-                <button
-                  onClick={verify}
-                  className="input-form-button-blue"
-                >
-                  検証
-                </button>
-            }
-          </div>
+              }
+            </div>
+          </Container>
         </div>
       </main>
     </>
