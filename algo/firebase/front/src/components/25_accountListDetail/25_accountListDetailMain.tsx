@@ -136,41 +136,39 @@ const AccountListDetailMain = () => {
               : null
             }
           </div>
-          <Container>
-            <div className="w-full pt-4 pb-2 px-5 flex justify-between">
-              <button
-                onClick={() => router.push('/24_account-list')}
-                className="input-form-button-white"
-              >
-                戻る
-              </button>
-              {
-                selectDetail && selectDetail.message.content.verifyStatus
-                  ? !selectDetail.message.content.approvalStatus &&
-                  <>
-                    <button
-                      onClick={reject}
-                      className="input-form-button-white"
-                    >
-                      却下
-                    </button>
-                    <button
-                      onClick={approve}
-                      className="input-form-button-blue"
-                    >
-                      承認
-                    </button>
-                  </>
-                  :
+          <div className="w-70 mx-auto pt-4 pb-2 flex justify-between">
+            <button
+              onClick={() => router.push('/24_account-list')}
+              className="input-form-button-white"
+            >
+              戻る
+            </button>
+            {
+              selectDetail && selectDetail.message.content.verifyStatus
+                ? !selectDetail.message.content.approvalStatus &&
+                <>
                   <button
-                    onClick={verify}
+                    onClick={reject}
+                    className="input-form-button-white"
+                  >
+                    却下
+                  </button>
+                  <button
+                    onClick={approve}
                     className="input-form-button-blue"
                   >
-                    検証
+                    承認
                   </button>
-              }
-            </div>
-          </Container>
+                </>
+                :
+                <button
+                  onClick={verify}
+                  className="input-form-button-blue"
+                >
+                  検証
+                </button>
+            }
+          </div>
         </div>
       </main>
     </>
