@@ -36,6 +36,20 @@ const useSubsidyListDetailMain = () => {
 
     dayjs.locale('ja');
 
+    useEffect(() => {
+        try {
+            (async () => {
+                verifyHandler();
+                const VCRequest = listState.find((v) => v.id === input.id);
+                if (VCRequest) {
+                    setVCRequest(VCRequest);
+                }
+            })();
+        } catch (e) {
+            errorHandler(e);
+        }
+    }, [chain])
+
 
 
     const methods = useForm<SubsidyInputFormType>({
@@ -105,20 +119,6 @@ const useSubsidyListDetailMain = () => {
         }
     }
 
-    useEffect(() => {
-        try {
-            (async () => {
-                const VCRequest = listState.find((v) => v.id === input.id);
-                if (VCRequest) {
-                    setVCRequest(VCRequest);
-                    verifyHandler();
-                }
-            })();
-        } catch (e) {
-            errorHandler(e);
-        }
-    }, [chain])
-
     const onSubmit = async () => {
         try {
             setIsIssuing(() => true);
@@ -170,7 +170,7 @@ const useSubsidyListDetailMain = () => {
     };
     // verifyHandler();
 
-    return { methods, VCRequest, onSubmit, reject, verifyHandler, back, isIssuing, residentVerifyStatus, accountVerifyStatus, taxVerifyStatus }
+    return { methods, input, VCRequest, onSubmit, reject, verifyHandler, back, isIssuing, residentVerifyStatus, accountVerifyStatus, taxVerifyStatus }
 };
 
 export default useSubsidyListDetailMain;
