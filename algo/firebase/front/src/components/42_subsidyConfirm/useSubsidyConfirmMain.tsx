@@ -66,20 +66,13 @@ const useSubsidyConfirmMain = () => {
                 const now = dayjs();
                 const applicationDate = dayjs(now).format('YYYY-MM-DD HH:mm:ss');
 
-                const resident = input.resident ? input.resident : "0";
-                const account = input.account ? input.account : "0";
-                const tax = input.resident ? input.tax : "0";
-
                 const subsidyInput: SubsidyInputFormType = {
                     ...input,
                     id: id,
                     applicationDate: applicationDate,
-                    resident: resident,
-                    account: account,
-                    tax: tax,
                 }
 
-                if (VCListGlobal.resident) {
+                if (VCListGlobal.resident && input.resident !== "-1") {
                     const content = createVPContent(VCListGlobal.resident[parseInt(input.resident)]);
                     const vm = createVPMessage(
                         content,
@@ -89,7 +82,7 @@ const useSubsidyConfirmMain = () => {
 
                     subsidyInput.residentVP = vm;
                 }
-                if (VCListGlobal.account) {
+                if (VCListGlobal.account && input.account !== "-1") {
                     const content = createVPContent(VCListGlobal.account[parseInt(input.account)]);
                     const vm = createVPMessage(
                         content,
@@ -98,7 +91,7 @@ const useSubsidyConfirmMain = () => {
                     );
                     subsidyInput.accountVP = vm;
                 }
-                if (VCListGlobal.tax) {
+                if (VCListGlobal.tax && input.tax !== "-1") {
                     const content = createVPContent(VCListGlobal.tax[parseInt(input.tax)]);
                     const vm = createVPMessage(
                         content,
