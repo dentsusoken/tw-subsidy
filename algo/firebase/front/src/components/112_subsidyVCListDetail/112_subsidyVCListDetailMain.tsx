@@ -8,6 +8,7 @@ import { SubsidyInputFormType, SubsidyVCType } from "@/lib/types/mockApp";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { useErrorHandler } from "react-error-boundary";
 import { useRecoilValue } from "recoil";
 import { SubsidyInquiry } from "../common/Forms";
 import Header from "../common/Header";
@@ -24,38 +25,47 @@ const SubsidyVCListDetailMain = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isRevoking, setIsRevoking] = useState(false);
   const issuerDidAccountGlobal = useRecoilValue(issuerDidAccountState);
+  const errorHandler = useErrorHandler();
   dayjs.locale("ja")
 
   useEffect(() => {
-    (async () => {
-      setIsLoading(() => true);
-      const algod = getAlgod(chain);
-      const id = router.query.id;
-      const SubsidyVC = VCListGlobal.subsidy.find((v) => v.message.content.content.id === Number(id));
-      if (SubsidyVC) {
-        const revoke = await verifyVerifiableCredential(algod, SubsidyVC);
-        setVC(SubsidyVC);
-        setInput(SubsidyVC.message.content.content);
-        setRevokeStatus(revoke);
-      }
+    try {
+      (async () => {
+        setIsLoading(() => true);
+        const algod = getAlgod(chain);
+        const id = router.query.id;
+        const SubsidyVC = VCListGlobal.subsidy.find((v) => v.message.content.content.id === Number(id));
+        if (SubsidyVC) {
+          const revoke = await verifyVerifiableCredential(algod, SubsidyVC);
+          setVC(SubsidyVC);
+          setInput(SubsidyVC.message.content.content);
+          setRevokeStatus(revoke);
+        }
 
-      setIsLoading(() => false);
-    })();
+        setIsLoading(() => false);
+      })();
+    } catch (e) {
+      errorHandler(e);
+    }
   }, [VCListGlobal, chain, router.query])
 
   const revoke = async () => {
-    setIsRevoking(() => true);
-    const algod = getAlgod(chain);
-    if (issuerDidAccountGlobal && vc) {
-      await revokeVerifiableCredential(
-        algod,
-        issuerDidAccountGlobal,
-        vc,
-        issuerPw
-      );
+    try {
+      setIsRevoking(() => true);
+      const algod = getAlgod(chain);
+      if (issuerDidAccountGlobal && vc) {
+        await revokeVerifiableCredential(
+          algod,
+          issuerDidAccountGlobal,
+          vc,
+          issuerPw
+        );
+      }
+      setIsRevoking(() => false);
+      router.push("/113_subsidyVCListDone");
+    } catch (e) {
+      errorHandler(e);
     }
-    setIsRevoking(() => false);
-    router.push("/113_subsidyVCListDone");
   }
 
   return (
@@ -98,8 +108,8 @@ const SubsidyVCListDetailMain = () => {
               </div>
             </div>
           </>}
-      <Loading isLoading={isLoading} />
-    </main>
+        <Loading isLoading={isLoading} />
+      </main>
     </>
   );
 };

@@ -10,6 +10,7 @@ import { ResidentInputFormType } from '@/lib/types/mockApp/inputForm';
 import chainState from '@/lib/states/chainState';
 import { getAlgod } from '@/lib/algo/algod/algods';
 import { verifyVerifiableCredential } from '@/lib/algosbt';
+import { useErrorHandler } from 'react-error-boundary';
 
 const useSubsidyInputMain = () => {
     const [VCListSelect, setVCListSelect] = useState<VCListType>();
@@ -24,6 +25,7 @@ const useSubsidyInputMain = () => {
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
     const chain = useRecoilValue(chainState);
+    const errorHandler = useErrorHandler();
 
     const methods = useForm<SubsidyInputFormType>({
         defaultValues: {
@@ -39,38 +41,42 @@ const useSubsidyInputMain = () => {
     });
 
     useEffect(() => {
-        (async () => {
-            setIsLoading(() => true);
+        try {
+            (async () => {
+                setIsLoading(() => true);
 
-            const algod = getAlgod(chain);
+                const algod = getAlgod(chain);
 
-            if (VCListGlobal.resident) {
-                const residentList = await Promise.all(VCListGlobal.resident.map(async (item) => {
-                    return await verifyVerifiableCredential(algod, item);
-                }));
-                if (residentList[residentList.length - 1]) {
-                    methods.setValue("residentVC", (VCListGlobal.resident.length - 1).toString());
-                    methods.setValue("fullName", VCListGlobal.resident[VCListGlobal.resident.length - 1].message.content.content.fullName);
-                    methods.setValue("address", VCListGlobal.resident[VCListGlobal.resident.length - 1].message.content.content.address);
-                } else {
-                    setIsEnable(true);
+                if (VCListGlobal.resident) {
+                    const residentList = await Promise.all(VCListGlobal.resident.map(async (item) => {
+                        return await verifyVerifiableCredential(algod, item);
+                    }));
+                    if (residentList[residentList.length - 1]) {
+                        methods.setValue("residentVC", (VCListGlobal.resident.length - 1).toString());
+                        methods.setValue("fullName", VCListGlobal.resident[VCListGlobal.resident.length - 1].message.content.content.fullName);
+                        methods.setValue("address", VCListGlobal.resident[VCListGlobal.resident.length - 1].message.content.content.address);
+                    } else {
+                        setIsEnable(true);
+                    }
+                    setResidentList(residentList);
                 }
-                setResidentList(residentList);
-            }
-            if (VCListGlobal.account) {
-                const accountList = await Promise.all(VCListGlobal.account.map(async (item) => {
-                    return await verifyVerifiableCredential(algod, item);
-                }));
-                setAccountList(accountList);
-            }
-            if (VCListGlobal.tax) {
-                const taxList = await Promise.all(VCListGlobal.tax.map(async (item) => {
-                    return await verifyVerifiableCredential(algod, item);
-                }));
-                setTaxList(taxList);
-            }
-            setIsLoading(() => false);
-        })();
+                if (VCListGlobal.account) {
+                    const accountList = await Promise.all(VCListGlobal.account.map(async (item) => {
+                        return await verifyVerifiableCredential(algod, item);
+                    }));
+                    setAccountList(accountList);
+                }
+                if (VCListGlobal.tax) {
+                    const taxList = await Promise.all(VCListGlobal.tax.map(async (item) => {
+                        return await verifyVerifiableCredential(algod, item);
+                    }));
+                    setTaxList(taxList);
+                }
+                setIsLoading(() => false);
+            })();
+        } catch (e) {
+            errorHandler(e)
+        }
     }, [VCListGlobal, methods])
 
 

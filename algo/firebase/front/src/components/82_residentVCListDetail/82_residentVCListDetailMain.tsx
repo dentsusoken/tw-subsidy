@@ -12,6 +12,7 @@ import { ResidentInquiry } from "../common/Forms";
 import Header from "../common/Header";
 import Loading from "../common/Loading";
 import { issuerPw } from "@/lib/algo/account/accounts";
+import { useErrorHandler } from "react-error-boundary";
 
 
 const ResidentVCListDetailMain = () => {
@@ -24,38 +25,47 @@ const ResidentVCListDetailMain = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isRevoking, setIsRevoking] = useState(false);
   const issuerDidAccountGlobal = useRecoilValue(issuerDidAccountState);
+  const errorHandler = useErrorHandler();
   dayjs.locale('ja');
 
   useEffect(() => {
-    (async () => {
-      setIsLoading(() => true);
-      const algod = getAlgod(chain);
-      const id = router.query.id;
-      const ResidentVC = ResidentVCListGlobal.find((v) => v.message.content.content.id === Number(id));
-      if (ResidentVC) {
-        const revoke = await verifyVerifiableCredential(algod, ResidentVC);
-        setVC(ResidentVC);
-        setInput(ResidentVC.message.content.content);
-        setRevokeStatus(revoke);
-      }
+    try {
+      (async () => {
+        setIsLoading(() => true);
+        const algod = getAlgod(chain);
+        const id = router.query.id;
+        const ResidentVC = ResidentVCListGlobal.find((v) => v.message.content.content.id === Number(id));
+        if (ResidentVC) {
+          const revoke = await verifyVerifiableCredential(algod, ResidentVC);
+          setVC(ResidentVC);
+          setInput(ResidentVC.message.content.content);
+          setRevokeStatus(revoke);
+        }
 
-      setIsLoading(() => false);
-    })();
+        setIsLoading(() => false);
+      })();
+    } catch (e) {
+      errorHandler(e)
+    }
   }, [ResidentVCListGlobal, router.query, chain])
 
   const revoke = async () => {
-    setIsRevoking(() => true);
-    const algod = getAlgod(chain);
-    if (issuerDidAccountGlobal && vc) {
-      await revokeVerifiableCredential(
-        algod,
-        issuerDidAccountGlobal,
-        vc,
-        issuerPw
-      );
+    try {
+      setIsRevoking(() => true);
+      const algod = getAlgod(chain);
+      if (issuerDidAccountGlobal && vc) {
+        await revokeVerifiableCredential(
+          algod,
+          issuerDidAccountGlobal,
+          vc,
+          issuerPw
+        );
+      }
+      setIsRevoking(() => false);
+      router.push("/83_residentVCListDone");
+    } catch (e) {
+      errorHandler(e)
     }
-    setIsRevoking(() => false);
-    router.push("/83_residentVCListDone");
   }
 
   return (

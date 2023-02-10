@@ -8,6 +8,7 @@ import { AccountInputFormType, AccountVCType } from "@/lib/types/mockApp";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { useErrorHandler } from "react-error-boundary";
 import { useRecoilValue } from "recoil";
 import { AccountInquiry } from "../common/Forms";
 import Header from "../common/Header";
@@ -24,38 +25,47 @@ const AccountVCListDetailMain = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isRevoking, setIsRevoking] = useState(false);
   const issuerDidAccountGlobal = useRecoilValue(issuerDidAccountState);
+  const errorHandler = useErrorHandler();
   dayjs.locale('ja');
 
   useEffect(() => {
-    (async () => {
-      setIsLoading(() => true);
-      const algod = getAlgod(chain);
-      const id = router.query.id;
-      const AccountVC = AccountVCListGlobal.find((v) => v.message.content.content.id === Number(id));
-      if (AccountVC) {
-        const revoke = await verifyVerifiableCredential(algod, AccountVC);
-        setVC(AccountVC);
-        setInput(AccountVC.message.content.content);
-        setRevokeStatus(revoke);
-      }
+    try {
+      (async () => {
+        setIsLoading(() => true);
+        const algod = getAlgod(chain);
+        const id = router.query.id;
+        const AccountVC = AccountVCListGlobal.find((v) => v.message.content.content.id === Number(id));
+        if (AccountVC) {
+          const revoke = await verifyVerifiableCredential(algod, AccountVC);
+          setVC(AccountVC);
+          setInput(AccountVC.message.content.content);
+          setRevokeStatus(revoke);
+        }
 
-      setIsLoading(() => false);
-    })();
+        setIsLoading(() => false);
+      })();
+    } catch (e) {
+      errorHandler(e)
+    }
   }, [AccountVCListGlobal, chain, router.query])
 
   const revoke = async () => {
-    setIsRevoking(() => true);
-    const algod = getAlgod(chain);
-    if (issuerDidAccountGlobal && vc) {
-      await revokeVerifiableCredential(
-        algod,
-        issuerDidAccountGlobal,
-        vc,
-        issuerPw
-      );
+    try {
+      setIsRevoking(() => true);
+      const algod = getAlgod(chain);
+      if (issuerDidAccountGlobal && vc) {
+        await revokeVerifiableCredential(
+          algod,
+          issuerDidAccountGlobal,
+          vc,
+          issuerPw
+        );
+      }
+      setIsRevoking(() => false);
+      router.push("/93_accountVCListDone");
+    } catch (e) {
+      errorHandler(e)
     }
-    setIsRevoking(() => false);
-    router.push("/93_accountVCListDone");
   }
 
 

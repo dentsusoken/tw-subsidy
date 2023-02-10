@@ -7,6 +7,7 @@ import dayjs from 'dayjs';
 import chainState from '@/lib/states/chainState';
 import { getAlgod } from '@/lib/algo/algod/algods';
 import { verifyVerifiableCredential } from '@/lib/algosbt';
+import { useErrorHandler } from 'react-error-boundary';
 
 const useVCListMain = () => {
     const VCListGlobal = useRecoilValue(VCListState);
@@ -16,51 +17,56 @@ const useVCListMain = () => {
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
     const chain = useRecoilValue(chainState);
+    const errorHandler = useErrorHandler();
     dayjs.locale('ja');
 
     useEffect(() => {
         (async () => {
-            setIsLoading(() => true);
+            try {
+                setIsLoading(() => true);
 
-            const algod = getAlgod(chain);
+                const algod = getAlgod(chain);
 
-            if (VCListGlobal.resident) {
-                const residentList: VCListItem[] = await Promise.all(VCListGlobal.resident.map(async (item) => {
-                    const revokeStatus = await verifyVerifiableCredential(algod, item);
-                    return {
-                        id: item.message.content.content.id,
-                        applicationDate: item.message.content.content.applicationDate,
-                        issueDate: item.message.content.content.issueDate,
-                        revokeStatus: revokeStatus,
-                    }
-                }));
-                setResidentList(sortList(residentList));
+                if (VCListGlobal.resident) {
+                    const residentList: VCListItem[] = await Promise.all(VCListGlobal.resident.map(async (item) => {
+                        const revokeStatus = await verifyVerifiableCredential(algod, item);
+                        return {
+                            id: item.message.content.content.id,
+                            applicationDate: item.message.content.content.applicationDate,
+                            issueDate: item.message.content.content.issueDate,
+                            revokeStatus: revokeStatus,
+                        }
+                    }));
+                    setResidentList(sortList(residentList));
+                }
+                if (VCListGlobal.account) {
+                    const accountList: VCListItem[] = await Promise.all(VCListGlobal.account.map(async (item) => {
+                        const revokeStatus = await verifyVerifiableCredential(algod, item);
+                        return {
+                            id: item.message.content.content.id,
+                            applicationDate: item.message.content.content.applicationDate,
+                            issueDate: item.message.content.content.issueDate,
+                            revokeStatus: revokeStatus,
+                        }
+                    }));
+                    setAccountList(sortList(accountList));
+                }
+                if (VCListGlobal.tax) {
+                    const taxList: VCListItem[] = await Promise.all(VCListGlobal.tax.map(async (item) => {
+                        const revokeStatus = await verifyVerifiableCredential(algod, item);
+                        return {
+                            id: item.message.content.content.id,
+                            applicationDate: item.message.content.content.applicationDate,
+                            issueDate: item.message.content.content.issueDate,
+                            revokeStatus: revokeStatus,
+                        }
+                    }));
+                    setTaxList(sortList(taxList));
+                }
+                setIsLoading(() => false);
+            } catch (e) {
+                errorHandler(e);
             }
-            if (VCListGlobal.account) {
-                const accountList: VCListItem[] = await Promise.all(VCListGlobal.account.map(async (item) => {
-                    const revokeStatus = await verifyVerifiableCredential(algod, item);
-                    return {
-                        id: item.message.content.content.id,
-                        applicationDate: item.message.content.content.applicationDate,
-                        issueDate: item.message.content.content.issueDate,
-                        revokeStatus: revokeStatus,
-                    }
-                }));
-                setAccountList(sortList(accountList));
-            }
-            if (VCListGlobal.tax) {
-                const taxList: VCListItem[] = await Promise.all(VCListGlobal.tax.map(async (item) => {
-                    const revokeStatus = await verifyVerifiableCredential(algod, item);
-                    return {
-                        id: item.message.content.content.id,
-                        applicationDate: item.message.content.content.applicationDate,
-                        issueDate: item.message.content.content.issueDate,
-                        revokeStatus: revokeStatus,
-                    }
-                }));
-                setTaxList(sortList(taxList));
-            }
-            setIsLoading(() => false);
         })();
     }, [VCListGlobal, chain]);
 

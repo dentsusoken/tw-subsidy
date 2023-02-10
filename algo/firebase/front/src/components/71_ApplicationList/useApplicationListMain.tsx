@@ -5,6 +5,7 @@ import { useRecoilValue } from "recoil";
 import { RequestItem } from "../common/ApplicationListContainer/ApplicationListContainer";
 import chainState from '@/lib/states/chainState';
 import { getAlgod } from "@/lib/algo/algod/algods";
+import { useErrorHandler } from "react-error-boundary";
 
 const useApplicationListMain = () => {
     const [residentList, setResidentList] = useState<RequestItem[]>([]);
@@ -19,98 +20,105 @@ const useApplicationListMain = () => {
     const subsidyRequestGlobal = useRecoilValue(subsidyListState);
     const VCList = useRecoilValue(VCListState);
     const chain = useRecoilValue(chainState);
+    const errorHandler = useErrorHandler();
 
 
     useEffect(() => {
-        (async () => {
-            setIsLoading(() => true);
+        try {
+            (async () => {
+                setIsLoading(() => true);
 
-            const algod = getAlgod(chain);
+                const algod = getAlgod(chain);
 
-            if (residentRequestGlobal) {
-                const residentList: RequestItem[] = await Promise.all(residentRequestGlobal.map(async (item) => {
-                    let issuedStatus = false;
-                    let revokeStatus = false;
-                    if (VCList.resident) {
-                        const residentVC = VCList.resident.find((vc) => { return vc.message.content.content.id === item.message.content.id });
-                        if (residentVC) {
-                            issuedStatus = true;
-                            revokeStatus = await verifyVerifiableCredential(algod, residentVC);
+                if (residentRequestGlobal) {
+                    const residentList: RequestItem[] = await Promise.all(residentRequestGlobal.map(async (item) => {
+                        let issuedStatus = false;
+                        let revokeStatus = false;
+                        if (VCList.resident) {
+                            const residentVC = VCList.resident.find((vc) => { return vc.message.content.content.id === item.message.content.id });
+                            if (residentVC) {
+                                issuedStatus = true;
+                                revokeStatus = await verifyVerifiableCredential(algod, residentVC);
+                            }
                         }
-                    }
-                    return {
-                        id: item.message.content.id,
-                        applicationDate: item.message.content.applicationDate,
-                        issuedStatus: issuedStatus,
-                        revokeStatus: revokeStatus,
-                    }
-                }));
-                setResidentList(residentList);
-            }
+                        return {
+                            id: item.message.content.id,
+                            applicationDate: item.message.content.applicationDate,
+                            issuedStatus: issuedStatus,
+                            revokeStatus: revokeStatus,
+                        }
+                    }));
+                    setResidentList(residentList);
+                }
 
-            if (accountRequestGlobal) {
-                const accountList = await Promise.all(accountRequestGlobal.map(async (item) => {
-                    let issuedStatus = false;
-                    let revokeStatus = false;
-                    if (VCList.account) {
-                        const accountVC = VCList.account.find((vc) => { return vc.message.content.content.id === item.message.content.id });
-                        if (accountVC) {
-                            issuedStatus = true;
-                            revokeStatus = await verifyVerifiableCredential(algod, accountVC);
+                if (accountRequestGlobal) {
+                    const accountList = await Promise.all(accountRequestGlobal.map(async (item) => {
+                        let issuedStatus = false;
+                        let revokeStatus = false;
+                        if (VCList.account) {
+                            const accountVC = VCList.account.find((vc) => { return vc.message.content.content.id === item.message.content.id });
+                            if (accountVC) {
+                                issuedStatus = true;
+                                revokeStatus = await verifyVerifiableCredential(algod, accountVC);
+                            }
                         }
-                    }
-                    return {
-                        id: item.message.content.id,
-                        applicationDate: item.message.content.applicationDate,
-                        issuedStatus: issuedStatus,
-                        revokeStatus: revokeStatus,
-                    }
-                }));
-                setAccountList(accountList);
-            }
+                        return {
+                            id: item.message.content.id,
+                            applicationDate: item.message.content.applicationDate,
+                            issuedStatus: issuedStatus,
+                            revokeStatus: revokeStatus,
+                        }
+                    }));
+                    setAccountList(accountList);
+                }
 
-            if (taxRequestGlobal) {
-                const taxList = await Promise.all(taxRequestGlobal.map(async (item) => {
-                    let issuedStatus = false;
-                    let revokeStatus = false;
-                    if (VCList.tax) {
-                        const taxVC = VCList.tax.find((vc) => { return vc.message.content.content.id === item.message.content.id });
-                        if (taxVC) {
-                            issuedStatus = true;
-                            revokeStatus = await verifyVerifiableCredential(algod, taxVC);
+                if (taxRequestGlobal) {
+                    const taxList = await Promise.all(taxRequestGlobal.map(async (item) => {
+                        let issuedStatus = false;
+                        let revokeStatus = false;
+                        if (VCList.tax) {
+                            const taxVC = VCList.tax.find((vc) => { return vc.message.content.content.id === item.message.content.id });
+                            if (taxVC) {
+                                issuedStatus = true;
+                                revokeStatus = await verifyVerifiableCredential(algod, taxVC);
+                            }
                         }
-                    }
-                    return {
-                        id: item.message.content.id,
-                        applicationDate: item.message.content.applicationDate,
-                        issuedStatus: issuedStatus,
-                        revokeStatus: revokeStatus,
-                    }
-                }));
-                setTaxList(taxList);
-            }
-            if (subsidyRequestGlobal) {
-                const subsidyList = await Promise.all(subsidyRequestGlobal.map(async (item) => {
-                    let issuedStatus = false;
-                    let revokeStatus = false;
-                    if (VCList.subsidy) {
-                        const subsidyVC = VCList.subsidy.find((vc) => { return vc.message.content.content.id === item.id });
-                        if (subsidyVC) {
-                            issuedStatus = true;
-                            revokeStatus = await verifyVerifiableCredential(algod, subsidyVC);
+                        return {
+                            id: item.message.content.id,
+                            applicationDate: item.message.content.applicationDate,
+                            issuedStatus: issuedStatus,
+                            revokeStatus: revokeStatus,
                         }
-                    }
-                    return {
-                        id: item.id,
-                        applicationDate: item.applicationDate,
-                        issuedStatus: issuedStatus,
-                        revokeStatus: revokeStatus,
-                    }
-                }));
-                setSubsidyList(subsidyList);
-            }
-            setIsLoading(() => false);
-        })();
+                    }));
+                    setTaxList(taxList);
+                }
+                if (subsidyRequestGlobal) {
+                    const subsidyList = await Promise.all(subsidyRequestGlobal.map(async (item) => {
+                        let issuedStatus = false;
+                        let revokeStatus = false;
+                        if (VCList.subsidy) {
+                            const subsidyVC = VCList.subsidy.find((vc) => { return vc.message.content.content.id === item.id });
+                            if (subsidyVC) {
+                                issuedStatus = true;
+                                revokeStatus = await verifyVerifiableCredential(algod, subsidyVC);
+                            }
+                        }
+                        return {
+                            id: item.id,
+                            applicationDate: item.applicationDate,
+                            issuedStatus: issuedStatus,
+                            revokeStatus: revokeStatus,
+                        }
+                    }));
+                    setSubsidyList(subsidyList);
+                }
+                setIsLoading(() => false);
+
+            })()
+        }
+        catch (e) {
+            errorHandler(e);
+        }
 
     }, [residentRequestGlobal, accountRequestGlobal, taxRequestGlobal, subsidyRequestGlobal, VCList, chain]);
 
