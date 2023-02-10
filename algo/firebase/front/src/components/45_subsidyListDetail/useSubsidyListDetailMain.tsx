@@ -23,6 +23,9 @@ const useSubsidyListDetailMain = () => {
     const [input, setInput] = useRecoilState(subsidyInputState);
     const [listState, setListState] = useRecoilState(subsidyListState);
     const [isIssuing, setIsIssuing] = useState(false);
+    const [residentVerifyStatus, setResidentVerifyStatus] = useState(false);
+    const [accountVerifyStatus, setAccountVerifyStatus] = useState(false);
+    const [taxVerifyStatus, setTaxVerifyStatus] = useState(false);
     const setVCList = useSetRecoilState(VCListState);
     const router = useRouter();
     const [VCRequest, setVCRequest] = useState<SubsidyInputFormType>()
@@ -33,21 +36,13 @@ const useSubsidyListDetailMain = () => {
 
     dayjs.locale('ja');
 
-    useEffect(() => {
-        const VCRequest = listState.find((v) => v.id === input.id);
-        if (VCRequest) {
-            setVCRequest(VCRequest);
-            if (!VCRequest.verifyStatus) {
-                verifyHandler();
-            }
-        }
-    }, [VCRequest])
+
 
     const methods = useForm<SubsidyInputFormType>({
         defaultValues: {
-            resident: input.resident,
-            account: input.account,
-            tax: input.tax,
+            residentVC: input.residentVC,
+            accountVC: input.accountVC,
+            taxVC: input.taxVC,
             fullName: input.fullName,
             address: input.address,
             verifyStatus: false,
@@ -72,40 +67,57 @@ const useSubsidyListDetailMain = () => {
 
     const verifyHandler = async () => {
         try {
-            const algod = getAlgod(chain);
+            if (input) {
+                const algod = getAlgod(chain);
 
-            let residentVerifyStatus = false;
-            let accountVerifyStatus = false;
-            let taxVerifyStatus = false;
+                let residentVerifyStatus = false;
+                let accountVerifyStatus = false;
+                let taxVerifyStatus = false;
 
-            residentVerifyStatus = await VPVerify(algod, input.residentVP);
-            accountVerifyStatus = await VPVerify(algod, input.accountVP);
-            taxVerifyStatus = await VPVerify(algod, input.taxVP);
+                residentVerifyStatus = await VPVerify(algod, input.residentVP);
+                accountVerifyStatus = await VPVerify(algod, input.accountVP);
+                taxVerifyStatus = await VPVerify(algod, input.taxVP);
 
-            if (residentVerifyStatus && accountVerifyStatus && taxVerifyStatus) {
-                const replaceData: SubsidyInputFormType = {
-                    ...input,
-                    verifyStatus: true,
-                    residentVerifyStatus: residentVerifyStatus,
-                    accountVerifyStatus: accountVerifyStatus,
-                    taxVerifyStatus: taxVerifyStatus
+                setResidentVerifyStatus(residentVerifyStatus);
+                setAccountVerifyStatus(accountVerifyStatus);
+                setTaxVerifyStatus(taxVerifyStatus);
+
+                if (residentVerifyStatus && accountVerifyStatus && taxVerifyStatus) {
+                    const replaceData: SubsidyInputFormType = {
+                        ...input,
+                        verifyStatus: true,
+                    }
+                    setInput(replaceData)
+
+                    const updateData = listState.map((item) => {
+                        if (item.id === replaceData.id) {
+                            return replaceData;
+                        }
+                        else {
+                            return item;
+                        }
+                    })
+                    setListState(updateData);
                 }
-                setInput(replaceData)
-
-                const updateData = listState.map((item) => {
-                    if (item.id === replaceData.id) {
-                        return replaceData;
-                    }
-                    else {
-                        return item;
-                    }
-                })
-                setListState(updateData);
             }
         } catch (e) {
             errorHandler(e);
         }
     }
+
+    useEffect(() => {
+        try {
+            (async () => {
+                const VCRequest = listState.find((v) => v.id === input.id);
+                if (VCRequest) {
+                    setVCRequest(VCRequest);
+                    verifyHandler();
+                }
+            })();
+        } catch (e) {
+            errorHandler(e);
+        }
+    }, [chain])
 
     const onSubmit = async () => {
         try {
@@ -156,8 +168,9 @@ const useSubsidyListDetailMain = () => {
     const back = () => {
         router.push('/44_subsidyList')
     };
+    // verifyHandler();
 
-    return { methods, VCRequest, onSubmit, reject, verifyHandler, back, isIssuing }
+    return { methods, VCRequest, onSubmit, reject, verifyHandler, back, isIssuing, residentVerifyStatus, accountVerifyStatus, taxVerifyStatus }
 };
 
 export default useSubsidyListDetailMain;

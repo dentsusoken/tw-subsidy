@@ -3,14 +3,13 @@ import { FormProvider } from 'react-hook-form';
 import Container from '@/components/common/Container';
 import Header from '@/components/common/Header';
 import InputArea from '@/components/common/InputArea';
-import CheckBox from '@/components/common/CheckBox';
 
 import { SubsidyInputFormType } from '@/lib/types/mockApp/Form';
 import useSubsidyListDetailMain from './useSubsidyListDetailMain';
 import dayjs from 'dayjs';
 
 const SubsidyListDetailMain = () => {
-    const { methods, VCRequest, onSubmit, reject, verifyHandler, back, isIssuing } = useSubsidyListDetailMain()
+    const { methods, VCRequest, onSubmit, reject, verifyHandler, back, isIssuing, residentVerifyStatus, accountVerifyStatus, taxVerifyStatus } = useSubsidyListDetailMain()
     dayjs.locale('ja');
 
     return (
@@ -43,7 +42,7 @@ const SubsidyListDetailMain = () => {
                                         disabled={true}
                                         value={`住民票 - VC${parseInt(VCRequest.residentVC) + 1}`}
                                     />
-                                    {VCRequest.residentVerifyStatus
+                                    {residentVerifyStatus
                                         ? <img src='/authenticated.svg' className={"absolute top-0 right-0 -translate-x-1/2 translate-y-2"} />
                                         : <img src='/warning.svg' className={"absolute top-0 right-0 -translate-x-full translate-y-full pr-2"} />
                                     }
@@ -54,7 +53,7 @@ const SubsidyListDetailMain = () => {
                                         disabled={true}
                                         value={`口座実在証明証 - VC${parseInt(VCRequest.accountVC) + 1}`}
                                     />
-                                    {VCRequest.accountVerifyStatus
+                                    {accountVerifyStatus
                                         ? <img src='/authenticated.svg' className={"absolute top-0 right-0 -translate-x-1/2 translate-y-2"} />
                                         : <img src='/warning.svg' className={"absolute top-0 right-0 -translate-x-full translate-y-full pr-2"} />
                                     }
@@ -65,7 +64,7 @@ const SubsidyListDetailMain = () => {
                                         disabled={true}
                                         value={`納税証明書 - VC${parseInt(VCRequest.taxVC) + 1}`}
                                     />
-                                    {VCRequest.taxVerifyStatus
+                                    {taxVerifyStatus
                                         ? <img src='/authenticated.svg' className={"absolute top-0 right-0 -translate-x-1/2 translate-y-2"} />
                                         : <img src='/warning.svg' className={"absolute top-0 right-0 -translate-x-full translate-y-full pr-2"} />
                                     }
