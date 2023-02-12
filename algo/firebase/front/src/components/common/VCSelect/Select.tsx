@@ -39,7 +39,7 @@ const VCSelect = <T extends FieldValues>({ name, label, items, validation = unde
                         : <option></option>
                     }
                 </select>
-                <label htmlFor={name} className={"absolute left-0 top-1/2 translate-x-2 -translate-y-1/2"}>{!select ? label : null}</label>
+                <label htmlFor={name} className={"absolute left-0 top-1/2 translate-x-2 -translate-y-1/2"}>{!select ? `${label} - VC0` : null}</label>
                 <svg className={"absolute right-0 top-1/2 -translate-x-2 -translate-y-1/2"} width="21" height="10" viewBox="0 0 21 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M21 0L0.000143051 0L10.5001 10L21 0Z" fill="#00938A" />
                 </svg>

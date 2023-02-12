@@ -12,6 +12,8 @@ import { TaxInquiry } from "../common/Forms";
 import Header from "../common/Header";
 import Loading from "../common/Loading";
 import { issuerPw } from "@/lib/algo/account/accounts";
+import Container from "../common/Container";
+import { useErrorHandler } from "react-error-boundary";
 
 
 const TaxVCListDetailMain = () => {
@@ -24,39 +26,48 @@ const TaxVCListDetailMain = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isRevoking, setIsRevoking] = useState(false);
   const issuerDidAccountGlobal = useRecoilValue(issuerDidAccountState);
+  const errorHandler = useErrorHandler();
 
   dayjs.locale("ja");
 
   useEffect(() => {
-    (async () => {
-      setIsLoading(() => true);
-      const algod = getAlgod(chain);
-      const id = router.query.id;
-      const TaxVC = TaxVCListGlobal.find((v) => v.message.content.content.id === Number(id));
-      if (TaxVC) {
-        const revoke = await verifyVerifiableCredential(algod, TaxVC);
-        setVC(TaxVC);
-        setInput(TaxVC.message.content.content);
-        setRevokeStatus(revoke);
-      }
+    try {
+      (async () => {
+        setIsLoading(() => true);
+        const algod = getAlgod(chain);
+        const id = router.query.id;
+        const TaxVC = TaxVCListGlobal.find((v) => v.message.content.content.id === Number(id));
+        if (TaxVC) {
+          const revoke = await verifyVerifiableCredential(algod, TaxVC);
+          setVC(TaxVC);
+          setInput(TaxVC.message.content.content);
+          setRevokeStatus(revoke);
+        }
 
-      setIsLoading(() => false);
-    })();
+        setIsLoading(() => false);
+      })();
+    } catch (e) {
+      errorHandler(e)
+    }
   }, [TaxVCListGlobal, chain, router.query])
 
   const revoke = async () => {
-    setIsRevoking(() => true);
-    const algod = getAlgod(chain);
-    if (issuerDidAccountGlobal && vc) {
-      await revokeVerifiableCredential(
-        algod,
-        issuerDidAccountGlobal,
-        vc,
-        issuerPw
-      );
+    try {
+      setIsRevoking(() => true);
+      const algod = getAlgod(chain);
+      if (issuerDidAccountGlobal && vc) {
+        await revokeVerifiableCredential(
+          algod,
+          issuerDidAccountGlobal,
+          vc,
+          issuerPw
+        );
+      }
+      setIsRevoking(() => false);
+      router.push("/103_taxVCListDone");
+    } catch (e) {
+      errorHandler(e);
     }
-    setIsRevoking(() => false);
-    router.push("/103_taxVCListDone");
   }
 
   return (
@@ -74,13 +85,13 @@ const TaxVCListDetailMain = () => {
               </div>
             </section>
             <TaxInquiry input={input} />
-            <div className={"relative w-80 mx-auto"}>
+            <div className={"relative w-70 mx-auto"}>
               {isRevoking
                 ? <span className={"absolute right-0 -translate-y-1/2 text-sm leading-relaxed text-yellow-500"}>VC取消中...</span>
                 : null
               }
             </div>
-            <div className="py-0 px-[53px]">
+            <div className="w-70 mx-auto py-0">
               <div className="pt-4 pb-2 flex justify-between">
                 <button
                   onClick={() => router.push("/91_accountVCList")}
@@ -97,7 +108,6 @@ const TaxVCListDetailMain = () => {
                   </button>
                 }
               </div>
-
             </div>
           </>}
         <Loading isLoading={isLoading} />

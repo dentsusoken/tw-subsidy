@@ -7,9 +7,9 @@ export const subsidyInputState = atom<SubsidyInputFormType>({
     key: 'subsidyInputState',
     default: {
         id: 0,
-        resident: "0",
-        account: "0",
-        tax: "0",
+        residentVC: "0",
+        accountVC: "0",
+        taxVC: "0",
         fullName: "",
         address: "",
         applicationDate: "",

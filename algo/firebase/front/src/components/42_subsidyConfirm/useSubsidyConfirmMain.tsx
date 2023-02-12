@@ -28,9 +28,9 @@ const useSubsidyConfirmMain = () => {
 
     const methods = useForm<SubsidyInputFormType>({
         defaultValues: {
-            resident: input.resident,
-            account: input.account,
-            tax: input.tax,
+            residentVC: input.residentVC,
+            accountVC: input.accountVC,
+            taxVC: input.taxVC,
             fullName: input.fullName,
             address: input.address,
             verifyStatus: false,
@@ -66,21 +66,14 @@ const useSubsidyConfirmMain = () => {
                 const now = dayjs();
                 const applicationDate = dayjs(now).format('YYYY-MM-DD HH:mm:ss');
 
-                const resident = input.resident ? input.resident : "0";
-                const account = input.account ? input.account : "0";
-                const tax = input.resident ? input.tax : "0";
-
                 const subsidyInput: SubsidyInputFormType = {
                     ...input,
                     id: id,
                     applicationDate: applicationDate,
-                    resident: resident,
-                    account: account,
-                    tax: tax,
                 }
 
-                if (VCListGlobal.resident) {
-                    const content = createVPContent(VCListGlobal.resident[parseInt(input.resident)]);
+                if (VCListGlobal.resident && input.residentVC !== "-1") {
+                    const content = createVPContent(VCListGlobal.resident[parseInt(input.residentVC)]);
                     const vm = createVPMessage(
                         content,
                         holderDidAccountGlobal,
@@ -89,8 +82,8 @@ const useSubsidyConfirmMain = () => {
 
                     subsidyInput.residentVP = vm;
                 }
-                if (VCListGlobal.account) {
-                    const content = createVPContent(VCListGlobal.account[parseInt(input.account)]);
+                if (VCListGlobal.account && input.accountVC !== "-1") {
+                    const content = createVPContent(VCListGlobal.account[parseInt(input.accountVC)]);
                     const vm = createVPMessage(
                         content,
                         holderDidAccountGlobal,
@@ -98,8 +91,8 @@ const useSubsidyConfirmMain = () => {
                     );
                     subsidyInput.accountVP = vm;
                 }
-                if (VCListGlobal.tax) {
-                    const content = createVPContent(VCListGlobal.tax[parseInt(input.tax)]);
+                if (VCListGlobal.tax && input.taxVC !== "-1") {
+                    const content = createVPContent(VCListGlobal.tax[parseInt(input.taxVC)]);
                     const vm = createVPMessage(
                         content,
                         holderDidAccountGlobal,

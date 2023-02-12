@@ -45,7 +45,8 @@ export const urls = {
     taxVCListDetail: "/102_taxVCListDetail",
     taxVCListDone: "/103_taxVCListDone",
     subsidyVCList: "/111_subsidyVCList",
-    subsidyVCListDetail: "/112_subsidyVCListDetail"
+    subsidyVCListDetail: "/112_subsidyVCListDetail",
+    subsidyVCListDone: "/113_subsidyVCListDone"
 } as const;
 
 export const icons = {

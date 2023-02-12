@@ -50,7 +50,6 @@ const useVCListContainer = () => {
 
     const onApply = (type: string) => {
         handleClearInputState();
-        console.log(type);
         
         switch (type) {
             case "住民票":

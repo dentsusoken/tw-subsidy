@@ -9,7 +9,11 @@ const useHeader = () => {
 
     useEffect(() => {
         clearOldData();
-    },)
+    }, [clearOldData])
+
+    const back = () => {
+        router.back();
+    }
 
     const Headings = {
         mainMenu: "DEMO MENU",
@@ -94,6 +98,7 @@ const useHeader = () => {
             case urls.subsidyListDone:
             case urls.subsidyVCList:
             case urls.subsidyVCListDetail:
+            case urls.subsidyVCListDone:
                 return colors.subsidy;
             default:
                 return "";
@@ -152,6 +157,7 @@ const useHeader = () => {
             case urls.subsidyListDone:
             case urls.subsidyVCList:
             case urls.subsidyVCListDetail:
+            case urls.subsidyVCListDone:
                 return Headings.subsidyMenu;
             default:
                 return "不正なURL";
@@ -208,6 +214,7 @@ const useHeader = () => {
             case urls.subsidyListDone:
             case urls.subsidyVCList:
             case urls.subsidyVCListDetail:
+            case urls.subsidyVCListDone:
                 return icons.subsidy;
             default:
                 return "";
@@ -265,6 +272,7 @@ const useHeader = () => {
             case urls.subsidyListDone:
             case urls.subsidyVCList:
             case urls.subsidyVCListDetail:
+            case urls.subsidyVCListDone:
                 return { url: urls.subsidyMenu, label: "menu" };
             default:
                 return { url: "", label: "" };
@@ -321,13 +329,14 @@ const useHeader = () => {
             case urls.subsidyListDone:
             case urls.subsidyVCList:
             case urls.subsidyVCListDetail:
+            case urls.subsidyVCListDone:
                 return Titles.subsidyMenu;
             default:
                 return "";
         }
     }
 
-    return { getHeading, getBgColor, getIcon, getLink, getTitle }
+    return { getHeading, getBgColor, getIcon, getLink, getTitle, back }
 };
 
 export default useHeader;

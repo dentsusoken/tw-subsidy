@@ -20,10 +20,13 @@ const TaxListDetailMain = () => {
                     {VCRequest &&
                         <section className={"flex flex-col items-center gap-1 w-72 mx-auto mb-2 pb-4 border-b"}>
                             {VCRequest.message.content.verifyStatus
-                                ? <p className={"relative text-sm leading-relaxed"}><img src='/authenticated.svg' className={"absolute top-0 -translate-y-3 -translate-x-full"} />検証済</p>
+                                ? <p className={"relative text-sm text-color-gray-search leading-relaxed"}><img src='/authenticated.svg' className={"absolute top-0 -translate-y-3 -translate-x-full"} />検証済</p>
                                 : <p className={"relative text-sm leading-relaxed"}><img src='/warning.svg' className={"absolute -translate-x-full pr-2"} /> 要検証</p>
                             }
-                            <p className={"text-sm text-color-gray-search leading-relaxed"}>{VCRequest.message.content.approvalStatus?"承認済":"未承認"}</p>
+                            {VCRequest.message.content.approvalStatus
+                                ? <p className={"relative text-sm text-color-gray-search leading-relaxed"}><img src='/authenticated.svg' className={"absolute top-0 -translate-y-3 -translate-x-full"} />承認済</p>
+                                : <p className={"text-sm text-color-required leading-relaxed"}>未承認</p>
+                            }
                             <p className={"text-xs text-color-gray-search leading-relaxed"}>申請日 {dayjs(VCRequest.message.content.applicationDate).format("YY/MM/DD HH:mm")}</p>
                         </section>
                     }
@@ -34,47 +37,45 @@ const TaxListDetailMain = () => {
                         <InputArea<TaxInputFormType> label='申請者名' name='fullName' placeholder='' isEnabled={false} />
                         <InputArea<TaxInputFormType> label='申請者住所' name="address" placeholder='' isEnabled={false} />
                     </Container>
-                    <div className={"relative"}>
+                    <div className={"w-70 mx-auto relative"}>
                         {isIssuing
-                            ? <span className={"absolute right-5 -translate-y-3 text-sm leading-relaxed text-yellow-500"}>VC発行中...</span>
+                            ? <span className={"absolute right-0 -translate-y-1/2 text-sm leading-relaxed text-yellow-500"}>VC発行中...</span>
                             : null
                         }
                     </div>
-                    <Container>
-                        <div className="w-full pt-4 pb-2 px-5 flex justify-between">
-                            <button
-                                onClick={back}
-                                className="input-form-button-white"
-                            >
-                                戻る
-                            </button>
-                            {
-                                VCRequest && VCRequest.message.content.verifyStatus
-                                    ? !VCRequest.message.content.approvalStatus&&
-                                    <>
-                                        <button
-                                            onClick={reject}
-                                            className="input-form-button-white"
-                                        >
-                                            却下
-                                        </button>
-                                        <button
-                                            onClick={approve}
-                                            className="input-form-button-blue"
-                                        >
-                                            承認
-                                        </button>
-                                    </>
-                                    :
+                    <div className="w-70 mx-auto pt-4 pb-2 flex justify-between">
+                        <button
+                            onClick={back}
+                            className="input-form-button-white"
+                        >
+                            戻る
+                        </button>
+                        {
+                            VCRequest && VCRequest.message.content.verifyStatus
+                                ? !VCRequest.message.content.approvalStatus &&
+                                <>
                                     <button
-                                        onClick={verify}
+                                        onClick={reject}
+                                        className="input-form-button-white"
+                                    >
+                                        却下
+                                    </button>
+                                    <button
+                                        onClick={approve}
                                         className="input-form-button-blue"
                                     >
-                                        検証
+                                        承認
                                     </button>
-                            }
-                        </div>
-                    </Container>
+                                </>
+                                :
+                                <button
+                                    onClick={verify}
+                                    className="input-form-button-blue"
+                                >
+                                    検証
+                                </button>
+                        }
+                    </div>
                 </FormProvider>
             </main>
 
