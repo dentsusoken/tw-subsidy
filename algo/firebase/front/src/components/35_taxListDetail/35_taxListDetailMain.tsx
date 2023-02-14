@@ -36,7 +36,7 @@ const TaxListDetailMain = () => {
                       'absolute top-0 -translate-y-3 -translate-x-full'
                     }
                   />
-                  検証済
+                  検証OK
                 </p>
               ) : (
                 <p className={'relative text-sm leading-relaxed'}>
@@ -44,7 +44,7 @@ const TaxListDetailMain = () => {
                     src="/warning.svg"
                     className={'absolute -translate-x-full pr-2'}
                   />{' '}
-                  要検証
+                  検証NG
                 </p>
               )}
               {VCRequest.message.content.approvalStatus ? (
