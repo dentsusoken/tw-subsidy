@@ -323,33 +323,61 @@ describe('algosbt', () => {
       content,
       issuerPassword
     );
+    const vc2 = await createVerifiableCredential(
+      algod,
+      issuerDidAccount,
+      holderDid,
+      content,
+      issuerPassword
+    );
     const appIndex = vc.message.content.appIndex;
+    const appIndex2 = vc2.message.content.appIndex;
+
     console.log('Application Index:', appIndex);
+    console.log('Application Index2:', appIndex2);
 
     try {
       const vp = await createVerifiablePresentation(
         holderDidAccount,
         verifierDidAccount.did,
-        [vc],
+        [vc, vc2],
         holderPassword
       );
 
-      expect(await verifyVerifiablePresentation(algod, vp)).to.be.true;
+      const result = await verifyVerifiablePresentation(algod, vp);
+
+      expect(result).to.eql({
+        vpVerified: true,
+        vcsVerified: [true, true],
+      });
 
       await revokeVerifiableCredential(
         algod,
         issuerDidAccount,
-        vc,
+        vc2,
         issuerPassword
       );
 
-      expect(await verifyVerifiablePresentation(algod, vp)).to.be.false;
+      const result2 = await verifyVerifiablePresentation(algod, vp);
+
+      expect(result2).to.eql({
+        vpVerified: false,
+        vcsVerified: [true, false],
+      });
     } finally {
       await deleteApp(
         algod,
         {
           from: addressFromDid(issuerDidAccount.did),
           appIndex,
+        },
+        issuerSecretKey
+      );
+      await deleteApp(
+        algod,
+        {
+          from: addressFromDid(issuerDidAccount.did),
+          appIndex: appIndex2,
         },
         issuerSecretKey
       );

@@ -175,23 +175,19 @@ export const verifyVerifiablePresentation = async (
   vp: VerifiablePresentation
 ) => {
   try {
-    if (!verifyVerifiableMessage(vp)) {
-      return false;
-    }
+    const vcsVerifiedPromises = vp.message.content.credentials.map((vc) =>
+      verifyVerifiableCredential(algod, vc)
+    );
+    const vcsVerified = await Promise.all(vcsVerifiedPromises);
+    const vpVerified =
+      verifyVerifiableMessage(vp) && vcsVerified.every((v) => v);
 
-    for (let i = 0; i < vp.message.content.credentials.length; i += 1) {
-      if (
-        !(await verifyVerifiableCredential(
-          algod,
-          vp.message.content.credentials[i]
-        ))
-      ) {
-        return false;
-      }
-    }
-
-    return true;
+    return { vpVerified, vcsVerified };
   } catch (ignore) {}
 
-  return false;
+  const vcsVerified = Array<boolean>(
+    vp.message.content.credentials.length
+  ).fill(false);
+
+  return { vpVerified: false, vcsVerified };
 };
