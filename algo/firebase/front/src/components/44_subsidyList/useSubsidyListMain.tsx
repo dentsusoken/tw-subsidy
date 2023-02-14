@@ -14,7 +14,10 @@ const useSubsidyListMain = () => {
     const [filterCount, setfilterCount] = useState(0);
 
     useEffect(() => {
-        setList(subsidyList);
+        // [id]の降順で表示
+        const listForSort = [...subsidyList];
+        listForSort.sort((a, b) => b.id - a.id);
+        setList(listForSort);
         setListCount(subsidyList.length)
         setfilterCount(subsidyList.length)
     }, [subsidyList]);

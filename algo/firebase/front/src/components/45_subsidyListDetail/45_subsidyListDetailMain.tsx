@@ -22,8 +22,8 @@ const SubsidyListDetailMain = () => {
                             {VCRequest &&
                                 <section className={"flex flex-col items-center gap-1 w-72 mx-auto mb-2 pb-4 border-b"}>
                                     {VCRequest.verifyStatus
-                                        ? <p className={"relative text-sm text-color-gray-search leading-relaxed"}><img src='/authenticated.svg' className={"absolute top-0 -translate-y-3 -translate-x-full"} />検証済</p>
-                                        : <p className={"relative text-sm leading-relaxed"}><img src='/warning.svg' className={"absolute -translate-x-full pr-2"} /> 要検証</p>
+                                        ? <p className={"relative text-sm text-color-gray-search leading-relaxed"}><img src='/authenticated.svg' className={"absolute top-0 -translate-y-3 -translate-x-full"} />検証OK</p>
+                                        : <p className={"relative text-sm leading-relaxed"}><img src='/warning.svg' className={"absolute -translate-x-full pr-2"} /> 検証NG</p>
                                     }
 
                                     {VCRequest.approvalStatus

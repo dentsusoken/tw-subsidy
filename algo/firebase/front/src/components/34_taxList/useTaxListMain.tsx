@@ -18,7 +18,10 @@ const useTaxListMain = () => {
 
     useEffect(() => {
         const requestList: TaxInputFormType[] = VCRequestlistState.map((item) => item.message.content);
-        setList(requestList);
+        // [id]の降順で表示
+        const listForSort = [...requestList];
+        listForSort.sort((a, b) => b.id - a.id);
+        setList(listForSort);
         setListCount(VCRequestlistState.length);
         setfilterCount(VCRequestlistState.length);
     }, [VCRequestlistState]);
