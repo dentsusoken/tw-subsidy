@@ -51,6 +51,8 @@ const useTaxInputMain = () => {
                 } else {
                     setIsEnable(true);
                 }
+            } else {
+                setIsEnable(true);
             }
             setIsLoading(() => false);
         })();
