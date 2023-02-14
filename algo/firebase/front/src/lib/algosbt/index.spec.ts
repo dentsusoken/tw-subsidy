@@ -335,6 +335,15 @@ describe('algosbt', () => {
       );
 
       expect(await verifyVerifiablePresentation(algod, vp)).to.be.true;
+
+      await revokeVerifiableCredential(
+        algod,
+        issuerDidAccount,
+        vc,
+        issuerPassword
+      );
+
+      expect(await verifyVerifiablePresentation(algod, vp)).to.be.false;
     } finally {
       await deleteApp(
         algod,

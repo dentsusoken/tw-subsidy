@@ -17,7 +17,6 @@ import * as cryptUtils from '@/lib/algosbt/utils/cryptUtils';
 
 import deleteAllApps from '@/lib/algo/api/deleteAllApps';
 import { issuerPw } from '@/lib/algo/account/accounts';
-import { tryDidjwt } from './tryDidJwt';
 
 const useMain = () => {
   const [accountsPrepared, setAccountsPrepared] = useState(false);
@@ -87,7 +86,7 @@ const useMain = () => {
   };
 
   (async () => {
-    await tryDidjwt();
+    //await tryDidjwt();
   })();
 
   return {

@@ -179,9 +179,18 @@ export const verifyVerifiablePresentation = async (
       return false;
     }
 
-    return vp.message.content.credentials.every((vc) =>
-      verifyVerifiableCredential(algod, vc)
-    );
+    for (let i = 0; i < vp.message.content.credentials.length; i += 1) {
+      if (
+        !(await verifyVerifiableCredential(
+          algod,
+          vp.message.content.credentials[i]
+        ))
+      ) {
+        return false;
+      }
+    }
+
+    return true;
   } catch (ignore) {}
 
   return false;
