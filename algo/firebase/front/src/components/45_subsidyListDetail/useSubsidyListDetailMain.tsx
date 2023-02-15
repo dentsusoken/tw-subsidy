@@ -3,10 +3,7 @@ import { useForm } from 'react-hook-form';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { useRouter } from 'next/router';
 
-import {
-  SubsidyInputFormType,
-  VPContent,
-} from '@/lib/types/mockApp/Form';
+import { SubsidyInputFormType, VPContent } from '@/lib/types/mockApp/Form';
 import { subsidyInputState } from '@/lib/states/mockApp/subsidyInputState';
 import { subsidyListState } from '@/lib/states/mockApp/subsidyListState';
 
@@ -29,6 +26,7 @@ const useSubsidyListDetailMain = () => {
   const [input, setInput] = useRecoilState(subsidyInputState);
   const [listState, setListState] = useRecoilState(subsidyListState);
   const [isIssuing, setIsIssuing] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [residentVerifyStatus, setResidentVerifyStatus] = useState(false);
   const [accountVerifyStatus, setAccountVerifyStatus] = useState(false);
   const [taxVerifyStatus, setTaxVerifyStatus] = useState(false);
@@ -45,10 +43,12 @@ const useSubsidyListDetailMain = () => {
   useEffect(() => {
     try {
       (async () => {
+        setIsLoading(() => true);
         const VCRequest = listState.find((v) => v.id === input.id);
         if (VCRequest) {
-          verifyHandler(VCRequest);
+          await verifyHandler(VCRequest);
         }
+        setIsLoading(() => false);
       })();
     } catch (e) {
       errorHandler(e);
@@ -74,7 +74,7 @@ const useSubsidyListDetailMain = () => {
     try {
       let verify = false;
       if (VP) {
-        verify = await verifyVerifiablePresentation(algod, VP);
+        verify = await (await verifyVerifiablePresentation(algod, VP)).vpVerified;
       } else {
         verify = true;
       }
@@ -92,6 +92,7 @@ const useSubsidyListDetailMain = () => {
         let residentVerifyStatus = false;
         let accountVerifyStatus = false;
         let taxVerifyStatus = false;
+        let verifyStatus = false;
 
         residentVerifyStatus = await VPVerify(algod, VCRequest.residentVP);
         accountVerifyStatus = await VPVerify(algod, VCRequest.accountVP);
@@ -101,23 +102,25 @@ const useSubsidyListDetailMain = () => {
         setAccountVerifyStatus(accountVerifyStatus);
         setTaxVerifyStatus(taxVerifyStatus);
 
-        if (residentVerifyStatus && accountVerifyStatus && taxVerifyStatus) {
-          const replaceData: SubsidyInputFormType = {
-            ...input,
-            verifyStatus: true,
-          };
-          setInput(replaceData);
-          setVCRequest(replaceData);
+        verifyStatus =
+          residentVerifyStatus && accountVerifyStatus && taxVerifyStatus;
 
-          const updateData = listState.map((item) => {
-            if (item.id === replaceData.id) {
-              return replaceData;
-            } else {
-              return item;
-            }
-          });
-          setListState(updateData);
-        }
+        const replaceData: SubsidyInputFormType = {
+          ...input,
+          verifyStatus: verifyStatus,
+        };
+
+        const updateData = listState.map((item) => {
+          if (item.id === replaceData.id) {
+            return replaceData;
+          } else {
+            return item;
+          }
+        });
+
+        setInput(replaceData);
+        setVCRequest(replaceData);
+        setListState(updateData);
       }
     } catch (e) {
       errorHandler(e);
@@ -185,7 +188,6 @@ const useSubsidyListDetailMain = () => {
   const back = () => {
     router.push('/44_subsidyList');
   };
-  // verifyHandler();
 
   return {
     methods,
@@ -199,6 +201,7 @@ const useSubsidyListDetailMain = () => {
     residentVerifyStatus,
     accountVerifyStatus,
     taxVerifyStatus,
+    isLoading
   };
 };
 

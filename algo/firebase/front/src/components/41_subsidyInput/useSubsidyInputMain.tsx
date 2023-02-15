@@ -23,6 +23,7 @@ const useSubsidyInputMain = () => {
     const [accountList, setAccountList] = useState<boolean[]>([]);
     const [taxList, setTaxList] = useState<boolean[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [accountCurrent, setAccountCurrent] = useState("");
 
     const chain = useRecoilValue(chainState);
     const errorHandler = useErrorHandler();
@@ -61,14 +62,24 @@ const useSubsidyInputMain = () => {
                     setResidentList(residentList);
                 }
                 if (VCListGlobal.account) {
-                    const accountList = await Promise.all(VCListGlobal.account.map(async (item) => {
-                        return await verifyVerifiableCredential(algod, item);
+                    const accountList = await Promise.all(VCListGlobal.account.map(async (item,index) => {
+                        const verify =  await verifyVerifiableCredential(algod, item);
+                        if(verify && input.accountVC === ""){          
+                            methods.setValue("accountVC", index.toString());
+                            setInput((prev) => ({...prev, accountVC:index.toString()}))
+                        }
+                        return verify
                     }));
                     setAccountList(accountList);
                 }
                 if (VCListGlobal.tax) {
-                    const taxList = await Promise.all(VCListGlobal.tax.map(async (item) => {
-                        return await verifyVerifiableCredential(algod, item);
+                    const taxList = await Promise.all(VCListGlobal.tax.map(async (item,index) => {
+                        const verify =  await verifyVerifiableCredential(algod, item);
+                        if(verify && input.taxVC === ""){          
+                            methods.setValue("taxVC", index.toString());
+                            setInput((prev) => ({...prev, taxVC:index.toString()}))
+                        }
+                        return verify
                     }));
                     setTaxList(taxList);
                 }
