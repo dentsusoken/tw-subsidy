@@ -1,9 +1,13 @@
 import { atom } from 'recoil';
 import persistAtom from './persistAtom';
 
-const certificateOfResidenceVPVerifiedState = atom<boolean>({
+import { VerifiablePresentationVerified } from '../algosbt/types';
+
+const certificateOfResidenceVPVerifiedState = atom<
+  VerifiablePresentationVerified | undefined
+>({
   key: 'CertificateOfResidenceVPVerifiedState',
-  default: false,
+  default: undefined,
   effects_UNSTABLE: [persistAtom],
 });
 

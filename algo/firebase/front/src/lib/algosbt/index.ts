@@ -14,6 +14,7 @@ import {
   VerifiablePresentation,
   VerifiablePresentationContent,
   Message,
+  VerifiablePresentationVerified,
 } from './types';
 import { encryptByPassword, decryptByPassword } from './utils/cryptUtils';
 import { addressFromSecretKey } from './utils/algosdkUtils';
@@ -173,7 +174,7 @@ export const createVerifiablePresentation = async (
 export const verifyVerifiablePresentation = async (
   algod: Algodv2,
   vp: VerifiablePresentation
-) => {
+): Promise<VerifiablePresentationVerified> => {
   try {
     const vcsVerifiedPromises = vp.message.content.credentials.map((vc) =>
       verifyVerifiableCredential(algod, vc)

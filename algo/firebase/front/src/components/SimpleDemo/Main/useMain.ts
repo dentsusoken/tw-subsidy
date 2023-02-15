@@ -17,13 +17,16 @@ import * as cryptUtils from '@/lib/algosbt/utils/cryptUtils';
 
 import deleteAllApps from '@/lib/algo/api/deleteAllApps';
 import { issuerPw } from '@/lib/algo/account/accounts';
+import { VerifiablePresentationVerified } from '@/lib/algosbt/types';
 
 const useMain = () => {
   const [accountsPrepared, setAccountsPrepared] = useState(false);
   const [vcRequested, setVCRequested] = useState(false);
   const [vcIssued, setVCIssued] = useState(false);
   const [vpSubmitted, setVPSubmitted] = useState(false);
-  const [vpVerified, setVPVerified] = useState(false);
+  const [vpVerified, setVPVerified] = useState<
+    VerifiablePresentationVerified | undefined
+  >(undefined);
   const [clearing, setClearing] = useState(false);
 
   const [accountsPreparedGlobal] = useRecoilState(accountsPreparedState);
@@ -56,7 +59,7 @@ const useMain = () => {
     setVCRequestGlobal(undefined);
     setVCGlobal(undefined);
     setVPGlobal(undefined);
-    setVPVerifiedGlobal(false);
+    setVPVerifiedGlobal(undefined);
 
     if (clearing) {
       return;
@@ -88,6 +91,7 @@ const useMain = () => {
   (async () => {
     //await tryDidjwt();
   })();
+  console.log(vpVerified);
 
   return {
     accountsPrepared,

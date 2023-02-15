@@ -34,7 +34,9 @@ const VPSubmitMain = () => {
         >
           検証
         </button>
-        {vpVerified && <span className="text-blue-500">Done</span>}
+        {vpVerified && vpVerified.vpVerified && (
+          <span className="text-blue-500">Done</span>
+        )}
       </div>
     </div>
   );

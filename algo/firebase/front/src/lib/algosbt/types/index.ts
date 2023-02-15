@@ -30,3 +30,8 @@ export type VerifiableCredential<T = any> = VerifiableMessage<
 
 export type VerifiablePresentation =
   VerifiableMessage<VerifiablePresentationContent>;
+
+export type VerifiablePresentationVerified = {
+  vpVerified: boolean;
+  vcsVerified: boolean[];
+};

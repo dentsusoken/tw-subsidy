@@ -14,10 +14,15 @@ import { getAlgod } from '@/lib/algo/algod/algods';
 
 import shortenVerifiablePresentation from '@/lib/utils/shortenVerifiablePresentation';
 import { verifyVerifiablePresentation } from '@/lib/algosbt';
-import { DidAccount } from '@/lib/algosbt/types';
+import {
+  DidAccount,
+  VerifiablePresentationVerified,
+} from '@/lib/algosbt/types';
 
 const useVPVerifyMain = () => {
-  const [vpVerified, setVPVerified] = useState(false);
+  const [vpVerified, setVPVerified] = useState<
+    VerifiablePresentationVerified | undefined
+  >(undefined);
   const [vm, setVM] = useState('');
   const [holderDidAccount, setHolderDidAccount] = useState<DidAccount>();
   const [verifierDidAccount, setVerifierDidAccount] = useState<DidAccount>();
@@ -60,7 +65,7 @@ const useVPVerifyMain = () => {
 
   const onVPVerifyClickHandler = async () => {
     try {
-      if (!vpVerifiedGlobal && vpGlobal) {
+      if (!(vpVerifiedGlobal && vpVerifiedGlobal.vpVerified) && vpGlobal) {
         const algod = getAlgod(chain);
         setVPVerifiedGlobal(
           await verifyVerifiablePresentation(algod, vpGlobal)
