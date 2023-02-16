@@ -26,7 +26,7 @@ const usePageTitle = () => {
         issueDone: "処理完了",
         accountMenu: "銀行メニュー",
         taxMenu: "税務署メニュー",
-        subsidyMenu: "申請先メニュー",
+        subsidyMenu: "事務局メニュー",
         applicationList: "申請一覧",
         VCRevoke: "デジタル証明書(VC)取消完了",
     } as const;

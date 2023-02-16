@@ -19,7 +19,7 @@ const SubsidyListDoneMain = () => {
                     </p>
                     <div className={"flex flex-col justify-between gap-4"}>
                         <ChangeUserButton text={"申請一覧へ"} onClick={() => router.push(urls.subsidyList)} />
-                        <ChangeUserButton text={"申請先メニューへ"} onClick={() => router.push(urls.subsidyMenu)} />
+                        <ChangeUserButton text={"事務局メニューへ"} onClick={() => router.push(urls.subsidyMenu)} />
                     </div>
                 </Container>
             </main>

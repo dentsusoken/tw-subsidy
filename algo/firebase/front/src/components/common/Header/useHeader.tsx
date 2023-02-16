@@ -33,7 +33,7 @@ const useHeader = () => {
     residentMenu: '自治体',
     accountMenu: '銀行',
     taxMenu: '税務署',
-    subsidyMenu: '申請先',
+    subsidyMenu: '事務局',
     accountAccept: '口座実在証明書の受入',
     taxApply: '納税証明書交付申請',
     taxApprove: '納税証明書交付申請一覧',
@@ -49,7 +49,7 @@ const useHeader = () => {
     residentMenu: '自治体メニュー',
     accountMenu: '銀行メニュー',
     taxMenu: '税務署メニュー',
-    subsidyMenu: '申請先メニュー',
+    subsidyMenu: '事務局メニュー',
   } as const;
 
   const colors = {

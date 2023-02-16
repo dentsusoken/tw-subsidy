@@ -13,7 +13,7 @@ const useSelectActorButton = (target: string) => {
         residentMenu: "自治体メニュー",
         accountMenu: "銀行メニュー",
         taxMenu: "税務署メニュー",
-        subsidyMenu: "申請先メニュー",
+        subsidyMenu: "事務局メニュー",
     } as const;
 
     const getUrl = () => {
