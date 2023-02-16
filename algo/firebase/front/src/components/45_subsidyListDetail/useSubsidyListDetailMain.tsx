@@ -74,7 +74,7 @@ const useSubsidyListDetailMain = () => {
     try {
       let verify = false;
       if (VP) {
-        verify = await (await verifyVerifiablePresentation(algod, VP)).vpVerified;
+        verify = (await verifyVerifiablePresentation(algod, VP)).vpVerified;
       } else {
         verify = true;
       }
@@ -201,7 +201,7 @@ const useSubsidyListDetailMain = () => {
     residentVerifyStatus,
     accountVerifyStatus,
     taxVerifyStatus,
-    isLoading
+    isLoading,
   };
 };
 
