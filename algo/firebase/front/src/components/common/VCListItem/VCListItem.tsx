@@ -29,7 +29,7 @@ export type VCListItemParams = {
 const VCListItem = ({ item, url }: VCListItemParams) => {
   const router = useRouter();
   const { verifyVCHandler, verifyVPHandler } = useVerifyHandler();
-  const [verifyResult, setVerigyResult] = useState<boolean | undefined>(
+  const [verifyResult, setVerifyResult] = useState<boolean | undefined>(
     undefined
   );
   dayjs.locale('ja');
@@ -42,7 +42,7 @@ const VCListItem = ({ item, url }: VCListItemParams) => {
         result = verifyVPResult.verifyStatus;
       }
 
-      setVerigyResult(result);
+      setVerifyResult(result);
     })();
   });
 

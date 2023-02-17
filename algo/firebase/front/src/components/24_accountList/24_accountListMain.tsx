@@ -13,6 +13,8 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/ja';
 import SearchArea from '../common/SearchArea';
 import { useVerifyHandler } from '@/lib/hooks/MockApp';
+import ApplicationListItem, { ApplicationInfo } from '../common/ApplicationListItem/ApplicationListItem';
+import { AccountVCRequestType, urls } from '@/lib/types/mockApp';
 
 const AccountListMain = () => {
   const router = useRouter();
@@ -24,7 +26,7 @@ const AccountListMain = () => {
 
   const VCRequestlistState = useRecoilValue(accountVCRequestListState);
   const VClistState = useRecoilValue(accountVCListState);
-  const [listState, setListState] = useState<AccountInputFormType[]>([]);
+  const [listState, setListState] = useState<AccountVCRequestType[]>([]);
 
   const errorHandler = useErrorHandler();
 
@@ -32,11 +34,8 @@ const AccountListMain = () => {
     try {
       const listForSort = [...VCRequestlistState];
       listForSort.sort((a, b) => b.message.content.id - a.message.content.id);
-      const requestList: AccountInputFormType[] = listForSort.map(
-        (item) => item.message.content
-      );
-      setListState(requestList);
-      setListCount(requestList.length);
+      setListState(listForSort);
+      setListCount(listForSort.length);
       verifyVCList(listForSort);
     } catch (e) {
       errorHandler(e);
@@ -45,7 +44,7 @@ const AccountListMain = () => {
 
   // [id]の降順で表示
   const listForSort = [...listState];
-  listForSort.sort((a, b) => b.id - a.id);
+  listForSort.sort((a, b) => b.message.content.id - a.message.content.id);
 
   return (
     <>
@@ -59,58 +58,26 @@ const AccountListMain = () => {
           {listCount} 件中 - {listCount} 件を表示
         </div>
         <ul>
-          {listState.map((item, index) => {
-            return (
-              <li
-                className={
-                  'flex items-center w-full h-16 px-3 text-sm border-b border-color-gainsboro'
-                }
-                key={index}
-              >
-                <div className={'flex items-center mx-auto'}>
-                  <span className={'pr-2'}>
-                    {dayjs(item.applicationDate).format('M月D日(ddd)')}
-                  </span>
-                  <span className={'w-18'}>{item.applicantName}</span>
-                  <div className={'flex w-12 h-12 items-center'}>
-                    {verifyStatusList.length > index ? (
-                      verifyStatusList[index] ? (
-                        <img
-                          src="./authenticated.svg"
-                          alt=""
-                          className="inline-block"
-                        />
-                      ) : (
-                        <img src="./warning.svg" className={'mx-auto'} />
-                      )
-                    ) : null}
-                  </div>
-                  <span
-                    className={
-                      'text-center w-18 ' +
-                      (item.approvalStatus
-                        ? 'text-color-gray-accepted'
-                        : 'text-color-warnig')
-                    }
-                  >
-                    {item.approvalStatus ? '承認済' : '未承認'}
-                  </span>
-                  <button
-                    onClick={() => {
-                      router.push({
-                        pathname: './25_account-list-detail',
-                        query: { id: item.id },
-                      });
-                    }}
-                    className={
-                      'w-18 h-7 leading-7 border border-color-gray rounded-lg block ml-auto text-base text-center font-bold'
-                    }
-                  >
-                    照会
-                  </button>
-                </div>
-              </li>
-            );
+        {listState.map((item, index) => {
+            if (item.message.content.approvalStatus) {
+              const ApplicationItem: ApplicationInfo = {
+                id: item.message.content.id,
+                applicationDate: item.message.content.applicationDate,
+                approvalStatus: item.message.content.approvalStatus,
+                name: item.message.content.applicantName,
+                vc: item,
+              };
+              return (
+                <ApplicationListItem
+                  item={ApplicationItem}
+                  url={{
+                    pathname: urls.accountListDetail,
+                    query: { id: item.message.content.id },
+                  }}
+                  key={index}
+                />
+              );
+            }
           })}
         </ul>
       </main>

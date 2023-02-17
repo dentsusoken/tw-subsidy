@@ -1,6 +1,6 @@
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 
-import { TaxInputFormType } from '@/lib/types/mockApp/Form';
+import { TaxInputFormType, TaxVCRequestType } from '@/lib/types/mockApp/Form';
 import {
   taxInputState,
   taxInputListState,
@@ -17,7 +17,7 @@ const useTaxListMain = () => {
   const VCRequestlistState = useRecoilValue(taxVCRequestListState);
   const [query, setQuery] = useState('');
   const taxInputList = useRecoilValue(taxInputListState);
-  const [list, setList] = useState<TaxInputFormType[]>([]);
+  const [list, setList] = useState<TaxVCRequestType[]>([]);
   const [listCount, setListCount] = useState(0);
   const [filterCount, setfilterCount] = useState(0);
   const router = useRouter();
@@ -27,23 +27,20 @@ const useTaxListMain = () => {
     // [id]の降順で表示
     const listForSort = [...VCRequestlistState];
     listForSort.sort((a, b) => b.message.content.id - a.message.content.id);
-    const requestList: TaxInputFormType[] = listForSort.map(
-          (item) => item.message.content
-        );
-    setList(requestList);
+    setList(listForSort);
     setListCount(VCRequestlistState.length);
     setfilterCount(VCRequestlistState.length);
     verifyVCList(listForSort);
   }, [VCRequestlistState]);
 
   const filterList = useMemo(() => {
-    let tmp = taxInputList.filter((item) => item.fullName.includes(query));
-    return tmp;
+    // let tmp = taxInputList.filter((item) => item.fullName.includes(query));
+    // return tmp;
   }, [query]);
 
   const filter = () => {
-    setList(filterList);
-    setfilterCount(filterList.length);
+    // setList(filterList);
+    // setfilterCount(filterList.length);
   };
 
   const onSubmit = (item: TaxInputFormType) => {

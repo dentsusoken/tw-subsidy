@@ -10,6 +10,10 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/ja';
 import SearchArea from '../common/SearchArea';
 import { useVerifyHandler } from '@/lib/hooks/MockApp';
+import { ResidentVCRequestType, urls } from '@/lib/types/mockApp';
+import ApplicationListItem, {
+  ApplicationInfo,
+} from '../common/ApplicationListItem/ApplicationListItem';
 
 const ResidentListMain = () => {
   const router = useRouter();
@@ -17,7 +21,7 @@ const ResidentListMain = () => {
   const [listCount, setListCount] = useState(0);
   const [query, setQuery] = useState('');
   const VCRequestlistState = useRecoilValue(residentVCRequestListState);
-  const [listState, setListState] = useState<ResidentInputFormType[]>([]);
+  const [listState, setListState] = useState<ResidentVCRequestType[]>([]);
 
   const errorHandler = useErrorHandler();
   dayjs.locale('ja');
@@ -26,11 +30,8 @@ const ResidentListMain = () => {
     try {
       const listForSort = [...VCRequestlistState];
       listForSort.sort((a, b) => b.message.content.id - a.message.content.id);
-      const requestList: ResidentInputFormType[] = listForSort.map(
-        (item) => item.message.content
-      );
-      setListState(requestList);
-      setListCount(requestList.length);
+      setListState(listForSort);
+      setListCount(listForSort.length);
       verifyVCList(listForSort);
     } catch (e) {
       errorHandler(e);
@@ -39,7 +40,7 @@ const ResidentListMain = () => {
 
   // [id]の降順で表示
   const listForSort = [...listState];
-  listForSort.sort((a, b) => b.id - a.id);
+  listForSort.sort((a, b) => b.message.content.id - a.message.content.id);
 
   return (
     <>
@@ -54,57 +55,25 @@ const ResidentListMain = () => {
         </div>
         <ul>
           {listState.map((item, index) => {
-            return (
-              <li
-                className={
-                  'flex items-center w-full h-16 px-3 text-sm border-b border-color-gainsboro'
-                }
-                key={index}
-              >
-                <div className={'flex items-center mx-auto'}>
-                  <span className={'pr-2'}>
-                    {dayjs(item.applicationDate).format('M月D日(ddd)')}
-                  </span>
-                  <span className={'w-18'}>{item.fullName}</span>
-                  <div className={'flex w-12 h-12 items-center'}>
-                    {verifyStatusList.length > index ? (
-                      verifyStatusList[index] ? (
-                        <img
-                          src="./authenticated.svg"
-                          alt=""
-                          className="inline-block"
-                        />
-                      ) : (
-                        <img src="./warning.svg" className={'mx-auto'} />
-                      )
-                    ) : null}
-                  </div>
-                  <span
-                    className={
-                      'text-center w-18 ' +
-                      (item.approvalStatus
-                        ? 'text-color-gray-accepted'
-                        : 'text-color-warnig')
-                    }
-                  >
-                    {item.approvalStatus ? '承認済' : '未承認'}
-                  </span>
-                  <button
-                    onClick={() => {
-                      router.push({
-                        pathname: './15_resident-list-detail',
-                        query: { id: item.id },
-                      });
-                    }}
-                    className={
-                      'w-18 h-7 leading-7 border border-color-gray rounded-lg block ml-auto text-base text-center font-bold'
-                    }
-                  >
-                    照会
-                  </button>
-                </div>
-              </li>
-            );
+            if (item.message.content.approvalStatus) {
+              const ApplicationItem: ApplicationInfo = {
+                id: item.message.content.id,
+                applicationDate: item.message.content.applicationDate,
+                approvalStatus: item.message.content.approvalStatus,
+                name: item.message.content.fullName,
+                vc: item,
+              };
+              return (
+                <ApplicationListItem
+                  item={ApplicationItem}
+                  url={{
+                    pathname: urls.residentListDetail,
+                    query: { id: item.message.content.id },
+                  }}
+                  key={index}
+                />
+              );
+            }
           })}
         </ul>
       </main>
