@@ -1,10 +1,19 @@
 import { Algodv2 } from 'algosdk';
 import { useRecoilState } from 'recoil';
 
-import { SubsidyInputFormType, VPContent } from '@/lib/types/mockApp/Form';
+import {
+  AccountVCRequestType,
+  ResidentVCRequestType,
+  SubsidyInputFormType,
+  TaxVCRequestType,
+  VPContent,
+} from '@/lib/types/mockApp/Form';
 
 import { getAlgod } from '@/lib/algo/algod/algods';
-import { verifyVerifiablePresentation } from '@/lib/algosbt';
+import {
+  verifyVerifiableMessage,
+  verifyVerifiablePresentation,
+} from '@/lib/algosbt';
 import chainState from '@/lib/states/chainState';
 import { VerifiableMessage } from '@/lib/algosbt/types';
 import { useErrorHandler } from 'react-error-boundary';
@@ -21,6 +30,36 @@ const useVerifyHandler = () => {
   const [issuerDidAccountGlobal] = useRecoilState(issuerDidAccountState);
 
   dayjs.locale('ja');
+
+  const verifyVCHandler = (
+    vc: ResidentVCRequestType | AccountVCRequestType | TaxVCRequestType
+  ) => {
+    try {
+      if (vc && holderDidAccountGlobal && issuerDidAccountGlobal) {
+        return verifyVerifiableMessage(vc);
+      }
+    } catch (e) {
+      errorHandler(e);
+    }
+    return false;
+  };
+
+  const verifyVCList = (
+    vcList: Array<
+      ResidentVCRequestType | AccountVCRequestType | TaxVCRequestType
+    >
+  ) => {
+    try {
+      vcList.map((item, index) => {
+        const result = verifyVCHandler(item);
+        const update = verifyStatusList;
+        update[index] = result;
+        setVerifyStatus(() => update);
+      });
+    } catch (e) {
+      errorHandler(e);
+    }
+  };
 
   const verifyVP = async (
     algod: Algodv2,
@@ -55,13 +94,8 @@ const useVerifyHandler = () => {
       verifyStatus =
         residentVerifyStatus && accountVerifyStatus && taxVerifyStatus;
 
-      const replaceData: SubsidyInputFormType = {
-        ...subsidyInput,
-        verifyStatus: verifyStatus,
-      };
-
       return {
-        replaceData,
+        verifyStatus,
         residentVerifyStatus,
         accountVerifyStatus,
         taxVerifyStatus,
@@ -70,7 +104,7 @@ const useVerifyHandler = () => {
       errorHandler(e);
     }
     return {
-      replaceData: subsidyInput,
+      verifyStatus: false,
       residentVerifyStatus: false,
       accountVerifyStatus: false,
       taxVerifyStatus: false,
@@ -78,19 +112,25 @@ const useVerifyHandler = () => {
   };
 
   const verifyVPList = async (subsidyInputList: SubsidyInputFormType[]) => {
-    if (subsidyInputList.length > 0) {
-      setVerifyStatus(() => []);
-      subsidyInputList.forEach(async (item, index) => {
-        const result = await verifyVPHandler(item);
-        const update = verifyStatusList;
-        update[index] = result.replaceData.verifyStatus;
-        setVerifyStatus(() => update);
-      });
+    try {
+      if (subsidyInputList.length > 0) {
+        setVerifyStatus(() => []);
+        subsidyInputList.forEach(async (item, index) => {
+          const result = await verifyVPHandler(item);
+          const update = verifyStatusList;
+          update[index] = result.verifyStatus;
+          setVerifyStatus(() => update);
+        });
+      }
+    } catch (e) {
+      errorHandler(e);
     }
   };
 
   return {
     verifyStatusList,
+    verifyVCHandler,
+    verifyVCList,
     verifyVPHandler,
     verifyVPList,
   };
