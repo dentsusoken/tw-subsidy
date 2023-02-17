@@ -14,7 +14,7 @@ const SubsidyListMain = () => {
     verifyStatusList,
     setQuery,
     filter,
-    onSubmit
+    onSubmit,
   } = useSubsidyListMain();
   dayjs.locale('ja');
 
@@ -43,7 +43,7 @@ const SubsidyListMain = () => {
                   </span>
                   <span className={'w-18'}>{item.fullName}</span>
                   <div className={'flex w-12 h-12 items-center'}>
-                    {verifyStatusList ? (
+                    {verifyStatusList.length > index ? (
                       verifyStatusList[index] ? (
                         <img
                           src="./authenticated.svg"
