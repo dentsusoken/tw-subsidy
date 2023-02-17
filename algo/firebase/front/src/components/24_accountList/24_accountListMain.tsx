@@ -30,12 +30,14 @@ const AccountListMain = () => {
 
   useEffect(() => {
     try {
-      const requestList: AccountInputFormType[] = VCRequestlistState.map(
+      const listForSort = [...VCRequestlistState];
+      listForSort.sort((a, b) => b.message.content.id - a.message.content.id);
+      const requestList: AccountInputFormType[] = listForSort.map(
         (item) => item.message.content
       );
       setListState(requestList);
       setListCount(requestList.length);
-      verifyVCList(VCRequestlistState);
+      verifyVCList(listForSort);
     } catch (e) {
       errorHandler(e);
     }
