@@ -16,7 +16,7 @@ const VCRevokeDone = () => {
             case urls.taxVCListDone:
                 return { msg: "税務署メニューへ", listUrl: urls.taxVCList, menuUrl: urls.taxMenu };
             case urls.subsidyVCListDone:
-                return { msg: "申請先メニューへ", listUrl: urls.subsidyVCList, menuUrl: urls.subsidyMenu };
+                return { msg: "事務局メニューへ", listUrl: urls.subsidyVCList, menuUrl: urls.subsidyMenu };
             default:
                 return { msg: "", listUrl: "", menuUrl: "" };
         }

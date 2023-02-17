@@ -1,44 +1,64 @@
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 
-import { TaxInputFormType } from '@/lib/types/mockApp/Form';
-import { taxInputState, taxInputListState, taxVCRequestListState } from '@/lib/states/mockApp';
-
+import { TaxInputFormType, TaxVCRequestType } from '@/lib/types/mockApp/Form';
+import {
+  taxInputState,
+  taxInputListState,
+  taxVCRequestListState,
+} from '@/lib/states/mockApp';
 
 import { useState, useEffect, useMemo } from 'react';
+import { urls } from '@/lib/types/mockApp';
+import { useRouter } from 'next/router';
+import { useVerifyHandler } from '@/lib/hooks/MockApp';
 
 const useTaxListMain = () => {
-    const setTaxInput = useSetRecoilState(taxInputState);
-    const VCRequestlistState = useRecoilValue(taxVCRequestListState);
-    const [query, setQuery] = useState("");
-    const taxInputList = useRecoilValue(taxInputListState);
-    const [list, setList] = useState<TaxInputFormType[]>([]);
-    const [listCount, setListCount] = useState(0);
-    const [filterCount, setfilterCount] = useState(0);
+  const setTaxInput = useSetRecoilState(taxInputState);
+  const VCRequestlistState = useRecoilValue(taxVCRequestListState);
+  const [query, setQuery] = useState('');
+  const taxInputList = useRecoilValue(taxInputListState);
+  const [list, setList] = useState<TaxVCRequestType[]>([]);
+  const [listCount, setListCount] = useState(0);
+  const [filterCount, setfilterCount] = useState(0);
+  const router = useRouter();
+  const { verifyStatusList, verifyVCList } = useVerifyHandler();
 
+  useEffect(() => {
+    // [id]の降順で表示
+    const listForSort = [...VCRequestlistState];
+    listForSort.sort((a, b) => b.message.content.id - a.message.content.id);
+    setList(listForSort);
+    setListCount(VCRequestlistState.length);
+    setfilterCount(VCRequestlistState.length);
+    verifyVCList(listForSort);
+  }, [VCRequestlistState]);
 
-    useEffect(() => {
-        const requestList: TaxInputFormType[] = VCRequestlistState.map((item) => item.message.content);
-        // [id]の降順で表示
-        const listForSort = [...requestList];
-        listForSort.sort((a, b) => b.id - a.id);
-        setList(listForSort);
-        setListCount(VCRequestlistState.length);
-        setfilterCount(VCRequestlistState.length);
-    }, [VCRequestlistState]);
+  const filterList = useMemo(() => {
+    // let tmp = taxInputList.filter((item) => item.fullName.includes(query));
+    // return tmp;
+  }, [query]);
 
-    const filterList = useMemo(() => {
-        let tmp = taxInputList.filter(item => item.fullName.includes(query))
-        return tmp;
-    }, [query])
+  const filter = () => {
+    // setList(filterList);
+    // setfilterCount(filterList.length);
+  };
 
-    const filter = () => {
-        setList(filterList);
-        setfilterCount(filterList.length)
-    }
+  const onSubmit = (item: TaxInputFormType) => {
+    setTaxInput(item);
+    router.push(urls.taxListDetail);
+  };
 
-    return { query, list, listCount, filterCount, filterList, setQuery, setTaxInput, filter }
-
-
+  return {
+    query,
+    list,
+    listCount,
+    filterCount,
+    filterList,
+    setQuery,
+    onSubmit,
+    filter,
+    verifyStatusList,
+  };
 };
 
 export default useTaxListMain;

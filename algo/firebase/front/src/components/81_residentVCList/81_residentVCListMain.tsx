@@ -14,11 +14,9 @@ import chainState from '@/lib/states/chainState';
 import { VCInfo } from '../common/VCListItem/VCListItem';
 import Loading from '../common/Loading';
 
-
-
 const ResidentVCListMain = () => {
   const [listCount, setListCount] = useState(0);
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
   const VClistState = useRecoilValue(residentVCListState);
@@ -33,19 +31,22 @@ const ResidentVCListMain = () => {
       setIsLoading(() => true);
       const algod = getAlgod(chain);
       try {
-        const verifiedList = await Promise.all(VClistState.map(async (item, index) => {
-          const revokeStatus = await verifyVerifiableCredential(algod, item)
-          return {
-            id: item.message.content.content.id,
-            name: item.message.content.content.fullName,
-            issueDate: item.message.content.content.issueDate,
-            revoked: revokeStatus,
-            VCName: `住民票 VC${index + 1}`
-          }
-        }));
-        setListState(verifiedList)
+        const verifiedList = await Promise.all(
+          VClistState.map(async (item, index) => {
+            const revokeStatus = await verifyVerifiableCredential(algod, item);
+            return {
+              id: item.message.content.content.id,
+              name: item.message.content.content.fullName,
+              issueDate: item.message.content.content.issueDate,
+              revoked: revokeStatus,
+              VCName: `住民票 VC${index + 1}`,
+              vc: item,
+            };
+          })
+        );
+        setListState(verifiedList);
         setListCount(VClistState.length);
-        dayjs.locale("ja")
+        dayjs.locale('ja');
       } catch (e) {
         errorHandler(e);
       }
@@ -53,40 +54,47 @@ const ResidentVCListMain = () => {
     })();
   }, [VClistState, chain, errorHandler]);
 
-
   const sortList = (list: VCInfo[]) => {
     list.sort((a, b) => {
       if (dayjs(b.issueDate).isBefore(dayjs(a.issueDate))) {
         return -1;
-      }
-      else if (dayjs(b.issueDate).isAfter(dayjs(a.issueDate))) {
-        return 1
-      }
-      else {
-        return 0
+      } else if (dayjs(b.issueDate).isAfter(dayjs(a.issueDate))) {
+        return 1;
+      } else {
+        return 0;
       }
     });
     return list;
-  }
+  };
   const listForSort = sortList(listState);
 
   return (
     <>
       <Header />
       <main className="bg-color-background">
-        <SearchArea value={query} onChange={(e) => setQuery(e.currentTarget.value)} />
+        <SearchArea
+          value={query}
+          onChange={(e) => setQuery(e.currentTarget.value)}
+        />
         <div className="py-3 px-0 bg-color-gray-count text-center h-[46px] font-sans">
           {listCount} 件中 - {listCount} 件を表示
         </div>
-        {!isLoading &&
+        {!isLoading && (
           <ul>
             {listForSort.map((item, index) => {
               return (
-                <VCListItem key={index} item={item} url={{ pathname: "/82_residentVCListDetail", query: { id: item.id, idx: listForSort.length - index } }} />
+                <VCListItem
+                  key={index}
+                  item={item}
+                  url={{
+                    pathname: '/82_residentVCListDetail',
+                    query: { id: item.id, idx: listForSort.length - index },
+                  }}
+                />
               );
             })}
           </ul>
-        }
+        )}
         <Loading isLoading={isLoading} />
       </main>
     </>

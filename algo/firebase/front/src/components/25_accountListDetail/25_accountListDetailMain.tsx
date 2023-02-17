@@ -154,7 +154,9 @@ const AccountListDetailMain = () => {
               >
                 <img
                   src="/authenticated.svg"
-                  className={'absolute top-0 -translate-y-3 -translate-x-full'}
+                  className={
+                    'absolute top-0 h-11 -translate-y-3 -translate-x-full'
+                  }
                 />
                 検証OK
               </p>
@@ -163,7 +165,7 @@ const AccountListDetailMain = () => {
                 <img
                   src="/warning.svg"
                   className={'absolute -translate-x-full pr-2'}
-                />{' '}
+                />
                 検証NG
               </p>
             )}
@@ -175,7 +177,9 @@ const AccountListDetailMain = () => {
               >
                 <img
                   src="/authenticated.svg"
-                  className={'absolute top-0 -translate-y-3 -translate-x-full'}
+                  className={
+                    'absolute top-0 h-11 -translate-y-3 -translate-x-full'
+                  }
                 />
                 承認済
               </p>
@@ -185,7 +189,7 @@ const AccountListDetailMain = () => {
               </p>
             )}
             <p className={'text-xs text-color-gray-search leading-relaxed'}>
-              申請日{' '}
+              申請日
               {dayjs(selectDetail.message.content.applicationDate).format(
                 'YY/MM/DD HH:mm'
               )}
@@ -214,8 +218,8 @@ const AccountListDetailMain = () => {
             >
               戻る
             </button>
-            {selectDetail && selectDetail.message.content.verifyStatus ? (
-              !selectDetail.message.content.approvalStatus ? (
+            {selectDetail && !selectDetail.message.content.approvalStatus ? (
+              selectDetail.message.content.verifyStatus ? (
                 <button onClick={approve} className="input-form-button-blue">
                   承認
                 </button>

@@ -27,7 +27,6 @@ import { holderPw, issuerPw } from '@/lib/algo/account/accounts';
 import { useErrorHandler } from 'react-error-boundary';
 
 const useTaxListDetailMain = () => {
-  const input = useRecoilValue(taxInputState);
   const [listState, setListState] = useRecoilState(taxVCRequestListState);
   const setVCList = useSetRecoilState(taxVCListState);
   const setIssuedVCList = useSetRecoilState(VCListState);
@@ -42,17 +41,22 @@ const useTaxListDetailMain = () => {
   const [issuerDidAccountGlobal] = useRecoilState(issuerDidAccountState);
 
   useEffect(() => {
-    const VCRequest = listState.find((v) => v.message.content.id === input.id);
-    VCRequest && verify(VCRequest);
-  }, [input]);
+    const VCRequest = listState.find(
+      (v) => v.message.content.id === Number(router.query.id)
+    );
+    if (VCRequest) {
+      verify(VCRequest);
+      methods.setValue("applicationYear",VCRequest.message.content.applicationYear)
+      methods.setValue("corporationName",VCRequest.message.content.corporationName)
+      methods.setValue("corporationAddress",VCRequest.message.content.corporationAddress)
+      methods.setValue("corporationAddress",VCRequest.message.content.corporationAddress)
+      methods.setValue("fullName",VCRequest.message.content.fullName)
+      methods.setValue("address",VCRequest.message.content.address)
+    }
+  }, []);
 
   const methods = useForm<TaxInputFormType>({
     defaultValues: {
-      applicationYear: input.applicationYear,
-      corporationName: input.corporationName,
-      corporationAddress: input.corporationAddress,
-      fullName: input.fullName,
-      address: input.address,
       verifyStatus: false,
       approvalStatus: false,
       applicationDate: '',
