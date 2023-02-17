@@ -3,9 +3,13 @@ import { useRecoilState } from 'recoil';
 
 import {
   AccountVCRequestType,
+  AccountVCType,
   ResidentVCRequestType,
+  ResidentVCType,
   SubsidyInputFormType,
+  SubsidyVCType,
   TaxVCRequestType,
+  TaxVCType,
   VPContent,
 } from '@/lib/types/mockApp/Form';
 
@@ -32,7 +36,14 @@ const useVerifyHandler = () => {
   dayjs.locale('ja');
 
   const verifyVCHandler = (
-    vc: ResidentVCRequestType | AccountVCRequestType | TaxVCRequestType
+    vc:
+      | ResidentVCRequestType
+      | AccountVCRequestType
+      | TaxVCRequestType
+      | ResidentVCType
+      | AccountVCType
+      | TaxVCType
+      | SubsidyVCType
   ) => {
     try {
       if (vc && holderDidAccountGlobal && issuerDidAccountGlobal) {
@@ -46,7 +57,13 @@ const useVerifyHandler = () => {
 
   const verifyVCList = (
     vcList: Array<
-      ResidentVCRequestType | AccountVCRequestType | TaxVCRequestType
+      | ResidentVCRequestType
+      | AccountVCRequestType
+      | TaxVCRequestType
+      | ResidentVCType
+      | AccountVCType
+      | TaxVCType
+      | SubsidyVCType
     >
   ) => {
     try {
