@@ -4,6 +4,7 @@ import NumberArea from '../common/NumberArea';
 import ApplicationListItem from '../common/ApplicationListItem';
 import useTaxListMain from './useTaxListMain';
 import dayjs from 'dayjs';
+import 'dayjs/locale/ja';
 
 const TaxListMain = () => {
   const {
@@ -16,6 +17,7 @@ const TaxListMain = () => {
     filter,
     verifyStatusList,
   } = useTaxListMain();
+  dayjs.locale('ja');
 
   return (
     <>
