@@ -26,6 +26,13 @@ import issuerDidAccountState from '@/lib/states/issuerDidAccountState';
 import dayjs from 'dayjs';
 import { useState } from 'react';
 
+export type verifyVPResultType = {
+  verifyStatus: boolean;
+  residentVerifyStatus: boolean;
+  accountVerifyStatus: boolean;
+  taxVerifyStatus: boolean;
+};
+
 const useVerifyHandler = () => {
   const errorHandler = useErrorHandler();
   const [verifyStatusList, setVerifyStatus] = useState<boolean[]>([]);
@@ -95,7 +102,9 @@ const useVerifyHandler = () => {
     }
   };
 
-  const verifyVPHandler = async (subsidyInput: SubsidyInputFormType) => {
+  const verifyVPHandler = async (
+    subsidyInput: SubsidyInputFormType
+  ): Promise<verifyVPResultType> => {
     try {
       const algod = getAlgod(chain);
 
