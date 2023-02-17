@@ -55,25 +55,26 @@ const ResidentListMain = () => {
         </div>
         <ul>
           {listState.map((item, index) => {
+            const ApplicationItem: ApplicationInfo = {
+              id: item.message.content.id,
+              applicationDate: item.message.content.applicationDate,
+              approvalStatus: false,
+              name: item.message.content.fullName,
+              vc: item,
+            };
             if (item.message.content.approvalStatus) {
-              const ApplicationItem: ApplicationInfo = {
-                id: item.message.content.id,
-                applicationDate: item.message.content.applicationDate,
-                approvalStatus: item.message.content.approvalStatus,
-                name: item.message.content.fullName,
-                vc: item,
-              };
-              return (
-                <ApplicationListItem
-                  item={ApplicationItem}
-                  url={{
-                    pathname: urls.residentListDetail,
-                    query: { id: item.message.content.id },
-                  }}
-                  key={index}
-                />
-              );
+              ApplicationItem.approvalStatus = true
             }
+            return (
+              <ApplicationListItem
+                item={ApplicationItem}
+                url={{
+                  pathname: urls.residentListDetail,
+                  query: { id: item.message.content.id },
+                }}
+                key={index}
+              />
+            );
           })}
         </ul>
       </main>

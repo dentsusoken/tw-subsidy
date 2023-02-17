@@ -118,8 +118,8 @@ const TaxListDetailMain = () => {
             <button onClick={back} className="input-form-button-white">
               戻る
             </button>
-            {VCRequest && VCRequest.message.content.verifyStatus ? (
-              !VCRequest.message.content.approvalStatus ? (
+            {VCRequest && !VCRequest.message.content.approvalStatus ? (
+              VCRequest.message.content.verifyStatus ? (
                 <button onClick={approve} className="input-form-button-blue">
                   承認
                 </button>

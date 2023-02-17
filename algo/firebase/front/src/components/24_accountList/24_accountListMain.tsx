@@ -13,12 +13,14 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/ja';
 import SearchArea from '../common/SearchArea';
 import { useVerifyHandler } from '@/lib/hooks/MockApp';
-import ApplicationListItem, { ApplicationInfo } from '../common/ApplicationListItem/ApplicationListItem';
+import ApplicationListItem, {
+  ApplicationInfo,
+} from '../common/ApplicationListItem/ApplicationListItem';
 import { AccountVCRequestType, urls } from '@/lib/types/mockApp';
 
 const AccountListMain = () => {
   const router = useRouter();
-  const { verifyStatusList, verifyVCList } = useVerifyHandler();
+  const { verifyVCList } = useVerifyHandler();
 
   const [listCount, setListCount] = useState(0);
   const [query, setQuery] = useState('');
@@ -58,26 +60,27 @@ const AccountListMain = () => {
           {listCount} 件中 - {listCount} 件を表示
         </div>
         <ul>
-        {listState.map((item, index) => {
+          {listState.map((item, index) => {
+            const ApplicationItem: ApplicationInfo = {
+              id: item.message.content.id,
+              applicationDate: item.message.content.applicationDate,
+              approvalStatus: false,
+              name: item.message.content.applicantName,
+              vc: item,
+            };
             if (item.message.content.approvalStatus) {
-              const ApplicationItem: ApplicationInfo = {
-                id: item.message.content.id,
-                applicationDate: item.message.content.applicationDate,
-                approvalStatus: item.message.content.approvalStatus,
-                name: item.message.content.applicantName,
-                vc: item,
-              };
-              return (
-                <ApplicationListItem
-                  item={ApplicationItem}
-                  url={{
-                    pathname: urls.accountListDetail,
-                    query: { id: item.message.content.id },
-                  }}
-                  key={index}
-                />
-              );
+              ApplicationItem.approvalStatus = true;
             }
+            return (
+              <ApplicationListItem
+                item={ApplicationItem}
+                url={{
+                  pathname: urls.accountListDetail,
+                  query: { id: item.message.content.id },
+                }}
+                key={index}
+              />
+            );
           })}
         </ul>
       </main>

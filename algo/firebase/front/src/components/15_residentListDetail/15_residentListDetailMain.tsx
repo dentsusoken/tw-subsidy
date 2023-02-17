@@ -216,8 +216,8 @@ const ResidentListDetailMain = () => {
               戻る
             </button>
             {
-              selectDetail && selectDetail.message.content.verifyStatus ? (
-                !selectDetail.message.content.approvalStatus ? (
+              selectDetail && !selectDetail.message.content.approvalStatus ? (
+                selectDetail.message.content.verifyStatus ? (
                   <button onClick={approve} className="input-form-button-blue">
                     承認
                   </button>
