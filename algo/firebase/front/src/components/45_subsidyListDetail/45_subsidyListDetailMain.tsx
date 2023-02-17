@@ -48,7 +48,7 @@ const SubsidyListDetailMain = () => {
                         <img
                           src="/authenticated.svg"
                           className={
-                            'absolute top-0 -translate-y-3 -translate-x-full'
+                            'absolute top-0 h-11 -translate-y-3 -translate-x-full'
                           }
                         />
                         検証OK
@@ -72,7 +72,7 @@ const SubsidyListDetailMain = () => {
                         <img
                           src="/authenticated.svg"
                           className={
-                            'absolute top-0 -translate-y-3 -translate-x-full'
+                            'absolute top-0 h-11 -translate-y-3 -translate-x-full'
                           }
                         />
                         承認済

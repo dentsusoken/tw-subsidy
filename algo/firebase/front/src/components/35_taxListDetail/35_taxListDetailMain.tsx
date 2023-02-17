@@ -33,7 +33,7 @@ const TaxListDetailMain = () => {
                   <img
                     src="/authenticated.svg"
                     className={
-                      'absolute top-0 -translate-y-3 -translate-x-full'
+                      'absolute top-0 h-11 -translate-y-3 -translate-x-full'
                     }
                   />
                   検証OK
@@ -43,7 +43,7 @@ const TaxListDetailMain = () => {
                   <img
                     src="/warning.svg"
                     className={'absolute -translate-x-full pr-2'}
-                  />{' '}
+                  />
                   検証NG
                 </p>
               )}
@@ -56,7 +56,7 @@ const TaxListDetailMain = () => {
                   <img
                     src="/authenticated.svg"
                     className={
-                      'absolute top-0 -translate-y-3 -translate-x-full'
+                      'absolute top-0 h-11 -translate-y-3 -translate-x-full'
                     }
                   />
                   承認済
@@ -67,7 +67,7 @@ const TaxListDetailMain = () => {
                 </p>
               )}
               <p className={'text-xs text-color-gray-search leading-relaxed'}>
-                申請日{' '}
+                申請日
                 {dayjs(VCRequest.message.content.applicationDate).format(
                   'YY/MM/DD HH:mm'
                 )}
