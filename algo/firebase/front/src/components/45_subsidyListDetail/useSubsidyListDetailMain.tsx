@@ -38,6 +38,13 @@ const useSubsidyListDetailMain = () => {
 
   dayjs.locale('ja');
 
+  const methods = useForm<SubsidyInputFormType>({
+    defaultValues: {
+      verifyStatus: false,
+      approvalStatus: false,
+    },
+  });
+
   useEffect(() => {
     try {
       (async () => {
@@ -47,6 +54,8 @@ const useSubsidyListDetailMain = () => {
         );
         if (VCRequest) {
           await verifyHandler(VCRequest);
+          methods.setValue('fullName', VCRequest.fullName);
+          methods.setValue('address', VCRequest.address);
         }
         setIsLoading(() => false);
       })();
@@ -54,13 +63,6 @@ const useSubsidyListDetailMain = () => {
       errorHandler(e);
     }
   }, [chain]);
-
-  const methods = useForm<SubsidyInputFormType>({
-    defaultValues: {
-      verifyStatus: false,
-      approvalStatus: false,
-    },
-  });
 
   const VPVerify = async (
     algod: Algodv2,
