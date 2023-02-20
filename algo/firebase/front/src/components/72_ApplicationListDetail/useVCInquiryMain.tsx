@@ -107,7 +107,7 @@ const useVCInquiryMain = () => {
                     }
                     else if (type === "subsidy") {
                         const req = subsidyRequestGlobal.find((v) => { return v.id === id });
-                        const vc = ""
+                        const vc = VCListGlobal.subsidy.find((v) => { return v.message.content.content.id === id });
                         if (req) {
                             let issuedStatus = false;
                             let revokeStatus = false;
