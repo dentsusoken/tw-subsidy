@@ -7,16 +7,28 @@ import InputArea from '@/components/common/InputArea';
 import { TaxInputFormType } from '@/lib/types/mockApp/Form';
 import useTaxListDetailMain from './useTaxListDetailMain';
 import dayjs from 'dayjs';
+import Loading from '../common/Loading';
 
 const TaxListDetailMain = () => {
-  const { VCRequest, methods, isIssuing, approve, back, verify, reject } =
-    useTaxListDetailMain();
+  const {
+    VCRequest,
+    vcStatus,
+    isLoading,
+    methods,
+    isIssuing,
+    approve,
+    back,
+    verify,
+    reject,
+  } = useTaxListDetailMain();
   dayjs.locale('ja');
 
   return (
     <>
       <Header />
       <main>
+        {!isLoading && (
+          <>
         <FormProvider {...methods}>
           {VCRequest && (
             <section
@@ -47,20 +59,28 @@ const TaxListDetailMain = () => {
                   検証NG
                 </p>
               )}
-              {VCRequest.message.content.approvalStatus ? (
-                <p
-                  className={
-                    'relative text-sm text-color-gray-search leading-relaxed'
-                  }
-                >
-                  <img
-                    src="/authenticated.svg"
+              {vcStatus.issuedStatus ? (
+                vcStatus.revokeStatus ? (
+                  <p
                     className={
-                      'absolute top-0 h-11 -translate-y-3 -translate-x-full'
+                      'relative text-sm text-color-gray-search leading-relaxed'
                     }
-                  />
-                  承認済
-                </p>
+                  >
+                    <img
+                      src="/authenticated.svg"
+                      className={
+                        'absolute top-0 h-11 -translate-y-3 -translate-x-full'
+                      }
+                    />
+                    承認済
+                  </p>
+                ) : (
+                  <p
+                    className={'text-sm text-color-gray-search leading-relaxed'}
+                  >
+                    取消済
+                  </p>
+                )
               ) : (
                 <p className={'text-sm text-color-required leading-relaxed'}>
                   未承認
@@ -131,7 +151,10 @@ const TaxListDetailMain = () => {
             ) : null}
           </div>
         </FormProvider>
+          </>
+        )}
       </main>
+      <Loading isLoading={isLoading} />
     </>
   );
 };

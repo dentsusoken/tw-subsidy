@@ -18,7 +18,8 @@ export type ApplicationInfo = {
   id: number;
   name: string;
   applicationDate: string | undefined;
-  approvalStatus: boolean;
+  issuedStatus: boolean;
+  revokeStatus: boolean;
   vc?: ResidentVCRequestType | AccountVCRequestType | TaxVCRequestType;
   vp?: SubsidyInputFormType;
 };
@@ -80,12 +81,12 @@ const ApplicationListItem = ({ item, url }: ApplicationListItemParams) => {
           <span
             className={
               'text-center w-18 ' +
-              (item.approvalStatus
+              (item.issuedStatus
                 ? 'text-color-gray-accepted'
                 : 'text-color-warnig')
             }
           >
-            {item.approvalStatus ? '承認済' : '未承認'}
+            {item.issuedStatus ? item.revokeStatus ? "承認済" : "取消済" : "承認待ち"}
           </span>
           <button
             onClick={() => {

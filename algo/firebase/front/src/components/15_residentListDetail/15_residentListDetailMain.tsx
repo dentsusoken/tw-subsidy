@@ -13,6 +13,7 @@ import {
   verifyVerifiableMessage,
   createVerifiableCredential,
   createVerifiableMessage,
+  verifyVerifiableCredential,
 } from '@/lib/algosbt';
 import { getAlgod } from '@/lib/algo/algod/algods';
 import chainState from '@/lib/states/chainState';
@@ -24,28 +25,54 @@ import { useEffect, useState } from 'react';
 import { useErrorHandler } from 'react-error-boundary';
 import { ResidentVCRequestType } from '@/lib/types/mockApp';
 import { ResidentInquiry } from '../common/Forms';
-import Container from '../common/Container';
+import Loading from '../common/Loading';
 
 const ResidentListDetailMain = () => {
   const router = useRouter();
   const errorHandler = useErrorHandler();
+  const [vcStatus, setVCStatus] = useState({
+    issuedStatus: false,
+    revokeStatus: false,
+  });
+  const [isLoading, setIsLoading] = useState(true);
 
   const [listState, setListState] = useRecoilState(residentVCRequestListState);
   const setVCList = useSetRecoilState(residentVCListState);
-  const setIssuedVCList = useSetRecoilState(VCListState);
   const [isIssuing, setIsIssuing] = useState(false);
   const [selectDetail, SetSelectDetail] = useState<ResidentVCRequestType>();
+  const [VCList, setIssuedVCList] = useRecoilState(VCListState);
 
   const chainType = useRecoilValue(chainState);
   const holderDidAccountGlobal = useRecoilValue(holderDidAccountState);
   const issuerDidAccountGlobal = useRecoilValue(issuerDidAccountState);
+  const [chain] = useRecoilState(chainState);
   dayjs.locale('ja');
 
   useEffect(() => {
-    const select = listState.find(
-      (v) => v.message.content.id === Number(router.query.id)
-    );
-    select && verify(select);
+    (async () => {
+      setIsLoading(() => true);
+      const algod = getAlgod(chain);
+      let issuedStatus = false;
+      let revokeStatus = false;
+      const select = listState.find(
+        (v) => v.message.content.id === Number(router.query.id)
+      );
+      if (select) {
+        const vc = VCList.resident.find((vc) => {
+          return vc.message.content.content.id === select.message.content.id;
+        });
+        if (vc) {
+          issuedStatus = true;
+          revokeStatus = await verifyVerifiableCredential(algod, vc);
+          setVCStatus(() => ({
+            issuedStatus: issuedStatus,
+            revokeStatus: revokeStatus,
+          }));
+        }
+        verify(select);
+      }
+      setIsLoading(() => false);
+    })();
   }, [router.query]);
 
   const verify = (select: ResidentVCRequestType) => {
@@ -141,96 +168,120 @@ const ResidentListDetailMain = () => {
     <>
       <Header />
       <main className="bg-color-background">
-        {selectDetail && (
-          <section
-            className={
-              'flex flex-col items-center gap-1 w-72 mx-auto mb-2 pb-4 border-b'
-            }
-          >
-            {selectDetail.message.content.verifyStatus ? (
-              <p
+        {!isLoading && (
+          <>
+            {selectDetail && (
+              <section
                 className={
-                  'relative text-sm text-color-gray-search leading-relaxed'
+                  'flex flex-col items-center gap-1 w-72 mx-auto mb-2 pb-4 border-b'
                 }
               >
-                <img
-                  src="/authenticated.svg"
-                  className={'absolute top-0 h-11 -translate-y-3 -translate-x-full'}
-                />
-                検証OK
-              </p>
-            ) : (
-              <p className={'relative text-sm leading-relaxed'}>
-                <img
-                  src="/warning.svg"
-                  className={'absolute -translate-x-full pr-2'}
-                />
-                検証NG
-              </p>
-            )}
-            {selectDetail.message.content.approvalStatus ? (
-              <p
-                className={
-                  'relative text-sm text-color-gray-search leading-relaxed'
-                }
-              >
-                <img
-                  src="/authenticated.svg"
-                  className={'absolute top-0 h-11 -translate-y-3 -translate-x-full'}
-                />
-                承認済
-              </p>
-            ) : (
-              <p className={'text-sm text-color-required leading-relaxed'}>
-                未承認
-              </p>
-            )}
-            <p className={'text-xs text-color-gray-search leading-relaxed'}>
-              申請日
-              {dayjs(selectDetail.message.content.applicationDate).format(
-                'YY/MM/DD HH:mm'
-              )}
-            </p>
-          </section>
-        )}
-        <div className="py-0 px-[53px]">
-          {selectDetail && (
-            <ResidentInquiry input={selectDetail.message.content} />
-          )}
-          <div className={'w-70 mx-auto relative'}>
-            {isIssuing ? (
-              <span
-                className={
-                  'absolute right-0 -translate-y-1/2 text-sm leading-relaxed text-yellow-500'
-                }
-              >
-                VC発行中...
-              </span>
-            ) : null}
-          </div>
-          <div className="w-70 mx-auto pt-4 pb-2 flex justify-between">
-            <button
-              onClick={() => router.push('/14_resident-list')}
-              className="input-form-button-white"
-            >
-              戻る
-            </button>
-            {
-              selectDetail && !selectDetail.message.content.approvalStatus ? (
-                selectDetail.message.content.verifyStatus ? (
-                  <button onClick={approve} className="input-form-button-blue">
-                    承認
-                  </button>
+                {selectDetail.message.content.verifyStatus ? (
+                  <p
+                    className={
+                      'relative text-sm text-color-gray-search leading-relaxed'
+                    }
+                  >
+                    <img
+                      src="/authenticated.svg"
+                      className={
+                        'absolute top-0 h-11 -translate-y-3 -translate-x-full'
+                      }
+                    />
+                    検証OK
+                  </p>
                 ) : (
-                  <button onClick={reject} className="input-form-button-white">
-                    却下
-                  </button>
-                )
-              ) : null
-            }
-          </div>
-        </div>
+                  <p className={'relative text-sm leading-relaxed'}>
+                    <img
+                      src="/warning.svg"
+                      className={'absolute -translate-x-full pr-2'}
+                    />
+                    検証NG
+                  </p>
+                )}
+                {vcStatus.issuedStatus ? (
+                  vcStatus.revokeStatus ? (
+                    <p
+                      className={
+                        'relative text-sm text-color-gray-search leading-relaxed'
+                      }
+                    >
+                      <img
+                        src="/authenticated.svg"
+                        className={
+                          'absolute top-0 h-11 -translate-y-3 -translate-x-full'
+                        }
+                      />
+                      承認済
+                    </p>
+                  ) : (
+                    <p
+                      className={
+                        'text-sm text-color-gray-search leading-relaxed'
+                      }
+                    >
+                      取消済
+                    </p>
+                  )
+                ) : (
+                  <p className={'text-sm text-color-required leading-relaxed'}>
+                    未承認
+                  </p>
+                )}
+                <p className={'text-xs text-color-gray-search leading-relaxed'}>
+                  申請日
+                  {dayjs(selectDetail.message.content.applicationDate).format(
+                    'YY/MM/DD HH:mm'
+                  )}
+                </p>
+              </section>
+            )}
+            <div className="py-0 px-[53px]">
+              {selectDetail && (
+                <ResidentInquiry input={selectDetail.message.content} />
+              )}
+              <div className={'w-70 mx-auto relative'}>
+                {isIssuing ? (
+                  <span
+                    className={
+                      'absolute right-0 -translate-y-1/2 text-sm leading-relaxed text-yellow-500'
+                    }
+                  >
+                    VC発行中...
+                  </span>
+                ) : null}
+              </div>
+              <div className="w-70 mx-auto pt-4 pb-2 flex justify-between">
+                <button
+                  onClick={() => router.push('/14_resident-list')}
+                  className="input-form-button-white"
+                >
+                  戻る
+                </button>
+                {selectDetail &&
+                !selectDetail.message.content.approvalStatus ? (
+                  selectDetail.message.content.verifyStatus ? (
+                    <button
+                      onClick={approve}
+                      className="input-form-button-blue"
+                    >
+                      承認
+                    </button>
+                  ) : (
+                    <button
+                      onClick={reject}
+                      className="input-form-button-white"
+                    >
+                      却下
+                    </button>
+                  )
+                ) : null}
+              </div>
+            </div>
+          </>
+        )}
       </main>
+      <Loading isLoading={isLoading} />
     </>
   );
 };

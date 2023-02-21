@@ -17,6 +17,7 @@ import {
   verifyVerifiableMessage,
   createVerifiableCredential,
   createVerifiableMessage,
+  verifyVerifiableCredential,
 } from '@/lib/algosbt';
 import { getAlgod } from '@/lib/algo/algod/algods';
 import chainState from '@/lib/states/chainState';
@@ -29,8 +30,13 @@ import { useErrorHandler } from 'react-error-boundary';
 const useTaxListDetailMain = () => {
   const [listState, setListState] = useRecoilState(taxVCRequestListState);
   const setVCList = useSetRecoilState(taxVCListState);
-  const setIssuedVCList = useSetRecoilState(VCListState);
+  const [VCList, setIssuedVCList] = useRecoilState(VCListState);
   const [isIssuing, setIsIssuing] = useState(false);
+  const [vcStatus, setVCStatus] = useState({
+    issuedStatus: false,
+    revokeStatus: false,
+  });
+  const [isLoading, setIsLoading] = useState(true);
   const [VCRequest, setVCRequest] = useState<TaxVCRequestType>();
   const router = useRouter();
   const errorHandler = useErrorHandler();
@@ -41,18 +47,49 @@ const useTaxListDetailMain = () => {
   const [issuerDidAccountGlobal] = useRecoilState(issuerDidAccountState);
 
   useEffect(() => {
-    const VCRequest = listState.find(
-      (v) => v.message.content.id === Number(router.query.id)
-    );
-    if (VCRequest) {
-      verify(VCRequest);
-      methods.setValue("applicationYear",VCRequest.message.content.applicationYear)
-      methods.setValue("corporationName",VCRequest.message.content.corporationName)
-      methods.setValue("corporationAddress",VCRequest.message.content.corporationAddress)
-      methods.setValue("corporationAddress",VCRequest.message.content.corporationAddress)
-      methods.setValue("fullName",VCRequest.message.content.fullName)
-      methods.setValue("address",VCRequest.message.content.address)
-    }
+    (async () => {
+      setIsLoading(() => true);
+      const algod = getAlgod(chainType);
+      let issuedStatus = false;
+      let revokeStatus = false;
+      const select = listState.find(
+        (v) => v.message.content.id === Number(router.query.id)
+      );
+      if (select) {
+        const vc = VCList.tax.find((vc) => {
+          return vc.message.content.content.id === select.message.content.id;
+        });
+
+        if (vc) {
+          issuedStatus = true;
+          revokeStatus = await verifyVerifiableCredential(algod, vc);
+          setVCStatus(() => ({
+            issuedStatus: issuedStatus,
+            revokeStatus: revokeStatus,
+          }));
+        }
+        verify(select);
+        methods.setValue(
+          'applicationYear',
+          select.message.content.applicationYear
+        );
+        methods.setValue(
+          'corporationName',
+          select.message.content.corporationName
+        );
+        methods.setValue(
+          'corporationAddress',
+          select.message.content.corporationAddress
+        );
+        methods.setValue(
+          'corporationAddress',
+          select.message.content.corporationAddress
+        );
+        methods.setValue('fullName', select.message.content.fullName);
+        methods.setValue('address', select.message.content.address);
+      }
+      setIsLoading(() => false);
+    })();
   }, []);
 
   const methods = useForm<TaxInputFormType>({
@@ -153,7 +190,17 @@ const useTaxListDetailMain = () => {
     router.push('/34_taxList', '/34_taxList');
   };
 
-  return { VCRequest, methods, isIssuing, approve, back, verify, reject };
+  return {
+    VCRequest,
+    vcStatus,
+    isLoading,
+    methods,
+    isIssuing,
+    approve,
+    back,
+    verify,
+    reject,
+  };
 };
 
 export default useTaxListDetailMain;

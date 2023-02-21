@@ -13,6 +13,7 @@ const SubsidyListDetailMain = () => {
   const {
     methods,
     VCRequest,
+    vcStatus,
     onSubmit,
     reject,
     verifyHandler,
@@ -62,21 +63,30 @@ const SubsidyListDetailMain = () => {
                         検証NG
                       </p>
                     )}
-
-                    {VCRequest.approvalStatus ? (
-                      <p
-                        className={
-                          'relative text-sm text-color-gray-search leading-relaxed'
-                        }
-                      >
-                        <img
-                          src="/authenticated.svg"
+                    {vcStatus.issuedStatus ? (
+                      vcStatus.revokeStatus ? (
+                        <p
                           className={
-                            'absolute top-0 h-11 -translate-y-3 -translate-x-full'
+                            'relative text-sm text-color-gray-search leading-relaxed'
                           }
-                        />
-                        承認済
-                      </p>
+                        >
+                          <img
+                            src="/authenticated.svg"
+                            className={
+                              'absolute top-0 h-11 -translate-y-3 -translate-x-full'
+                            }
+                          />
+                          承認済
+                        </p>
+                      ) : (
+                        <p
+                          className={
+                            'text-sm text-color-gray-search leading-relaxed'
+                          }
+                        >
+                          取消済
+                        </p>
+                      )
                     ) : (
                       <p
                         className={
