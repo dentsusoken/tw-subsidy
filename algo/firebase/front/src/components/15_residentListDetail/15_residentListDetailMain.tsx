@@ -13,6 +13,7 @@ import {
   verifyVerifiableMessage,
   createVerifiableCredential,
   createVerifiableMessage,
+  verifyVerifiableCredential,
 } from '@/lib/algosbt';
 import { getAlgod } from '@/lib/algo/algod/algods';
 import chainState from '@/lib/states/chainState';
@@ -24,28 +25,50 @@ import { useEffect, useState } from 'react';
 import { useErrorHandler } from 'react-error-boundary';
 import { ResidentVCRequestType } from '@/lib/types/mockApp';
 import { ResidentInquiry } from '../common/Forms';
-import Container from '../common/Container';
 
 const ResidentListDetailMain = () => {
   const router = useRouter();
   const errorHandler = useErrorHandler();
+  const [vcStatus, setVCStatus] = useState({
+    issuedStatus: false,
+    revokeStatus: false,
+  });
 
   const [listState, setListState] = useRecoilState(residentVCRequestListState);
   const setVCList = useSetRecoilState(residentVCListState);
-  const setIssuedVCList = useSetRecoilState(VCListState);
   const [isIssuing, setIsIssuing] = useState(false);
   const [selectDetail, SetSelectDetail] = useState<ResidentVCRequestType>();
+  const [VCList, setIssuedVCList] = useRecoilState(VCListState);
 
   const chainType = useRecoilValue(chainState);
   const holderDidAccountGlobal = useRecoilValue(holderDidAccountState);
   const issuerDidAccountGlobal = useRecoilValue(issuerDidAccountState);
+  const [chain] = useRecoilState(chainState);
   dayjs.locale('ja');
 
   useEffect(() => {
-    const select = listState.find(
-      (v) => v.message.content.id === Number(router.query.id)
-    );
-    select && verify(select);
+    (async () => {
+      const algod = getAlgod(chain);
+      let issuedStatus = false;
+      let revokeStatus = false;
+      const select = listState.find(
+        (v) => v.message.content.id === Number(router.query.id)
+      );
+      if (select) {
+        const vc = VCList.resident.find((vc) => {
+          return vc.message.content.content.id === select.message.content.id;
+        });
+        if (vc) {
+          issuedStatus = true;
+          revokeStatus = await verifyVerifiableCredential(algod, vc);
+          setVCStatus(() => ({
+            issuedStatus: issuedStatus,
+            revokeStatus: revokeStatus,
+          }));
+        }
+        verify(select);
+      }
+    })();
   }, [router.query]);
 
   const verify = (select: ResidentVCRequestType) => {
@@ -155,7 +178,9 @@ const ResidentListDetailMain = () => {
               >
                 <img
                   src="/authenticated.svg"
-                  className={'absolute top-0 h-11 -translate-y-3 -translate-x-full'}
+                  className={
+                    'absolute top-0 h-11 -translate-y-3 -translate-x-full'
+                  }
                 />
                 検証OK
               </p>
@@ -168,18 +193,26 @@ const ResidentListDetailMain = () => {
                 検証NG
               </p>
             )}
-            {selectDetail.message.content.approvalStatus ? (
-              <p
-                className={
-                  'relative text-sm text-color-gray-search leading-relaxed'
-                }
-              >
-                <img
-                  src="/authenticated.svg"
-                  className={'absolute top-0 h-11 -translate-y-3 -translate-x-full'}
-                />
-                承認済
-              </p>
+            {vcStatus.issuedStatus ? (
+              vcStatus.revokeStatus ? (
+                <p
+                  className={
+                    'relative text-sm text-color-gray-search leading-relaxed'
+                  }
+                >
+                  <img
+                    src="/authenticated.svg"
+                    className={
+                      'absolute top-0 h-11 -translate-y-3 -translate-x-full'
+                    }
+                  />
+                  承認済
+                </p>
+              ) : (
+                <p className={'text-sm text-color-gray-search leading-relaxed'}>
+                  取消済
+                </p>
+              )
             ) : (
               <p className={'text-sm text-color-required leading-relaxed'}>
                 未承認
@@ -215,19 +248,17 @@ const ResidentListDetailMain = () => {
             >
               戻る
             </button>
-            {
-              selectDetail && !selectDetail.message.content.approvalStatus ? (
-                selectDetail.message.content.verifyStatus ? (
-                  <button onClick={approve} className="input-form-button-blue">
-                    承認
-                  </button>
-                ) : (
-                  <button onClick={reject} className="input-form-button-white">
-                    却下
-                  </button>
-                )
-              ) : null
-            }
+            {selectDetail && !selectDetail.message.content.approvalStatus ? (
+              selectDetail.message.content.verifyStatus ? (
+                <button onClick={approve} className="input-form-button-blue">
+                  承認
+                </button>
+              ) : (
+                <button onClick={reject} className="input-form-button-white">
+                  却下
+                </button>
+              )
+            ) : null}
           </div>
         </div>
       </main>

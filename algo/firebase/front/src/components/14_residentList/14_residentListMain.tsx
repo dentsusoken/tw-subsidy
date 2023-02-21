@@ -5,7 +5,7 @@ import { useRecoilValue } from 'recoil';
 
 import Header from '../common/Header';
 import { ResidentInputFormType } from '@/lib/types/mockApp/inputForm';
-import { residentVCRequestListState } from '@/lib/states/mockApp';
+import { residentVCRequestListState, VCListState } from '@/lib/states/mockApp';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ja';
 import SearchArea from '../common/SearchArea';
@@ -14,25 +14,59 @@ import { ResidentVCRequestType, urls } from '@/lib/types/mockApp';
 import ApplicationListItem, {
   ApplicationInfo,
 } from '../common/ApplicationListItem/ApplicationListItem';
+import chainState from '@/lib/states/chainState';
+import { getAlgod } from '@/lib/algo/algod/algods';
+import { verifyVerifiableCredential } from '@/lib/algosbt';
 
 const ResidentListMain = () => {
   const router = useRouter();
   const { verifyStatusList, verifyVCList } = useVerifyHandler();
   const [listCount, setListCount] = useState(0);
   const [query, setQuery] = useState('');
+  const [applicationItem, setApplicationItem] = useState<ApplicationInfo[]>([]);
   const VCRequestlistState = useRecoilValue(residentVCRequestListState);
   const [listState, setListState] = useState<ResidentVCRequestType[]>([]);
+  const VCList = useRecoilValue(VCListState);
+  const chain = useRecoilValue(chainState);
 
   const errorHandler = useErrorHandler();
   dayjs.locale('ja');
 
   useEffect(() => {
     try {
-      const listForSort = [...VCRequestlistState];
-      listForSort.sort((a, b) => b.message.content.id - a.message.content.id);
-      setListState(listForSort);
-      setListCount(listForSort.length);
-      verifyVCList(listForSort);
+      (async () => {
+        // [id]の降順で表示
+        const algod = getAlgod(chain);        
+  
+        const listForSort = [...VCRequestlistState];
+        listForSort.sort((a, b) => b.message.content.id - a.message.content.id);
+        const items: ApplicationInfo[] = await Promise.all(
+          listForSort.map(async (item, index) => {
+            let issuedStatus = false;
+            let revokeStatus = false;
+            const vc = VCList.resident.find((vc) => {
+              return vc.message.content.content.id === item.message.content.id;
+            });
+            if (vc) {
+              issuedStatus = true;
+              revokeStatus = await verifyVerifiableCredential(algod, vc);
+            }
+            return {
+              id: item.message.content.id,
+              applicationDate: item.message.content.applicationDate,
+              issuedStatus: issuedStatus,
+              name: item.message.content.fullName,
+              vc: item,
+              revokeStatus: revokeStatus,
+            };
+          })
+        );        
+        setListState(listForSort);
+        setListCount(listForSort.length);
+        verifyVCList(listForSort);
+        setApplicationItem(() => items);
+      })();
+
     } catch (e) {
       errorHandler(e);
     }
@@ -54,23 +88,13 @@ const ResidentListMain = () => {
           {listCount} 件中 - {listCount} 件を表示
         </div>
         <ul>
-          {listState.map((item, index) => {
-            const ApplicationItem: ApplicationInfo = {
-              id: item.message.content.id,
-              applicationDate: item.message.content.applicationDate,
-              approvalStatus: false,
-              name: item.message.content.fullName,
-              vc: item,
-            };
-            if (item.message.content.approvalStatus) {
-              ApplicationItem.approvalStatus = true
-            }
+          {applicationItem.map((item, index) => {
             return (
               <ApplicationListItem
-                item={ApplicationItem}
+                item={item}
                 url={{
                   pathname: urls.residentListDetail,
-                  query: { id: item.message.content.id },
+                  query: { id: item.id },
                 }}
                 key={index}
               />
