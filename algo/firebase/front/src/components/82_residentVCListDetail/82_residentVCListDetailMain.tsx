@@ -16,13 +16,10 @@ import Header from '../common/Header';
 import Loading from '../common/Loading';
 import { issuerPw } from '@/lib/algo/account/accounts';
 import { useErrorHandler } from 'react-error-boundary';
-import { useVerifyHandler } from '@/lib/hooks/MockApp';
 
 const ResidentVCListDetailMain = () => {
   const router = useRouter();
   const ResidentVCListGlobal = useRecoilValue(residentVCListState);
-  const { verifyVCHandler } = useVerifyHandler();
-  const [verifyResult, setVerifyResult] = useState<boolean>();
   const [input, setInput] = useState<ResidentInputFormType>();
   const [vc, setVC] = useState<ResidentVCType>();
   const [revokeStatus, setRevokeStatus] = useState(true);
@@ -44,11 +41,9 @@ const ResidentVCListDetailMain = () => {
         );
         if (ResidentVC) {
           const revoke = await verifyVerifiableCredential(algod, ResidentVC);
-          const verify = verifyVCHandler(ResidentVC);
           setVC(ResidentVC);
           setInput(ResidentVC.message.content.content);
           setRevokeStatus(revoke);
-          setVerifyResult(verify);
         }
 
         setIsLoading(() => false);
@@ -94,7 +89,7 @@ const ResidentVCListDetailMain = () => {
                     'flex flex-col items-center gap-2 mx-auto mt-2 pb-4 border-b'
                   }
                 >
-                  {verifyResult ? (
+                  {revokeStatus ? (
                     <p
                       className={
                         'relative text-xs text-color-gray-search leading-relaxed'

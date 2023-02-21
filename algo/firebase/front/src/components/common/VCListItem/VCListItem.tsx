@@ -1,4 +1,3 @@
-import { useVerifyHandler } from '@/lib/hooks/MockApp';
 import {
   AccountVCType,
   ResidentVCType,
@@ -8,7 +7,6 @@ import {
 } from '@/lib/types/mockApp';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
 import { UrlObject } from 'url';
 
 export type VCInfo = {
@@ -28,23 +26,8 @@ export type VCListItemParams = {
 
 const VCListItem = ({ item, url }: VCListItemParams) => {
   const router = useRouter();
-  const { verifyVCHandler, verifyVPHandler } = useVerifyHandler();
-  const [verifyResult, setVerifyResult] = useState<boolean | undefined>(
-    undefined
-  );
+
   dayjs.locale('ja');
-
-  useEffect(() => {
-    (async () => {
-      let result = verifyVCHandler(item.vc);
-      if (item.vp && result) {
-        const verifyVPResult = await verifyVPHandler(item.vp);
-        result = verifyVPResult.verifyStatus;
-      }
-
-      setVerifyResult(result);
-    })();
-  });
 
   return (
     <>
@@ -64,17 +47,11 @@ const VCListItem = ({ item, url }: VCListItemParams) => {
             <span>{item.VCName}</span>
           </div>
           <div className={'flex w-10 h-12 items-center'}>
-            {typeof verifyResult === 'boolean' ? (
-              verifyResult ? (
-                <img
-                  src="./authenticated.svg"
-                  alt=""
-                  className="inline-block"
-                />
-              ) : (
-                <img src="./warning.svg" className={'mx-auto'} />
-              )
-            ) : null}
+            {item.revoked ? (
+              <img src="./authenticated.svg" alt="" className="inline-block" />
+            ) : (
+              <img src="./warning.svg" className={'mx-auto'} />
+            )}
           </div>
           <span className={'w-fit text-color-gray-accepted'}>
             {item.revoked ? '発行済' : '取消済'}

@@ -28,7 +28,7 @@ const useSubsidyListDetailMain = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [vcStatus, setVCStatus] = useState({
     issuedStatus: false,
-    revokeStatus: false,
+    revokeStatus: true,
   });
   const [residentVerifyStatus, setResidentVerifyStatus] = useState(false);
   const [accountVerifyStatus, setAccountVerifyStatus] = useState(false);
@@ -56,7 +56,7 @@ const useSubsidyListDetailMain = () => {
         setIsLoading(() => true);
         const algod = getAlgod(chain);
         let issuedStatus = false;
-        let revokeStatus = false;
+        let revokeStatus = true;
         const VCRequest = listState.find(
           (v) => v.id === Number(router.query.id)
         );

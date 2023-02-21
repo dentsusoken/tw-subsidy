@@ -50,7 +50,7 @@ const AccountListMain = () => {
         const items: ApplicationInfo[] = await Promise.all(
           listForSort.map(async (item, index) => {
             let issuedStatus = false;
-            let revokeStatus = false;
+            let revokeStatus = true;
             const vc = VCList.account.find((vc) => {
               return vc.message.content.content.id === item.message.content.id;
             });

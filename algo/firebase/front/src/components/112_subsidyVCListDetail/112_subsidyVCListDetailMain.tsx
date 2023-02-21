@@ -46,14 +46,13 @@ const SubsidyVCListDetailMain = () => {
         );
         if (SubsidyVC) {
           const revoke = await verifyVerifiableCredential(algod, SubsidyVC);
-          const verifyVC = verifyVCHandler(SubsidyVC);
           const verifyVP = await verifyVPHandler(
             SubsidyVC.message.content.content
           );
           setVC(SubsidyVC);
           setInput(SubsidyVC.message.content.content);
           setRevokeStatus(revoke);
-          setVerifyResult(verifyVC && verifyVP.verifyStatus);
+          setVerifyResult(revoke && verifyVP.verifyStatus);
           setVerifyVPResult(verifyVP);
         }
 

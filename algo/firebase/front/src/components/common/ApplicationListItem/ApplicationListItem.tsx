@@ -67,7 +67,7 @@ const ApplicationListItem = ({ item, url }: ApplicationListItemParams) => {
           <span className={'w-18'}>{item.name}</span>
           <div className={'flex items-center w-12 h-12'}>
             {typeof verifyResult === 'boolean' ? (
-              verifyResult ? (
+              verifyResult && item.revokeStatus ? (
                 <img
                   src="./authenticated.svg"
                   alt=""

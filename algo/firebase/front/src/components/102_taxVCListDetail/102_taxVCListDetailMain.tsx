@@ -22,8 +22,6 @@ import { useVerifyHandler } from '@/lib/hooks/MockApp';
 const TaxVCListDetailMain = () => {
   const router = useRouter();
   const TaxVCListGlobal = useRecoilValue(taxVCListState);
-  const { verifyVCHandler } = useVerifyHandler();
-  const [verifyResult, setVerifyResult] = useState<boolean>();
   const [input, setInput] = useState<TaxInputFormType>();
   const [vc, setVC] = useState<TaxVCType>();
   const [revokeStatus, setRevokeStatus] = useState(true);
@@ -46,11 +44,9 @@ const TaxVCListDetailMain = () => {
         );
         if (TaxVC) {
           const revoke = await verifyVerifiableCredential(algod, TaxVC);
-          const verify = verifyVCHandler(TaxVC);
           setVC(TaxVC);
           setInput(TaxVC.message.content.content);
           setRevokeStatus(revoke);
-          setVerifyResult(verify);
         }
 
         setIsLoading(() => false);
@@ -96,7 +92,7 @@ const TaxVCListDetailMain = () => {
                     'flex flex-col items-center gap-2 mx-auto mt-2 pb-4 border-b'
                   }
                 >
-                  {verifyResult ? (
+                  {isRevoking ? (
                     <p
                       className={
                         'relative text-xs text-color-gray-search leading-relaxed'

@@ -34,7 +34,7 @@ const useTaxListDetailMain = () => {
   const [isIssuing, setIsIssuing] = useState(false);
   const [vcStatus, setVCStatus] = useState({
     issuedStatus: false,
-    revokeStatus: false,
+    revokeStatus: true,
   });
   const [isLoading, setIsLoading] = useState(true);
   const [VCRequest, setVCRequest] = useState<TaxVCRequestType>();
@@ -51,7 +51,7 @@ const useTaxListDetailMain = () => {
       setIsLoading(() => true);
       const algod = getAlgod(chainType);
       let issuedStatus = false;
-      let revokeStatus = false;
+      let revokeStatus = true;
       const select = listState.find(
         (v) => v.message.content.id === Number(router.query.id)
       );

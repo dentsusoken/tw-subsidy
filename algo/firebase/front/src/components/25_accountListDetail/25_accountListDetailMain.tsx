@@ -33,7 +33,7 @@ const AccountListDetailMain = () => {
   const errorHandler = useErrorHandler();
   const [vcStatus, setVCStatus] = useState({
     issuedStatus: false,
-    revokeStatus: false,
+    revokeStatus: true,
   });
   const [isLoading, setIsLoading] = useState(true);
 
@@ -54,7 +54,7 @@ const AccountListDetailMain = () => {
       setIsLoading(() => true);
       const algod = getAlgod(chain);
       let issuedStatus = false;
-      let revokeStatus = false;
+      let revokeStatus = true;
       const select = listState.find(
         (v) => v.message.content.id === Number(router.query.id)
       );
@@ -177,7 +177,7 @@ const AccountListDetailMain = () => {
                   'flex flex-col items-center gap-1 w-72 mx-auto mb-2 pb-4 border-b'
                 }
               >
-                {selectDetail.message.content.verifyStatus ? (
+                {selectDetail.message.content.verifyStatus && vcStatus.revokeStatus ? (
                   <p
                     className={
                       'relative text-sm text-color-gray-search leading-relaxed'
