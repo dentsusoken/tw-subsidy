@@ -4,7 +4,9 @@ import NumberArea from '../common/NumberArea';
 import useSubsidyListMain from './useSubsidyListMain';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ja';
-import ApplicationListItem, { ApplicationInfo } from '../common/ApplicationListItem/ApplicationListItem';
+import ApplicationListItem, {
+  ApplicationInfo,
+} from '../common/ApplicationListItem/ApplicationListItem';
 import { urls } from '@/lib/types/mockApp';
 
 const SubsidyListMain = () => {
@@ -13,10 +15,9 @@ const SubsidyListMain = () => {
     list,
     listCount,
     filterCount,
-    verifyStatusList,
+    applicationItem,
     setQuery,
     filter,
-    onSubmit,
   } = useSubsidyListMain();
   dayjs.locale('ja');
 
@@ -31,17 +32,10 @@ const SubsidyListMain = () => {
         />
         <NumberArea listCount={listCount} resultCount={filterCount} />
         <ul>
-          {list.map((item, index) => {
-            const ApplicationItem: ApplicationInfo = {
-              id: item.id,
-              applicationDate: item.applicationDate,
-              approvalStatus: item.approvalStatus,
-              name: item.fullName,
-              vp: item,
-            };
+          {applicationItem.map((item, index) => {
             return (
               <ApplicationListItem
-                item={ApplicationItem}
+                item={item}
                 url={{
                   pathname: urls.subsidyListDetail,
                   query: { id: item.id },

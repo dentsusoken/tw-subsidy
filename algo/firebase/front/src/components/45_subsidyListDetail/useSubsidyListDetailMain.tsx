@@ -1,6 +1,6 @@
 import { Algodv2 } from 'algosdk';
 import { useForm } from 'react-hook-form';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { useRouter } from 'next/router';
 
 import { SubsidyInputFormType, VPContent } from '@/lib/types/mockApp/Form';
@@ -9,6 +9,7 @@ import { subsidyListState } from '@/lib/states/mockApp/subsidyListState';
 import { getAlgod } from '@/lib/algo/algod/algods';
 import {
   createVerifiableCredential,
+  verifyVerifiableCredential,
   verifyVerifiablePresentation,
 } from '@/lib/algosbt';
 import chainState from '@/lib/states/chainState';
@@ -25,10 +26,14 @@ const useSubsidyListDetailMain = () => {
   const [listState, setListState] = useRecoilState(subsidyListState);
   const [isIssuing, setIsIssuing] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [vcStatus, setVCStatus] = useState({
+    issuedStatus: false,
+    revokeStatus: false,
+  });
   const [residentVerifyStatus, setResidentVerifyStatus] = useState(false);
   const [accountVerifyStatus, setAccountVerifyStatus] = useState(false);
   const [taxVerifyStatus, setTaxVerifyStatus] = useState(false);
-  const setVCList = useSetRecoilState(VCListState);
+  const [VCList, setVCList] = useRecoilState(VCListState);
   const router = useRouter();
   const [VCRequest, setVCRequest] = useState<SubsidyInputFormType>();
   const errorHandler = useErrorHandler();
@@ -49,10 +54,24 @@ const useSubsidyListDetailMain = () => {
     try {
       (async () => {
         setIsLoading(() => true);
+        const algod = getAlgod(chain);
+        let issuedStatus = false;
+        let revokeStatus = false;
         const VCRequest = listState.find(
           (v) => v.id === Number(router.query.id)
         );
         if (VCRequest) {
+          const vc = VCList.subsidy.find((vc) => {
+            return vc.message.content.content.id === VCRequest.id;
+          });
+          if (vc) {
+            issuedStatus = true;
+            revokeStatus = await verifyVerifiableCredential(algod, vc);
+            setVCStatus(() => ({
+              issuedStatus: issuedStatus,
+              revokeStatus: revokeStatus,
+            }));
+          }
           await verifyHandler(VCRequest);
           methods.setValue('fullName', VCRequest.fullName);
           methods.setValue('address', VCRequest.address);
@@ -186,6 +205,7 @@ const useSubsidyListDetailMain = () => {
   return {
     methods,
     VCRequest,
+    vcStatus,
     onSubmit,
     reject,
     verifyHandler,
