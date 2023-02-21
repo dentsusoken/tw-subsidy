@@ -26,6 +26,7 @@ import { useErrorHandler } from 'react-error-boundary';
 import { AccountInquiry } from '../common/Forms';
 import Container from '../common/Container';
 import { AccountVCRequestType } from '@/lib/types/mockApp';
+import Loading from '../common/Loading';
 
 const AccountListDetailMain = () => {
   const router = useRouter();
@@ -34,6 +35,7 @@ const AccountListDetailMain = () => {
     issuedStatus: false,
     revokeStatus: false,
   });
+  const [isLoading, setIsLoading] = useState(true);
 
   const [listState, setListState] = useRecoilState(accountVCRequestListState);
   const setVCList = useSetRecoilState(accountVCListState);
@@ -49,6 +51,7 @@ const AccountListDetailMain = () => {
 
   useEffect(() => {
     (async () => {
+      setIsLoading(() => true);
       const algod = getAlgod(chain);
       let issuedStatus = false;
       let revokeStatus = false;
@@ -59,7 +62,7 @@ const AccountListDetailMain = () => {
         const vc = VCList.account.find((vc) => {
           return vc.message.content.content.id === select.message.content.id;
         });
-        
+
         if (vc) {
           issuedStatus = true;
           revokeStatus = await verifyVerifiableCredential(algod, vc);
@@ -70,6 +73,7 @@ const AccountListDetailMain = () => {
         }
         verify(select);
       }
+      setIsLoading(() => false);
     })();
   }, [router.query]);
 
@@ -165,104 +169,120 @@ const AccountListDetailMain = () => {
     <>
       <Header />
       <main className="bg-color-background">
-        {selectDetail && (
-          <section
-            className={
-              'flex flex-col items-center gap-1 w-72 mx-auto mb-2 pb-4 border-b'
-            }
-          >
-            {selectDetail.message.content.verifyStatus ? (
-              <p
+        {!isLoading && (
+          <>
+            {selectDetail && (
+              <section
                 className={
-                  'relative text-sm text-color-gray-search leading-relaxed'
+                  'flex flex-col items-center gap-1 w-72 mx-auto mb-2 pb-4 border-b'
                 }
               >
-                <img
-                  src="/authenticated.svg"
-                  className={
-                    'absolute top-0 h-11 -translate-y-3 -translate-x-full'
-                  }
-                />
-                検証OK
-              </p>
-            ) : (
-              <p className={'relative text-sm leading-relaxed'}>
-                <img
-                  src="/warning.svg"
-                  className={'absolute -translate-x-full pr-2'}
-                />
-                検証NG
-              </p>
-            )}
-            {vcStatus.issuedStatus ? (
-              vcStatus.revokeStatus ? (
-                <p
-                  className={
-                    'relative text-sm text-color-gray-search leading-relaxed'
-                  }
-                >
-                  <img
-                    src="/authenticated.svg"
+                {selectDetail.message.content.verifyStatus ? (
+                  <p
                     className={
-                      'absolute top-0 h-11 -translate-y-3 -translate-x-full'
+                      'relative text-sm text-color-gray-search leading-relaxed'
                     }
-                  />
-                  承認済
+                  >
+                    <img
+                      src="/authenticated.svg"
+                      className={
+                        'absolute top-0 h-11 -translate-y-3 -translate-x-full'
+                      }
+                    />
+                    検証OK
+                  </p>
+                ) : (
+                  <p className={'relative text-sm leading-relaxed'}>
+                    <img
+                      src="/warning.svg"
+                      className={'absolute -translate-x-full pr-2'}
+                    />
+                    検証NG
+                  </p>
+                )}
+                {vcStatus.issuedStatus ? (
+                  vcStatus.revokeStatus ? (
+                    <p
+                      className={
+                        'relative text-sm text-color-gray-search leading-relaxed'
+                      }
+                    >
+                      <img
+                        src="/authenticated.svg"
+                        className={
+                          'absolute top-0 h-11 -translate-y-3 -translate-x-full'
+                        }
+                      />
+                      承認済
+                    </p>
+                  ) : (
+                    <p
+                      className={
+                        'text-sm text-color-gray-search leading-relaxed'
+                      }
+                    >
+                      取消済
+                    </p>
+                  )
+                ) : (
+                  <p className={'text-sm text-color-required leading-relaxed'}>
+                    未承認
+                  </p>
+                )}
+                <p className={'text-xs text-color-gray-search leading-relaxed'}>
+                  申請日
+                  {dayjs(selectDetail.message.content.applicationDate).format(
+                    'YY/MM/DD HH:mm'
+                  )}
                 </p>
-              ) : (
-                <p className={'text-sm text-color-gray-search leading-relaxed'}>
-                  取消済
-                </p>
-              )
-            ) : (
-              <p className={'text-sm text-color-required leading-relaxed'}>
-                未承認
-              </p>
+              </section>
             )}
-            <p className={'text-xs text-color-gray-search leading-relaxed'}>
-              申請日
-              {dayjs(selectDetail.message.content.applicationDate).format(
-                'YY/MM/DD HH:mm'
+            <div className="py-0 px-[53px]">
+              {selectDetail && (
+                <AccountInquiry input={selectDetail.message.content} />
               )}
-            </p>
-          </section>
+              <div className={'w-70 mx-auto relative'}>
+                {isIssuing ? (
+                  <span
+                    className={
+                      'absolute right-0 -translate-y-1/2 text-sm leading-relaxed text-yellow-500'
+                    }
+                  >
+                    VC発行中...
+                  </span>
+                ) : null}
+              </div>
+              <div className="w-70 mx-auto pt-4 pb-2 flex justify-between">
+                <button
+                  onClick={() => router.push('/24_account-list')}
+                  className="input-form-button-white"
+                >
+                  戻る
+                </button>
+                {selectDetail &&
+                !selectDetail.message.content.approvalStatus ? (
+                  selectDetail.message.content.verifyStatus ? (
+                    <button
+                      onClick={approve}
+                      className="input-form-button-blue"
+                    >
+                      承認
+                    </button>
+                  ) : (
+                    <button
+                      onClick={reject}
+                      className="input-form-button-white"
+                    >
+                      却下
+                    </button>
+                  )
+                ) : null}
+              </div>
+            </div>
+          </>
         )}
-        <div className="py-0 px-[53px]">
-          {selectDetail && (
-            <AccountInquiry input={selectDetail.message.content} />
-          )}
-          <div className={'w-70 mx-auto relative'}>
-            {isIssuing ? (
-              <span
-                className={
-                  'absolute right-0 -translate-y-1/2 text-sm leading-relaxed text-yellow-500'
-                }
-              >
-                VC発行中...
-              </span>
-            ) : null}
-          </div>
-          <div className="w-70 mx-auto pt-4 pb-2 flex justify-between">
-            <button
-              onClick={() => router.push('/24_account-list')}
-              className="input-form-button-white"
-            >
-              戻る
-            </button>
-            {selectDetail && !selectDetail.message.content.approvalStatus ? (
-              selectDetail.message.content.verifyStatus ? (
-                <button onClick={approve} className="input-form-button-blue">
-                  承認
-                </button>
-              ) : (
-                <button onClick={reject} className="input-form-button-white">
-                  却下
-                </button>
-              )
-            ) : null}
-          </div>
-        </div>
       </main>
+      <Loading isLoading={isLoading} />
     </>
   );
 };

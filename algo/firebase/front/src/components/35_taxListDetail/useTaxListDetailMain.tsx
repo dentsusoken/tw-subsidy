@@ -36,6 +36,7 @@ const useTaxListDetailMain = () => {
     issuedStatus: false,
     revokeStatus: false,
   });
+  const [isLoading, setIsLoading] = useState(true);
   const [VCRequest, setVCRequest] = useState<TaxVCRequestType>();
   const router = useRouter();
   const errorHandler = useErrorHandler();
@@ -47,6 +48,7 @@ const useTaxListDetailMain = () => {
 
   useEffect(() => {
     (async () => {
+      setIsLoading(() => true);
       const algod = getAlgod(chainType);
       let issuedStatus = false;
       let revokeStatus = false;
@@ -86,6 +88,7 @@ const useTaxListDetailMain = () => {
         methods.setValue('fullName', select.message.content.fullName);
         methods.setValue('address', select.message.content.address);
       }
+      setIsLoading(() => false);
     })();
   }, []);
 
@@ -190,6 +193,7 @@ const useTaxListDetailMain = () => {
   return {
     VCRequest,
     vcStatus,
+    isLoading,
     methods,
     isIssuing,
     approve,

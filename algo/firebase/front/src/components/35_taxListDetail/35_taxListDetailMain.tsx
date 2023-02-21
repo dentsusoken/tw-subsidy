@@ -7,11 +7,13 @@ import InputArea from '@/components/common/InputArea';
 import { TaxInputFormType } from '@/lib/types/mockApp/Form';
 import useTaxListDetailMain from './useTaxListDetailMain';
 import dayjs from 'dayjs';
+import Loading from '../common/Loading';
 
 const TaxListDetailMain = () => {
   const {
     VCRequest,
     vcStatus,
+    isLoading,
     methods,
     isIssuing,
     approve,
@@ -25,6 +27,8 @@ const TaxListDetailMain = () => {
     <>
       <Header />
       <main>
+        {!isLoading && (
+          <>
         <FormProvider {...methods}>
           {VCRequest && (
             <section
@@ -147,7 +151,10 @@ const TaxListDetailMain = () => {
             ) : null}
           </div>
         </FormProvider>
+          </>
+        )}
       </main>
+      <Loading isLoading={isLoading} />
     </>
   );
 };
