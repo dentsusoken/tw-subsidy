@@ -86,7 +86,7 @@ const ApplicationListItem = ({ item, url }: ApplicationListItemParams) => {
                 : 'text-color-warnig')
             }
           >
-            {item.issuedStatus ? item.revokeStatus ? "承認済" : "取消済" : "承認待ち"}
+            {item.issuedStatus ? item.revokeStatus ? "承認済" : "取消済" : "未承認"}
           </span>
           <button
             onClick={() => {
