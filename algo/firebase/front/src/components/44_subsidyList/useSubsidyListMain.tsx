@@ -57,7 +57,6 @@ const useSubsidyListMain = () => {
       setList(() => listForSort);
       setListCount(() => subsidyList.length);
       setfilterCount(() => subsidyList.length);
-      // verifyVPList(listForSort);
       setApplicationItem(() => items);
     })();
   }, [subsidyList, chain]);

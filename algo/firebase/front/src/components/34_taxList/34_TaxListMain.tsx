@@ -15,6 +15,7 @@ const TaxListMain = () => {
   const {
     query,
     list,
+    applicationItem,
     listCount,
     filterCount,
     setQuery,
@@ -35,20 +36,13 @@ const TaxListMain = () => {
         />
         <NumberArea listCount={listCount} resultCount={filterCount} />
         <ul>
-          {list.map((item, index) => {
-            const ApplicationItem: ApplicationInfo = {
-              id: item.message.content.id,
-              applicationDate: item.message.content.applicationDate,
-              approvalStatus: item.message.content.approvalStatus,
-              name: item.message.content.fullName,
-              vc: item,
-            };
+          {applicationItem.map((item, index) => {
             return (
               <ApplicationListItem
-                item={ApplicationItem}
+                item={item}
                 url={{
                   pathname: urls.taxListDetail,
-                  query: { id: item.message.content.id },
+                  query: { id: item.id },
                 }}
                 key={index}
               />
