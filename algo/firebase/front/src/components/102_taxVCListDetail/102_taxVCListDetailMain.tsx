@@ -92,7 +92,7 @@ const TaxVCListDetailMain = () => {
                     'flex flex-col items-center gap-2 mx-auto mt-2 pb-4 border-b'
                   }
                 >
-                  {isRevoking ? (
+                  {revokeStatus ? (
                     <p
                       className={
                         'relative text-xs text-color-gray-search leading-relaxed'
