@@ -36,7 +36,7 @@ const useSubsidyListMain = () => {
       const items: ApplicationInfo[] = await Promise.all(
         listForSort.map(async (item, index) => {
           let issuedStatus = false;
-          let revokeStatus = false;
+          let revokeStatus = true;
           const vc = VCList.subsidy.find((vc) => {
             return vc.message.content.content.id === item.id;
           });

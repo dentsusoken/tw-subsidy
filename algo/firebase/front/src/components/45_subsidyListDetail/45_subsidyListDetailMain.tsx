@@ -40,7 +40,7 @@ const SubsidyListDetailMain = () => {
                       'flex flex-col items-center gap-1 w-72 mx-auto mb-2 pb-4 border-b'
                     }
                   >
-                    {VCRequest.verifyStatus ? (
+                    {VCRequest.verifyStatus && vcStatus.revokeStatus ? (
                       <p
                         className={
                           'relative text-sm text-color-gray-search leading-relaxed'

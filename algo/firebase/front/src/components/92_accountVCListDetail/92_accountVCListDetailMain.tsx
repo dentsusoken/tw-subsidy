@@ -4,7 +4,6 @@ import {
   revokeVerifiableCredential,
   verifyVerifiableCredential,
 } from '@/lib/algosbt';
-import { useVerifyHandler } from '@/lib/hooks/MockApp';
 import chainState from '@/lib/states/chainState';
 import issuerDidAccountState from '@/lib/states/issuerDidAccountState';
 import { accountVCListState } from '@/lib/states/mockApp';
@@ -21,8 +20,6 @@ import Loading from '../common/Loading';
 const AccountVCListDetailMain = () => {
   const router = useRouter();
   const AccountVCListGlobal = useRecoilValue(accountVCListState);
-  const { verifyVCHandler } = useVerifyHandler();
-  const [verifyResult, setVerifyResult] = useState<boolean>();
   const [input, setInput] = useState<AccountInputFormType>();
   const [vc, setVC] = useState<AccountVCType>();
   const [revokeStatus, setRevokeStatus] = useState(true);
@@ -44,11 +41,9 @@ const AccountVCListDetailMain = () => {
         );
         if (AccountVC) {
           const revoke = await verifyVerifiableCredential(algod, AccountVC);
-          const verify = verifyVCHandler(AccountVC);
           setVC(AccountVC);
           setInput(AccountVC.message.content.content);
           setRevokeStatus(revoke);
-          setVerifyResult(verify);
         }
 
         setIsLoading(() => false);
@@ -94,7 +89,7 @@ const AccountVCListDetailMain = () => {
                     'flex flex-col items-center gap-2 mx-auto mt-2 pb-4 border-b'
                   }
                 >
-                  {verifyResult ? (
+                  {revokeStatus ? (
                     <p
                       className={
                         'relative text-xs text-color-gray-search leading-relaxed'

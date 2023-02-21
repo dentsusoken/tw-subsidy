@@ -36,7 +36,7 @@ const VCListItem = ({ item, url }: VCListItemParams) => {
 
   useEffect(() => {
     (async () => {
-      let result = verifyVCHandler(item.vc);
+      let result = true;
       if (item.vp && result) {
         const verifyVPResult = await verifyVPHandler(item.vp);
         result = verifyVPResult.verifyStatus;
@@ -65,7 +65,7 @@ const VCListItem = ({ item, url }: VCListItemParams) => {
           </div>
           <div className={'flex w-10 h-12 items-center'}>
             {typeof verifyResult === 'boolean' ? (
-              verifyResult ? (
+              verifyResult && item.revoked ? (
                 <img
                   src="./authenticated.svg"
                   alt=""
