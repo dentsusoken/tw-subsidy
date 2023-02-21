@@ -13,6 +13,7 @@ import {
   verifyVerifiableMessage,
   createVerifiableCredential,
   createVerifiableMessage,
+  verifyVerifiableCredential,
 } from '@/lib/algosbt';
 import { getAlgod } from '@/lib/algo/algod/algods';
 import chainState from '@/lib/states/chainState';
@@ -29,23 +30,47 @@ import { AccountVCRequestType } from '@/lib/types/mockApp';
 const AccountListDetailMain = () => {
   const router = useRouter();
   const errorHandler = useErrorHandler();
+  const [vcStatus, setVCStatus] = useState({
+    issuedStatus: false,
+    revokeStatus: false,
+  });
 
   const [listState, setListState] = useRecoilState(accountVCRequestListState);
   const setVCList = useSetRecoilState(accountVCListState);
-  const setIssuedVCList = useSetRecoilState(VCListState);
   const [isIssuing, setIsIssuing] = useState(false);
   const [selectDetail, SetSelectDetail] = useState<AccountVCRequestType>();
+  const [VCList, setIssuedVCList] = useRecoilState(VCListState);
 
   const [chainType] = useRecoilState(chainState);
   const [holderDidAccountGlobal] = useRecoilState(holderDidAccountState);
   const [issuerDidAccountGlobal] = useRecoilState(issuerDidAccountState);
+  const [chain] = useRecoilState(chainState);
   dayjs.locale('ja');
 
   useEffect(() => {
-    const select = listState.find(
-      (v) => v.message.content.id === Number(router.query.id)
-    );
-    select && verify(select);
+    (async () => {
+      const algod = getAlgod(chain);
+      let issuedStatus = false;
+      let revokeStatus = false;
+      const select = listState.find(
+        (v) => v.message.content.id === Number(router.query.id)
+      );
+      if (select) {
+        const vc = VCList.account.find((vc) => {
+          return vc.message.content.content.id === select.message.content.id;
+        });
+        
+        if (vc) {
+          issuedStatus = true;
+          revokeStatus = await verifyVerifiableCredential(algod, vc);
+          setVCStatus(() => ({
+            issuedStatus: issuedStatus,
+            revokeStatus: revokeStatus,
+          }));
+        }
+        verify(select);
+      }
+    })();
   }, [router.query]);
 
   const verify = (select: AccountVCRequestType) => {
@@ -169,20 +194,26 @@ const AccountListDetailMain = () => {
                 検証NG
               </p>
             )}
-            {selectDetail.message.content.approvalStatus ? (
-              <p
-                className={
-                  'relative text-sm text-color-gray-search leading-relaxed'
-                }
-              >
-                <img
-                  src="/authenticated.svg"
+            {vcStatus.issuedStatus ? (
+              vcStatus.revokeStatus ? (
+                <p
                   className={
-                    'absolute top-0 h-11 -translate-y-3 -translate-x-full'
+                    'relative text-sm text-color-gray-search leading-relaxed'
                   }
-                />
-                承認済
-              </p>
+                >
+                  <img
+                    src="/authenticated.svg"
+                    className={
+                      'absolute top-0 h-11 -translate-y-3 -translate-x-full'
+                    }
+                  />
+                  承認済
+                </p>
+              ) : (
+                <p className={'text-sm text-color-gray-search leading-relaxed'}>
+                  取消済
+                </p>
+              )
             ) : (
               <p className={'text-sm text-color-required leading-relaxed'}>
                 未承認
