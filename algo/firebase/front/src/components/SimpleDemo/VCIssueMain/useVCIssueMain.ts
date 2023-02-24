@@ -11,7 +11,6 @@ import corVCState from '@/lib/states/corVCState';
 import corVCRequestState from '@/lib/states/corVCRequestState';
 import holderDidAccountState from '@/lib/states/holderDidAccountState';
 import issuerDidAccountState from '@/lib/states/issuerDidAccountState';
-import shortenVerifiableMessage from '@/lib/utils/shortenVerifiableMessage';
 import {
   createVerifiableCredential,
   verifyVerifiableMessage,
@@ -63,13 +62,7 @@ const useVCIssueMain = () => {
       }
 
       if (vcRequestGlobal && !vcRequestForDisplay) {
-        setVCRequestForDisplay(
-          JSON.stringify(
-            shortenVerifiableMessage(vcRequestGlobal),
-            undefined,
-            2
-          )
-        );
+        setVCRequestForDisplay(JSON.stringify(vcRequestGlobal, undefined, 2));
       }
     } catch (e) {
       errorHandler(e);
@@ -125,9 +118,7 @@ const useVCIssueMain = () => {
 
         setVCGlobal(vc);
         setIssueTimestamp(new Date().getTime());
-        setVCAfterIssuingForDisplay(
-          JSON.stringify(shortenVerifiableMessage(vc), null, 2)
-        );
+        setVCAfterIssuingForDisplay(JSON.stringify(vc, null, 2));
       }
     } catch (e) {
       errorHandler(e);

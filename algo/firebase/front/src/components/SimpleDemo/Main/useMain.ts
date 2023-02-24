@@ -80,7 +80,7 @@ const useMain = () => {
         issuerPw
       );
 
-      await deleteAllApps(indexer, algod, issuerDidAccount.address, sk);
+      await deleteAllApps(indexer, algod, sk);
 
       setClearing(false);
     };

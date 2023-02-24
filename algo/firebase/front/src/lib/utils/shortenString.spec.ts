@@ -1,11 +1,11 @@
-import { expect } from 'chai';
+import { describe, it, expect } from 'vitest';
 import shortenString from './shortenString';
 
 describe('shortenString', () => {
   it('should work', () => {
-    expect(shortenString('abcdefghijklmnopqrstuvwxyz')).to.equal(
+    expect(shortenString('abcdefghijklmnopqrstuvwxyz')).toEqual(
       'abcdef...uvwxyz'
     );
-    expect(shortenString('abcdefg')).to.equal('abcdefg');
+    expect(shortenString('abcdefg')).toEqual('abcdefg');
   });
 });

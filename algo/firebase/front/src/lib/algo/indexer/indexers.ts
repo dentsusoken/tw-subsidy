@@ -1,4 +1,4 @@
-import { ChainType } from '@/lib/types';
+import { ChainType } from '../../types';
 import algosdk from 'algosdk';
 
 const MAINNET_ALGO_INDEXER = 'https://algoindexer.algoexplorerapi.io';

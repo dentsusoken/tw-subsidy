@@ -12,7 +12,6 @@ import issuerDidAccountState from '@/lib/states/issuerDidAccountState';
 
 import { getAlgod } from '@/lib/algo/algod/algods';
 
-import shortenVerifiablePresentation from '@/lib/utils/shortenVerifiablePresentation';
 import { verifyVerifiablePresentation } from '@/lib/algosbt';
 import {
   DidAccount,
@@ -46,9 +45,7 @@ const useVPVerifyMain = () => {
       setIssuerDidAccount(issuerDidAccountGlobal);
 
       if (!vm && vpGlobal) {
-        const vmForDisplay = shortenVerifiablePresentation(vpGlobal);
-
-        setVM(JSON.stringify(vmForDisplay, undefined, 2));
+        setVM(JSON.stringify(vpGlobal, undefined, 2));
       }
     } catch (e) {
       errorHandler(e);

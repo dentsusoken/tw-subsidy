@@ -1,13 +1,13 @@
-import { expect } from 'chai';
+import { describe, it, expect } from 'vitest';
 
 import algosdk from 'algosdk';
 
-import { test1Account } from '../account/accounts';
+import { test1Account } from '../account/secrets';
 
 import { testNetAlgod } from '../algod/algods';
-import signSendWaitTxn from './signSendWaitTxn';
+import sendWaitTxn from './sendWaitTxn';
 
-describe('signSendWaitTxn', () => {
+describe('sendWaitTxn', () => {
   it('should work', async () => {
     const suggestedParams = await testNetAlgod.getTransactionParams().do();
 
@@ -18,7 +18,8 @@ describe('signSendWaitTxn', () => {
       suggestedParams,
     });
 
-    expect(await signSendWaitTxn(testNetAlgod, txn, test1Account.sk)).to.not.be
-      .empty;
+    const signedTxn = txn.signTxn(test1Account.sk);
+
+    expect(await sendWaitTxn(testNetAlgod, signedTxn)).to.not.be.empty;
   });
 });

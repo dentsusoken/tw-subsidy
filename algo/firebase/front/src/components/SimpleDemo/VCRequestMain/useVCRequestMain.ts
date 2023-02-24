@@ -10,7 +10,6 @@ import { holderPw } from '@/lib/algo/account/accounts';
 import corVCRequestState from '@/lib/states/corVCRequestState';
 import holderDidAccountState from '@/lib/states/holderDidAccountState';
 import issuerDidAccountState from '@/lib/states/issuerDidAccountState';
-import shotrenVerifiableMessage from '@/lib/utils/shortenVerifiableMessage';
 import { DidAccount } from '@/lib/algosbt/types';
 
 const createCORVCRequestMessage = (
@@ -54,9 +53,8 @@ const useVCRequestMain = () => {
           holderDidAccountGlobal,
           issuerDidAccountGlobal.did
         );
-        const vmForDisplay = shotrenVerifiableMessage(vm);
 
-        setVM(JSON.stringify(vmForDisplay, undefined, 2));
+        setVM(JSON.stringify(vm, undefined, 2));
       }
     } catch (e) {
       errorHandler(e);

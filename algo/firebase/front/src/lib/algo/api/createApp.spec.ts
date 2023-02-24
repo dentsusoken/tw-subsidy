@@ -1,8 +1,8 @@
-import { expect } from 'chai';
+import { describe, it, expect } from 'vitest';
 
-import { test1Account } from '../account/accounts';
+import { test1Account } from '../account/secrets';
 import { testNetAlgod as algod } from '../algod/algods';
-import compile from '../algod/compile';
+import compile from './compile';
 import approvalTeal from '../teal/revokedApproval.teal';
 import clearTeal from '../teal/revokedClear.teal';
 
@@ -14,7 +14,6 @@ describe('createApp', () => {
     const approvalProgram = await compile(algod, approvalTeal);
     const clearProgram = await compile(algod, clearTeal);
     const txnParams: TxnParams = {
-      from: test1Account.addr,
       approvalProgram,
       clearProgram,
       numLocalInts: 0,
@@ -29,11 +28,7 @@ describe('createApp', () => {
       console.log('Application Index:', appIndex);
       expect(appIndex).to.be.gt(0);
     } finally {
-      await deleteApp(
-        algod,
-        { from: test1Account.addr, appIndex },
-        test1Account.sk
-      );
+      await deleteApp(algod, appIndex, test1Account.sk);
     }
   });
 });

@@ -11,7 +11,6 @@ import issuerDidAccountState from '@/lib/states/issuerDidAccountState';
 
 import { CORVPContent } from '@/lib/types';
 
-import shortenVerifiableMessage from '@/lib/utils/shortenVerifiableMessage';
 import { createVerifiableMessage } from '@/lib/algosbt';
 import { holderPw } from '@/lib/algo/account/accounts';
 import { VerifiableCredential, DidAccount } from '@/lib/algosbt/types';
@@ -64,15 +63,12 @@ const useVPSubmitMain = () => {
         holderDidAccountGlobal &&
         verifierDidAccountGlobal
       ) {
-        const content = createVPContent(shortenVerifiableMessage(vcGlobal));
-        const vmForDisplay = shortenVerifiableMessage(
-          createVPMessage(
-            content,
-            holderDidAccountGlobal,
-            verifierDidAccountGlobal.did
-          )
+        const content = createVPContent(vcGlobal);
+        const vmForDisplay = createVPMessage(
+          content,
+          holderDidAccountGlobal,
+          verifierDidAccountGlobal.did
         );
-
         setVM(JSON.stringify(vmForDisplay, undefined, 2));
       }
     } catch (e) {

@@ -8,12 +8,8 @@
     "start": "next start",
     "lint": "next lint --dir src",
     "lint:fix": "yarn lint --fix",
-    "test": "TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\"}' ts-mocha -r tsconfig-paths/register --transpile-only --timeout 100000",
-    "tests": "yarn test --paths **/*.spec.ts",
-    "tests:watch": "yarn tests --watch --watch-files '**/*.ts'",
-    "ts-node": "TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\"}' ts-node -r tsconfig-paths/register --transpile-only",
-    "destroyAsset": "yarn ts-node src/lib/algosbt/transactions/destroyAsset.ts",
-    "deleteAllApps": "yarn ts-node src/cui/deleteAllApps.ts"
+    "test": "vitest",
+    "ts-node": "TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\"}' ts-node -r tsconfig-paths/register --transpile-only"
   },
   "dependencies": {
     "aes-js": "^3.1.2",
@@ -21,6 +17,7 @@
     "buffer": "^6.0.3",
     "dayjs": "^1.11.7",
     "did-jwt": "^6.11.0",
+    "did-jwt-toolkit": "git+https://github.com/higayasuo/did-jwt-toolkit",
     "dotenv": "^16.0.3",
     "js-sha512": "^0.8.0",
     "next": "12.3.0",
@@ -37,25 +34,22 @@
   },
   "devDependencies": {
     "@types/aes-js": "^3.1.1",
-    "@types/chai": "^4.3.3",
-    "@types/mocha": "^9.1.1",
     "@types/node": "18.7.18",
     "@types/pbkdf2": "^3.1.0",
     "@types/react": "18.0.20",
     "@types/react-dom": "18.0.6",
     "autoprefixer": "^10.4.11",
-    "chai": "^4.3.6",
     "eslint": "8.23.1",
     "eslint-config-next": "12.3.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-unused-imports": "^2.0.0",
-    "mocha": "^10.0.0",
     "postcss": "^8.4.16",
     "prettier": "^2.7.1",
     "tailwindcss": "^3.1.8",
-    "ts-mocha": "^10.0.0",
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.1.0",
-    "typescript": "4.8.3"
+    "typescript": "4.8.3",
+    "vite": "^4.1.4",
+    "vitest": "^0.28.5"
   }
 }

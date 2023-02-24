@@ -15,9 +15,9 @@ export const getAppIndexes = async (
 export const deleteAllApps = async (
   indexer: algosdk.Indexer,
   algod: algosdk.Algodv2,
-  address: string,
-  sk: Uint8Array
+  secretKey: Uint8Array
 ) => {
+  const address = algosdk.encodeAddress(secretKey.slice(32));
   const suggestedParams = await algod.getTransactionParams().do();
   const txns: algosdk.Transaction[] = [];
   const appIndexes = await getAppIndexes(indexer, address);
@@ -43,7 +43,7 @@ export const deleteAllApps = async (
   const stxns: Uint8Array[] = [];
 
   txns.forEach((txn) => {
-    stxns.push(txn.signTxn(sk));
+    stxns.push(txn.signTxn(secretKey));
   });
 
   const txResult = await algod.sendRawTransaction(stxns).do();

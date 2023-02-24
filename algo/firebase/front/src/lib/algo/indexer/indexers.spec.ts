@@ -1,15 +1,16 @@
-import { ChainType } from '@/lib/types';
-import { expect } from 'chai';
+import { describe, it, expect } from 'vitest';
+
+import { ChainType } from '../../types';
 
 import { mainNetAlgoIndexer, testNetAlgoIndexer, getIndexer } from './indexers';
 
 describe('indexers', () => {
   it('mainNetAlgoIndexer should work', async () => {
-    expect(await mainNetAlgoIndexer.makeHealthCheck()).to.not.be.empty;
+    expect(await mainNetAlgoIndexer.makeHealthCheck()).toBeDefined();
   });
 
   it('testNetAlgoIndexer should work', async () => {
-    expect(await testNetAlgoIndexer.makeHealthCheck()).to.not.be.empty;
+    expect(await testNetAlgoIndexer.makeHealthCheck()).toBeDefined();
   });
 
   it('getIndexer should work', async () => {

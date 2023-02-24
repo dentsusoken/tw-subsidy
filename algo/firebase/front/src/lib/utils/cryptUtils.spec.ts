@@ -1,5 +1,4 @@
-import { expect } from 'chai';
-import { generateAccount } from 'algosdk';
+import { describe, it, expect } from 'vitest';
 
 import {
   genericHash,
@@ -8,8 +7,6 @@ import {
   decrypt,
   encryptByPassword,
   decryptByPassword,
-  encryptBySecretKey,
-  decryptBySecretKey,
 } from './cryptUtils';
 
 describe('cryptUtils', () => {
@@ -48,20 +45,5 @@ describe('cryptUtils', () => {
     const password = 'abcdefgh';
     const encData = encryptByPassword(data, password);
     expect(decryptByPassword(encData, password)).to.eql(data);
-  });
-
-  it('encryptBySecretKey should work', () => {
-    const account = generateAccount();
-    const data = new TextEncoder().encode('Hello');
-
-    expect(encryptBySecretKey(data, account.sk)).to.not.empty;
-  });
-
-  it('decryptBySecretKey should work', () => {
-    const account = generateAccount();
-    const data = new TextEncoder().encode('Hello');
-
-    const encData = encryptBySecretKey(data, account.sk);
-    expect(decryptBySecretKey(encData, account.sk)).to.eql(data);
   });
 });

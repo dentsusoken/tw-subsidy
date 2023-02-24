@@ -1,5 +1,5 @@
 import algosdk from 'algosdk';
-import { ChainType } from '@/lib/types';
+import { ChainType } from '../../types';
 
 const MAINNET_ALGOD = 'https://node.algoexplorerapi.io';
 const TESTNET_ALGOD = 'https://node.testnet.algoexplorerapi.io';
