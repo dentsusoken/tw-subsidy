@@ -4,65 +4,66 @@ import { useErrorHandler } from 'react-error-boundary';
 
 import { getAlgod } from '@/lib/algo/algod/algods';
 
-import { DidAccount } from '@/lib/algosbt/types';
+import { DIDAccount } from '@/lib/types';
 
 import chainState from '@/lib/states/chainState';
-import corVCState from '@/lib/states/corVCState';
-import corVCRequestState from '@/lib/states/corVCRequestState';
-import holderDidAccountState from '@/lib/states/holderDidAccountState';
-import issuerDidAccountState from '@/lib/states/issuerDidAccountState';
-import {
-  createVerifiableCredential,
-  verifyVerifiableMessage,
-} from '@/lib/algosbt';
+import vcState from '@/lib/states/corVCJWTState';
+import vcRequestState from '@/lib/states/corVCRequestJWTState';
+import holderDIDAccountState from '@/lib/states/holderDIDAccount2State';
+import issuerDIDAccountState from '@/lib/states/issuerDIDAccount2State';
+import * as didvc from '@/lib/didvc';
 import { CORVCContent, CORVCRequestContent } from '@/lib/types';
 
 import { issuerPw } from '@/lib/algo/account/accounts';
 
 const createVCContent = (vcRequestContent: CORVCRequestContent) => {
-  const content: CORVCContent = {
-    issueDate: new Date().toISOString(),
-    address: vcRequestContent.address,
-    name: vcRequestContent.name,
-  };
+  const content: CORVCContent = { ...vcRequestContent };
 
   return content;
 };
 
 const useVCIssueMain = () => {
-  const [vcRequestVerified, setVCRequestVerified] = useState(false);
+  const [issueTimestamp, setIssueTimestamp] = useState(0);
   const [vcIssued, setVCIssued] = useState(false);
   const [vcIssuing, setVCIssuing] = useState(false);
   const [vcRequestForDisplay, setVCRequestForDisplay] = useState('');
   const [vcContent, setVCContent] = useState<CORVCContent>();
-  const [vcBeforeIssuingForDisplay, setVCBeforeIssuingForDisplay] =
-    useState('');
-  const [vcAfterIssuingForDisplay, setVCAfterIssuingForDisplay] = useState('');
+  const [vcForDisplay, setVCForDisplay] = useState('');
 
-  const [issueTimestamp, setIssueTimestamp] = useState(0);
-  const [holderDidAccount, setHolderDidAccount] = useState<DidAccount>();
-  const [issuerDidAccount, setIssuerDidAccount] = useState<DidAccount>();
+  const [holderDIDAccount, setHolderDIDAccount] = useState<DIDAccount>();
+  const [issuerDIDAccount, setIssuerDIDAccount] = useState<DIDAccount>();
 
   const [chainType] = useRecoilState(chainState);
-  const [vcRequestGlobal] = useRecoilState(corVCRequestState);
-  const [vcGlobal, setVCGlobal] = useRecoilState(corVCState);
-  const [holderDidAccountGlobal] = useRecoilState(holderDidAccountState);
-  const [issuerDidAccountGlobal] = useRecoilState(issuerDidAccountState);
+  const [vcRequestGlobal] = useRecoilState(vcRequestState);
+  const [vcGlobal, setVCGlobal] = useRecoilState(vcState);
+  const [holderDIDAccountGlobal] = useRecoilState(holderDIDAccountState);
+  const [issuerDIDAccountGlobal] = useRecoilState(issuerDIDAccountState);
 
   const errorHandler = useErrorHandler();
 
   useEffect(() => {
     try {
       setVCIssued(!!vcGlobal);
-      setHolderDidAccount(holderDidAccountGlobal);
-      setIssuerDidAccount(issuerDidAccountGlobal);
+      setHolderDIDAccount(holderDIDAccountGlobal);
+      setIssuerDIDAccount(issuerDIDAccountGlobal);
 
       if (vcIssuing && !!vcGlobal) {
         setVCIssuing(false);
       }
 
-      if (vcRequestGlobal && !vcRequestForDisplay) {
-        setVCRequestForDisplay(JSON.stringify(vcRequestGlobal, undefined, 2));
+      if (vcRequestGlobal && !vcRequestForDisplay && issuerDIDAccountGlobal) {
+        const f = async () => {
+          const verifiedJWT = await didvc.verifyJWT<CORVCRequestContent>(
+            vcRequestGlobal,
+            issuerDIDAccountGlobal.did
+          );
+
+          setVCContent(createVCContent(verifiedJWT.payload));
+          setVCRequestForDisplay(
+            JSON.stringify(verifiedJWT.payload, undefined, 2)
+          );
+        };
+        f().catch(errorHandler);
       }
     } catch (e) {
       errorHandler(e);
@@ -72,29 +73,10 @@ const useVCIssueMain = () => {
     vcRequestGlobal,
     vcIssuing,
     vcRequestForDisplay,
-    issuerDidAccountGlobal,
-    holderDidAccountGlobal,
+    issuerDIDAccountGlobal,
+    holderDIDAccountGlobal,
     errorHandler,
   ]);
-
-  const onVerifyVCRequestHandler = () => {
-    try {
-      if (vcRequestGlobal) {
-        const verified = verifyVerifiableMessage(vcRequestGlobal);
-
-        setVCRequestVerified(verified);
-
-        if (verified) {
-          const content = createVCContent(vcRequestGlobal.message.content);
-
-          setVCContent(content);
-          setVCBeforeIssuingForDisplay(JSON.stringify(content, null, 2));
-        }
-      }
-    } catch (e) {
-      errorHandler(e);
-    }
-  };
 
   const onIssueVCHandler = async () => {
     try {
@@ -102,23 +84,42 @@ const useVCIssueMain = () => {
         vcRequestGlobal &&
         !vcGlobal &&
         vcContent &&
-        issuerDidAccountGlobal &&
-        holderDidAccountGlobal
+        issuerDIDAccountGlobal &&
+        holderDIDAccountGlobal
       ) {
         setVCIssuing(true);
 
         const algod = getAlgod(chainType);
-        const vc = await createVerifiableCredential(
+        const appIndex = await didvc.createRevokedApp(
           algod,
-          issuerDidAccountGlobal,
-          holderDidAccountGlobal.did,
-          vcContent,
+          issuerDIDAccountGlobal.encryptedSecretKey,
+          issuerPw
+        );
+        const payload: didvc.CredentialJWTPayload<CORVCContent> = {
+          sub: holderDIDAccountGlobal.did,
+          vc: {
+            '@context': [didvc.DEFAULT_CONTEXT],
+            type: [didvc.DEFAULT_VC_TYPE],
+            credentialSubject: {
+              ...vcContent,
+              appIndex,
+            },
+          },
+        };
+
+        const vcJWT = await didvc.createCredentialJWT(
+          payload,
+          issuerDIDAccountGlobal.encryptedSecretKey,
           issuerPw
         );
 
-        setVCGlobal(vc);
-        setIssueTimestamp(new Date().getTime());
-        setVCAfterIssuingForDisplay(JSON.stringify(vc, null, 2));
+        setVCGlobal(vcJWT);
+        setIssueTimestamp(Date.now());
+
+        const verifiedVC = await didvc.verifyCredentialJWT<CORVCContent>(vcJWT);
+        setVCForDisplay(
+          JSON.stringify(verifiedVC.verifiableCredential, null, 2)
+        );
       }
     } catch (e) {
       errorHandler(e);
@@ -127,16 +128,15 @@ const useVCIssueMain = () => {
 
   return {
     vcRequestForDisplay,
-    vcRequestVerified,
-    vcBeforeIssuingForDisplay,
-    vcAfterIssuingForDisplay,
+    vcForDisplay,
     vcIssued,
     vcIssuing,
-    issuerDidAccount,
-    holderDidAccount,
-    issueTimestamp,
-    onVerifyVCRequestHandler,
+    issuerDID: issuerDIDAccount?.did,
+    issuerAddress: issuerDIDAccount?.address,
+    holderDID: holderDIDAccount?.did,
+    holderAddress: holderDIDAccount?.address,
     onIssueVCHandler,
+    issueTimestamp,
   };
 };
 

@@ -1,4 +1,4 @@
-import DidInfo from '@/components/DidInfo';
+import DIDInfo2 from '@/components/DIDInfo2';
 import BackButton from '@/components/BackButton';
 
 import useVCIssueMain from './useVCIssueMain';
@@ -6,44 +6,23 @@ import useVCIssueMain from './useVCIssueMain';
 const VCIssueMain = () => {
   const {
     vcRequestForDisplay,
-    vcRequestVerified,
-    vcBeforeIssuingForDisplay,
-    vcAfterIssuingForDisplay,
-    onVerifyVCRequestHandler,
+    vcForDisplay,
     onIssueVCHandler,
     vcIssued,
     vcIssuing,
-    issuerDidAccount,
-    holderDidAccount,
+    issuerDID,
+    issuerAddress,
+    holderDID,
+    holderAddress,
     issueTimestamp,
   } = useVCIssueMain();
-  const VCRequestVerify = () => (
+  const VCBeforeIssuing = () => (
     <>
       <div className="pt-2">住民票VCリクエストの内容</div>
       <textarea
         value={vcRequestForDisplay}
         rows={12}
-        cols={50}
-        readOnly={true}
-      ></textarea>
-      <div>
-        <button
-          onClick={onVerifyVCRequestHandler}
-          className="inline-block w-20 border-2 border-blue-500 hover:bg-blue-400 hover:text-white rounded-full text-center mr-4"
-        >
-          検証
-        </button>
-      </div>
-    </>
-  );
-
-  const VCBeforeIssuing = () => (
-    <>
-      <div className="pt-2">住民票VC発行前の内容</div>
-      <textarea
-        value={vcBeforeIssuingForDisplay}
-        rows={5}
-        cols={50}
+        cols={70}
         readOnly={true}
       ></textarea>
       <div>
@@ -61,11 +40,11 @@ const VCIssueMain = () => {
 
   const VCAfterIssuing = () => (
     <>
-      <div className="pt-2">住民票VC発行後の内容</div>
+      <div className="pt-2">住民票VCの内容</div>
       <textarea
-        value={vcAfterIssuingForDisplay}
-        rows={15}
-        cols={50}
+        value={vcForDisplay}
+        rows={37}
+        cols={90}
         readOnly={true}
       ></textarea>
     </>
@@ -74,22 +53,20 @@ const VCIssueMain = () => {
   return (
     <div>
       <div className="py-2">
-        <BackButton url="./simple-demo" />
+        <BackButton url="./simple-demo2" />
       </div>
       <p className="w-fit border-dashed border-4 p-4 mb-2">
-        証明者が申請者の住民票VCリクエストを検証します。
-        <br />
-        検証がOKなら、証明者が申請者の住民票VCを発行します。
+        証明者が申請者の住民票VCを発行します。
       </p>
-      <DidInfo
+      <DIDInfo2
         name="証明者"
-        didAccount={issuerDidAccount}
+        did={issuerDID}
+        address={issuerAddress}
         timestamp={issueTimestamp}
       />
-      <DidInfo name="申請者" didAccount={holderDidAccount} />
+      <DIDInfo2 name="申請者" did={holderDID} address={holderAddress} />
 
-      {!vcRequestVerified && <VCRequestVerify />}
-      {vcRequestVerified && !vcIssued && <VCBeforeIssuing />}
+      {!vcIssued && <VCBeforeIssuing />}
       {vcIssued && <VCAfterIssuing />}
     </div>
   );

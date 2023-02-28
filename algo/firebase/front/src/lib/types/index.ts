@@ -24,7 +24,6 @@ export type CORVCRequestContent = {
 };
 
 export type CORVCContent = {
-  issueDate: string;
   address: string;
   name: string;
 };
