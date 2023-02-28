@@ -50,7 +50,7 @@ const Main = () => {
       <div className="mt-4 flex">
         {!vcRequested && !clearing && accountsPrepared ? (
           <div className="w-56 border-2 border-blue-500 rounded-full text-center hover:bg-blue-400 hover:text-white">
-            <a href="./simple-demo-vcrequest">住民票VCの発行依頼</a>
+            <a href="./simple-demo2-vcrequest">住民票VCの発行依頼</a>
           </div>
         ) : (
           <div className="w-56 text-center">住民票VCの発行依頼</div>
@@ -64,7 +64,7 @@ const Main = () => {
       <div className="mt-4 flex">
         {vcRequested && !vcIssued ? (
           <div className="w-56 border-2 border-blue-500 rounded-full text-center hover:bg-blue-400 hover:text-white">
-            <a href="./simple-demo-vcissue">住民票VCの発行</a>
+            <a href="./simple-demo2-vcissue">住民票VCの発行</a>
           </div>
         ) : (
           <div className="w-56 text-center">住民票VCの発行</div>
@@ -78,7 +78,7 @@ const Main = () => {
       <div className="mt-4 flex">
         {vcIssued && !vpSubmitted ? (
           <div className="w-56 border-2 border-blue-500 rounded-full text-center hover:bg-blue-400 hover:text-white">
-            <a href="./simple-demo-vpsubmit">住民票VPの提出</a>
+            <a href="./simple-demo2-vpsubmit">住民票VPの提出</a>
           </div>
         ) : (
           <div className="w-56 text-center">住民票VPの提出</div>
@@ -92,7 +92,7 @@ const Main = () => {
       <div className="mt-4 flex">
         {vpSubmitted && !vpVerified ? (
           <div className="w-56 border-2 border-blue-500 rounded-full text-center hover:bg-blue-400 hover:text-white">
-            <a href="./simple-demo-vpverify">住民票VPの検証</a>
+            <a href="./simple-demo2-vpverify">住民票VPの検証</a>
           </div>
         ) : (
           <div className="w-56 text-center">住民票VPの検証</div>

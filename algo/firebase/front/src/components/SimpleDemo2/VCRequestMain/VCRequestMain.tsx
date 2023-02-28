@@ -1,29 +1,48 @@
-import DidInfo from '@/components/DidInfo';
+import DIDInfo2 from '@/components/DIDInfo2';
 import BackButton from '@/components/BackButton';
 import useVCRequestMain from './useVCRequestMain';
 
 const VCRequestMain = () => {
   const {
-    vm,
+    requestContent,
+    requestResult,
     onVCRequestClickHandler,
     vcRequested,
-    holderDidAccount,
-    issuerDidAccount,
+    holderDID,
+    holderAddress,
+    issuerDID,
+    issuerAddress,
   } = useVCRequestMain();
 
   return (
     <div>
       <div className="py-2">
-        <BackButton url="./simple-demo" />
+        <BackButton url="./simple-demo2" />
       </div>
       <p className="w-fit border-dashed border-4 p-4 mb-2">
         申請者が証明者に住民票VCの発行を依頼します。
       </p>
-      <DidInfo name="申請者" didAccount={holderDidAccount} />
-      <DidInfo name="証明者" didAccount={issuerDidAccount} />
+      <DIDInfo2 name="申請者" did={holderDID} address={holderAddress} />
+      <DIDInfo2 name="証明者" did={issuerDID} address={issuerAddress} />
 
       <div className="pt-2">依頼内容</div>
-      <textarea value={vm} rows={12} cols={50} readOnly={true}></textarea>
+      <textarea
+        value={requestContent}
+        rows={5}
+        cols={50}
+        readOnly={true}
+      ></textarea>
+      {requestResult && (
+        <>
+          <div className="pt-2">依頼結果</div>
+          <textarea
+            value={requestResult}
+            rows={20}
+            cols={86}
+            readOnly={true}
+          ></textarea>
+        </>
+      )}
       <div>
         <button
           onClick={onVCRequestClickHandler}

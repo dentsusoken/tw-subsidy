@@ -7,11 +7,11 @@ import { getAlgod } from '@/lib/algo/algod/algods';
 
 import chainState from '@/lib/states/chainState';
 import accountsPreparedState from '@/lib/states/accountsPreparedState';
-import corVCRequestState from '@/lib/states/corVCRequestState';
-import corVCState from '@/lib/states/corVCState';
-import corVPState from '@/lib/states/corVPState';
+import corVCRequestState from '@/lib/states/corVCRequestJWTState';
+import corVCState from '@/lib/states/corVCJWTState';
+import corVPState from '@/lib/states/corVPJWTState';
 import corVPVerifiedState from '@/lib/states/corVPVerifiedState';
-import issuerEncryptSecretKeyState from '@/lib/states/issuerEncryptSecretKeyState';
+import issuerDIDAccountState from '@/lib/states/issuerDIDAccount2State';
 import * as didvc from '@/lib/didvc';
 
 import { issuerPw } from '@/lib/algo/account/accounts';
@@ -31,7 +31,7 @@ const useMain = () => {
   const [vpGlobal, setVPGlobal] = useRecoilState(corVPState);
   const [vpVerifiedGlobal, setVPVerifiedGlobal] =
     useRecoilState(corVPVerifiedState);
-  const [issuerEncryptSecretKey] = useRecoilState(issuerEncryptSecretKeyState);
+  const [issuerDIDAccount] = useRecoilState(issuerDIDAccountState);
   const [chainType] = useRecoilState(chainState);
 
   const errorHandler = useErrorHandler();
@@ -51,6 +51,7 @@ const useMain = () => {
   ]);
 
   const onClearClickHandler = () => {
+    setAccountsPrepared(false);
     setVCRequestGlobal(undefined);
     setVCGlobal(undefined);
     setVPGlobal(undefined);
@@ -60,7 +61,7 @@ const useMain = () => {
       return;
     }
 
-    if (!issuerEncryptSecretKey) {
+    if (!issuerDIDAccount) {
       return;
     }
 
@@ -73,7 +74,7 @@ const useMain = () => {
       await didvc.deleteAllApps(
         indexer,
         algod,
-        issuerEncryptSecretKey,
+        issuerDIDAccount.encryptedSecretKey,
         issuerPw
       );
 

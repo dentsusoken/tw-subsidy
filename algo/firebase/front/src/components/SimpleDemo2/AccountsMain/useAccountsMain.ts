@@ -3,41 +3,35 @@ import { useRecoilState } from 'recoil';
 
 import { useErrorHandler } from 'react-error-boundary';
 
-import * as didJwtKit from 'did-jwt-toolkit';
-
 import { holderPw, issuerPw, verifierPw } from '@/lib/algo/account/accounts';
+import { DIDAccount } from '@/lib/types';
 
 import { getAlgod } from '@/lib/algo/algod/algods';
 import getAlgoBalance from '@/lib/algo/api/getAlgoBalance';
-import addressFromSecretKey from '@/lib/algo/utils/addressFromSecretKey';
-import { decryptSecretKey, encryptSecretKey } from '@/lib/didvc';
 
-import holderEncryptSecretKeyState from '@/lib/states/holderEncryptSecretKeyState';
-import verifierEncryptSecretKeyState from '@/lib/states/verifierEncryptSecretKeyState';
-import issuerEncryptSecretKeyState from '@/lib/states/issuerEncryptSecretKeyState';
+import holderDIDAccountState from '@/lib/states/holderDIDAccount2State';
+import verifierDIDAccountState from '@/lib/states/verifierDIDAccount2State';
+import issuerDIDAccountState from '@/lib/states/issuerDIDAccount2State';
 import accountsPreparedState from '@/lib/states/accountsPreparedState';
 import chainState from '@/lib/states/chainState';
 
 import * as didvc from '@/lib/didvc';
 
-const driver = didJwtKit.getDIDKeyDriver('EdDSA');
-
 const useAccountsMain = () => {
   const [accountsPrepared, setAccountsPrepared] = useState(false);
-  const [holderEncryptSecretKey, setHolderEncryptSecretKey] =
-    useState<string>();
-  const [verifierEncryptSecretKey, setVerifierEncryptSecretKey] =
-    useState<string>();
-  const [issuerEncryptSecretKey, setIssuerEncryptSecretKey] =
-    useState<string>();
+  const [holderDIDAccount, setHolderDIDAccount] = useState<DIDAccount>();
+  const [verifierDIDAccount, setVerifierDIDAccount] = useState<DIDAccount>();
+  const [issuerDIDAccount, setIssuerDIDAccount] = useState<DIDAccount>();
   const [timestamp, setTimestamp] = useState(0);
 
-  const [holderEncryptSecretkeyGlobal, setHolderEncryptSecretKeyGlobal] =
-    useRecoilState(holderEncryptSecretKeyState);
-  const [verifierEncryptSecretKeyGlobal, setVerifierEncryptSecretKeyGlobal] =
-    useRecoilState(verifierEncryptSecretKeyState);
-  const [issuerEncryptSecretKeyGlobal, setIssuerEncryptSecretKeyGlobal] =
-    useRecoilState(issuerEncryptSecretKeyState);
+  const [holderDIDAccountGlobal, setHolderDIDAccountGlobal] = useRecoilState(
+    holderDIDAccountState
+  );
+  const [verifierDIDAccountGlobal, setVerifierDIDAccountGlobal] =
+    useRecoilState(verifierDIDAccountState);
+  const [issuerDIDAccountGlobal, setIssuerDIDAccountGlobal] = useRecoilState(
+    issuerDIDAccountState
+  );
   const [accountsPreparedGlobal, setAccountsPreparedGlobal] = useRecoilState(
     accountsPreparedState
   );
@@ -47,39 +41,38 @@ const useAccountsMain = () => {
 
   const checkIssuerBalance = useCallback(async () => {
     if (
-      !holderEncryptSecretkeyGlobal ||
-      !issuerEncryptSecretKeyGlobal ||
-      !verifierEncryptSecretKeyGlobal
+      !holderDIDAccountGlobal ||
+      !issuerDIDAccountGlobal ||
+      !verifierDIDAccountGlobal
     ) {
+      setAccountsPreparedGlobal(false);
       return;
     }
 
     const algod = getAlgod(chainType);
-    const issuerSecretKey = decryptSecretKey(
-      issuerEncryptSecretKeyGlobal,
-      issuerPw
-    );
 
     const balance = Number(
-      await getAlgoBalance(algod, addressFromSecretKey(issuerSecretKey))
+      await getAlgoBalance(algod, issuerDIDAccountGlobal.address)
     );
 
     if (balance >= 1000000) {
       setAccountsPreparedGlobal(true);
+    } else {
+      setAccountsPreparedGlobal(false);
     }
   }, [
-    holderEncryptSecretkeyGlobal,
-    issuerEncryptSecretKeyGlobal,
-    verifierEncryptSecretKeyGlobal,
+    holderDIDAccountGlobal,
+    issuerDIDAccountGlobal,
+    verifierDIDAccountGlobal,
     chainType,
     setAccountsPreparedGlobal,
   ]);
 
   useEffect(() => {
     try {
-      setHolderEncryptSecretKey(holderEncryptSecretkeyGlobal);
-      setIssuerEncryptSecretKey(issuerEncryptSecretKeyGlobal);
-      setVerifierEncryptSecretKey(verifierEncryptSecretKeyGlobal);
+      setHolderDIDAccount(holderDIDAccountGlobal);
+      setIssuerDIDAccount(issuerDIDAccountGlobal);
+      setVerifierDIDAccount(verifierDIDAccountGlobal);
       setAccountsPrepared(accountsPreparedGlobal);
 
       checkIssuerBalance();
@@ -87,9 +80,9 @@ const useAccountsMain = () => {
       errorHandler(e);
     }
   }, [
-    holderEncryptSecretkeyGlobal,
-    issuerEncryptSecretKeyGlobal,
-    verifierEncryptSecretKeyGlobal,
+    holderDIDAccountGlobal,
+    issuerDIDAccountGlobal,
+    verifierDIDAccountGlobal,
     accountsPreparedGlobal,
     chainType,
     errorHandler,
@@ -98,13 +91,13 @@ const useAccountsMain = () => {
 
   const onCreateAccountsHandler = async () => {
     try {
-      const holderEncryptSecretKey = didvc.createEncryptSecretKey(holderPw);
-      const issuerEncryptSecretKey = didvc.createEncryptSecretKey(issuerPw);
-      const verifierEncryptSecretKey = didvc.createEncryptSecretKey(verifierPw);
+      const holderDIDAccount = didvc.createDIDAccount(holderPw);
+      const issuerDIDAccount = didvc.createDIDAccount(issuerPw);
+      const verifierDIDAccount = didvc.createDIDAccount(verifierPw);
 
-      setHolderEncryptSecretKeyGlobal(holderEncryptSecretKey);
-      setIssuerEncryptSecretKeyGlobal(issuerEncryptSecretKey);
-      setVerifierEncryptSecretKeyGlobal(verifierEncryptSecretKey);
+      setHolderDIDAccountGlobal(holderDIDAccount);
+      setIssuerDIDAccountGlobal(issuerDIDAccount);
+      setVerifierDIDAccountGlobal(verifierDIDAccount);
 
       setAccountsPreparedGlobal(false);
     } catch (e) {
@@ -122,24 +115,14 @@ const useAccountsMain = () => {
     }
   };
 
-  const { did: holderDID, address: holderAddress } =
-    didvc.didAndAddressFromEncryptSecretKey(holderEncryptSecretKey, holderPw);
-  const { did: issuerDID, address: issuerAddress } =
-    didvc.didAndAddressFromEncryptSecretKey(issuerEncryptSecretKey, issuerPw);
-  const { did: verifierDID, address: verifierAddress } =
-    didvc.didAndAddressFromEncryptSecretKey(
-      verifierEncryptSecretKey,
-      verifierPw
-    );
-
   return {
     accountsPrepared,
-    holderDID,
-    holderAddress,
-    issuerDID,
-    issuerAddress,
-    verifierDID,
-    verifierAddress,
+    holderDID: holderDIDAccount?.did,
+    holderAddress: holderDIDAccount?.address,
+    issuerDID: issuerDIDAccount?.did,
+    issuerAddress: issuerDIDAccount?.address,
+    verifierDID: verifierDIDAccount?.did,
+    verifierAddress: verifierDIDAccount?.address,
     timestamp,
     onCreateAccountsHandler,
     onCheckBalanceHandler,
