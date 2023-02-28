@@ -3,73 +3,53 @@ import { useRecoilState } from 'recoil';
 
 import { useErrorHandler } from 'react-error-boundary';
 
-import corVCState from '@/lib/states/corVCState';
-import corVPState from '@/lib/states/corVPState';
-import holderDidAccountState from '@/lib/states/holderDidAccountState';
-import verifierDidAccountState from '@/lib/states/verifierDidAccountState';
-import issuerDidAccountState from '@/lib/states/issuerDidAccountState';
+import vcState from '@/lib/states/corVCJWTState';
+import vpState from '@/lib/states/corVPJWTState';
+import holderDIDAccountState from '@/lib/states/holderDIDAccount2State';
+import verifierDIDAccountState from '@/lib/states/verifierDIDAccount2State';
+import issuerDIDAccountState from '@/lib/states/issuerDIDAccount2State';
 
-import { CORVPContent } from '@/lib/types';
+import * as didvc from '@/lib/didvc';
 
-import { createVerifiableMessage } from '@/lib/algosbt';
 import { holderPw } from '@/lib/algo/account/accounts';
-import { VerifiableCredential, DidAccount } from '@/lib/algosbt/types';
-
-const createVPContent = (vc: VerifiableCredential) => {
-  const content: CORVPContent = {
-    credentials: [vc],
-  };
-
-  return content;
-};
-const createVPMessage = (
-  content: CORVPContent,
-  holderDidAccount: DidAccount,
-  verifierDid: string
-) => {
-  return createVerifiableMessage(
-    holderDidAccount,
-    verifierDid,
-    content,
-    holderPw
-  );
-};
+import { DIDAccount } from '@/lib/types';
 
 const useVPSubmitMain = () => {
   const [vpSubmitted, setVPSubmitted] = useState(false);
-  const [vm, setVM] = useState('');
-  const [holderDidAccount, setHolderDidAccount] = useState<DidAccount>();
-  const [verifierDidAccount, setVerifierDidAccount] = useState<DidAccount>();
-  const [issuerDidAccount, setIssuerDidAccount] = useState<DidAccount>();
+  const [vcForDisplay, setVCForDisplay] = useState('');
+  const [vpForDisplay, setVPForDisplay] = useState('');
+  const [holderDIDAccount, setHolderDIDAccount] = useState<DIDAccount>();
+  const [verifierDIDAccount, setVerifierDIDAccount] = useState<DIDAccount>();
+  const [issuerDIDAccount, setIssuerDIDAccount] = useState<DIDAccount>();
 
-  const [vcGlobal] = useRecoilState(corVCState);
-  const [vpGlobal, setVPGlobal] = useRecoilState(corVPState);
-  const [holderDidAccountGlobal] = useRecoilState(holderDidAccountState);
-  const [verifierDidAccountGlobal] = useRecoilState(verifierDidAccountState);
-  const [issuerDidAccountGlobal] = useRecoilState(issuerDidAccountState);
+  const [vcGlobal] = useRecoilState(vcState);
+  const [vpGlobal, setVPGlobal] = useRecoilState(vpState);
+  const [holderDIDAccountGlobal] = useRecoilState(holderDIDAccountState);
+  const [verifierDIDAccountGlobal] = useRecoilState(verifierDIDAccountState);
+  const [issuerDIDAccountGlobal] = useRecoilState(issuerDIDAccountState);
 
   const errorHandler = useErrorHandler();
 
   useEffect(() => {
     try {
       setVPSubmitted(!!vpGlobal);
-      setHolderDidAccount(holderDidAccountGlobal);
-      setVerifierDidAccount(verifierDidAccountGlobal);
-      setIssuerDidAccount(issuerDidAccountGlobal);
+      setHolderDIDAccount(holderDIDAccountGlobal);
+      setVerifierDIDAccount(verifierDIDAccountGlobal);
+      setIssuerDIDAccount(issuerDIDAccountGlobal);
 
       if (
-        !vm &&
+        !vcForDisplay &&
         vcGlobal &&
-        holderDidAccountGlobal &&
-        verifierDidAccountGlobal
+        holderDIDAccountGlobal &&
+        verifierDIDAccountGlobal
       ) {
-        const content = createVPContent(vcGlobal);
-        const vmForDisplay = createVPMessage(
-          content,
-          holderDidAccountGlobal,
-          verifierDidAccountGlobal.did
-        );
-        setVM(JSON.stringify(vmForDisplay, undefined, 2));
+        const f = async () => {
+          const verifiedVC = await didvc.verifyCredentialJWT(vcGlobal);
+          setVCForDisplay(
+            JSON.stringify(verifiedVC.verifiableCredential, undefined, 2)
+          );
+        };
+        f().catch(errorHandler);
       }
     } catch (e) {
       errorHandler(e);
@@ -77,28 +57,44 @@ const useVPSubmitMain = () => {
   }, [
     vcGlobal,
     vpGlobal,
-    vm,
-    holderDidAccountGlobal,
-    verifierDidAccountGlobal,
-    issuerDidAccountGlobal,
+    vcForDisplay,
+    holderDIDAccountGlobal,
+    verifierDIDAccountGlobal,
+    issuerDIDAccountGlobal,
     errorHandler,
   ]);
 
-  const onVPSubmitClickHandler = () => {
+  const onVPSubmitClickHandler = async () => {
     try {
       if (
         !vpGlobal &&
         vcGlobal &&
-        holderDidAccountGlobal &&
-        verifierDidAccountGlobal
+        holderDIDAccountGlobal &&
+        verifierDIDAccountGlobal
       ) {
-        const content = createVPContent(vcGlobal);
-        const vm = createVPMessage(
-          content,
-          holderDidAccountGlobal,
-          verifierDidAccountGlobal.did
+        const payload: didvc.PresentationJWTPayload = {
+          aud: verifierDIDAccountGlobal.did,
+          vp: {
+            '@context': [didvc.DEFAULT_CONTEXT],
+            type: [didvc.DEFAULT_VP_TYPE],
+            verifiableCredential: [vcGlobal],
+          },
+        };
+
+        const vpJWT = await didvc.createPresentationJWT(
+          payload,
+          holderDIDAccountGlobal.encryptedSecretKey,
+          holderPw
         );
-        setVPGlobal(vm);
+        setVPGlobal(vpJWT);
+
+        const verifiedVP = await didvc.verifyPresentationJWT(
+          vpJWT,
+          verifierDIDAccountGlobal.did
+        );
+        setVPForDisplay(
+          JSON.stringify(verifiedVP.verifiablePresentation, undefined, 2)
+        );
       }
     } catch (e) {
       errorHandler(e);
@@ -106,12 +102,16 @@ const useVPSubmitMain = () => {
   };
 
   return {
-    vm,
+    vcForDisplay,
+    vpForDisplay,
     onVPSubmitClickHandler,
     vpSubmitted,
-    holderDidAccount,
-    verifierDidAccount,
-    issuerDidAccount,
+    holderDID: holderDIDAccount?.did,
+    holderAddress: holderDIDAccount?.address,
+    verifierDID: verifierDIDAccount?.did,
+    verifierAddress: verifierDIDAccount?.address,
+    issuerDID: issuerDIDAccount?.did,
+    issuerAddress: issuerDIDAccount?.address,
   };
 };
 

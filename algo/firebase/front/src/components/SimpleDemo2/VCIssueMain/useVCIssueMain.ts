@@ -113,10 +113,11 @@ const useVCIssueMain = () => {
           issuerPw
         );
 
+        const verifiedVC = await didvc.verifyCredentialJWT<CORVCContent>(vcJWT);
+
         setVCGlobal(vcJWT);
         setIssueTimestamp(Date.now());
 
-        const verifiedVC = await didvc.verifyCredentialJWT<CORVCContent>(vcJWT);
         setVCForDisplay(
           JSON.stringify(verifiedVC.verifiableCredential, null, 2)
         );
