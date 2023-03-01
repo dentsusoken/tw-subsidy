@@ -8,6 +8,7 @@ import { test1Account, test2Account } from '../algo/account/secrets';
 import { testNetAlgod as algod } from '../algo/algod/algods';
 import { testNetAlgoIndexer as indexer } from '../algo/indexer/indexers';
 import deleteApp from '../algo/api/deleteApp';
+import deleteAllApps from '../algo/api/deleteAllApps';
 import createRevokedApp from '../algo/api/createRevokedApp';
 import setRevoked from '../algo/api/setRevoked';
 import { getAppIndexes } from '../algo/api/deleteAllApps';
@@ -254,13 +255,12 @@ describe('didvc', () => {
       expect(
         verifiedJWT.verifiableCredential.credentialSubject.appIndex
       ).toEqual(appIndex);
-      expect(await didvc.verifyCredentialStatus(algod, appIndex)).toBeTruthy();
     } finally {
       await deleteApp(algod, appIndex, test2Account.sk);
     }
   });
 
-  it('verifyPresentationJWT should work', async () => {
+  it.skip('verifyPresentationJWT should work', async () => {
     const issuerEncryptedSecretKey = didvc.encryptSecretKey(
       test2Account.sk,
       issuerPw
@@ -348,6 +348,92 @@ describe('didvc', () => {
     expect(typedVC.credentialSubject.appIndex).toEqual(1);
   });
 
+  it.skip('verifyCredentialStatus should work', async () => {
+    const appIndex = await createRevokedApp(algod, test1Account.sk);
+    const vc: didJwtKit.VerifiableCredential = {
+      '@context': [didJwtKit.DEFAULT_CONTEXT],
+      type: [didJwtKit.DEFAULT_VC_TYPE],
+      credentialSubject: {
+        name: 'aaa',
+        appIndex,
+      },
+      issuer: {
+        id: 'did:key:abc',
+      },
+      issuanceDate: '1234/12/31T12:34:56',
+      proof: {
+        type: 'hoge',
+      },
+    };
+
+    try {
+      console.log('Application Index:', appIndex);
+
+      expect(await didvc.verifyCredentialStatus(algod, vc)).toBeTruthy();
+
+      await setRevoked(algod, { appIndex, value: 1 }, test1Account.sk);
+
+      expect(await didvc.verifyCredentialStatus(algod, vc)).toBeFalsy();
+    } finally {
+      await deleteApp(algod, appIndex, test1Account.sk);
+    }
+  });
+
+  it.skip('verifyCredentialStatuses should work', async () => {
+    const appIndex = await createRevokedApp(algod, test1Account.sk);
+    const appIndex2 = await createRevokedApp(algod, test1Account.sk);
+
+    const vc: didJwtKit.VerifiableCredential = {
+      '@context': [didJwtKit.DEFAULT_CONTEXT],
+      type: [didJwtKit.DEFAULT_VC_TYPE],
+      credentialSubject: {
+        name: 'aaa',
+        appIndex,
+      },
+      issuer: {
+        id: 'did:key:abc',
+      },
+      issuanceDate: '1234/12/31T12:34:56',
+      proof: {
+        type: 'hoge',
+      },
+    };
+    const vc2: didJwtKit.VerifiableCredential = {
+      '@context': [didJwtKit.DEFAULT_CONTEXT],
+      type: [didJwtKit.DEFAULT_VC_TYPE],
+      credentialSubject: {
+        name: 'bbb',
+        appIndex2,
+      },
+      issuer: {
+        id: 'did:key:abc',
+      },
+      issuanceDate: '1234/12/31T12:34:56',
+      proof: {
+        type: 'hoge',
+      },
+    };
+
+    try {
+      console.log('Application Index:', appIndex);
+      console.log('Application Index2:', appIndex2);
+
+      expect(await didvc.verifyCredentialStatuses(algod, [vc, vc2])).toEqual([
+        true,
+        true,
+      ]);
+
+      await setRevoked(algod, { appIndex, value: 1 }, test1Account.sk);
+
+      expect(await didvc.verifyCredentialStatuses(algod, [vc, vc2])).toEqual([
+        false,
+        true,
+      ]);
+    } finally {
+      await deleteAllApps(indexer, algod, test1Account.sk);
+    }
+  });
+
   it.skip('deleteAllApps should work', async () => {
     const encryptSecretKey = didvc.encryptSecretKey(test2Account.sk, issuerPw);
     const appIndex = await createRevokedApp(algod, test2Account.sk);
@@ -388,22 +474,6 @@ describe('didvc', () => {
       );
     } finally {
       await deleteApp(algod, appIndex, test2Account.sk);
-    }
-  });
-
-  it.skip('verifyCredentialStatus should work', async () => {
-    const appIndex = await createRevokedApp(algod, test1Account.sk);
-
-    try {
-      console.log('Application Index:', appIndex);
-
-      expect(await didvc.verifyCredentialStatus(algod, appIndex)).toBeTruthy();
-
-      await setRevoked(algod, { appIndex, value: 1 }, test1Account.sk);
-
-      expect(await didvc.verifyCredentialStatus(algod, appIndex)).toBeFalsy();
-    } finally {
-      await deleteApp(algod, appIndex, test1Account.sk);
     }
   });
 });

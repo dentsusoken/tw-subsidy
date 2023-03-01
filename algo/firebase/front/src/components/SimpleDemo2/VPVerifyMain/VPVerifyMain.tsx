@@ -1,32 +1,40 @@
-import DidInfo from '@/components/DidInfo';
+import DIDInfo2 from '@/components/DIDInfo2';
 import BackButton from '@/components/BackButton';
 
 import useVPVerifyMain from './useVPVerifyMain';
 
 const VPSubmitMain = () => {
   const {
-    vm,
+    vpForDisplay,
     vpVerified,
-    holderDidAccount,
-    verifierDidAccount,
-    issuerDidAccount,
+    holderDID,
+    holderAddress,
+    verifierDID,
+    verifierAddress,
+    issuerDID,
+    issuerAddress,
     onVPVerifyClickHandler,
   } = useVPVerifyMain();
 
   return (
     <div>
       <div className="py-2">
-        <BackButton url="./simple-demo" />
+        <BackButton url="./simple-demo2" />
       </div>
       <p className="w-fit border-dashed border-4 p-4 mb-2">
         申請先が住民票VPを検証します。
       </p>
-      <DidInfo name="申請先" didAccount={verifierDidAccount} />
-      <DidInfo name="申請者" didAccount={holderDidAccount} />
-      <DidInfo name="証明者" didAccount={issuerDidAccount} />
+      <DIDInfo2 name="申請先" did={verifierDID} address={verifierAddress} />
+      <DIDInfo2 name="申請者" did={holderDID} address={holderAddress} />
+      <DIDInfo2 name="証明者" did={issuerDID} address={issuerAddress} />
 
       <div className="pt-2">住民票VPの内容</div>
-      <textarea value={vm} rows={26} cols={50} readOnly={true}></textarea>
+      <textarea
+        value={vpForDisplay}
+        rows={26}
+        cols={90}
+        readOnly={true}
+      ></textarea>
       <div>
         <button
           onClick={onVPVerifyClickHandler}
@@ -34,9 +42,7 @@ const VPSubmitMain = () => {
         >
           検証
         </button>
-        {vpVerified && vpVerified.vpVerified && (
-          <span className="text-blue-500">Done</span>
-        )}
+        {vpVerified && <span className="text-blue-500">Done</span>}
       </div>
     </div>
   );

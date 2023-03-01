@@ -168,13 +168,31 @@ export const createRevokedApp = async (
 
 export const verifyCredentialStatus = async (
   algod: algosdk.Algodv2,
-  appIndex: number
+  credential: didJwtKit.VerifiableCredential
 ): Promise<boolean> => {
   try {
-    const state = await getGlobalState(algod, appIndex);
+    if (credential.credentialSubject.appIndex) {
+      const state = await getGlobalState(
+        algod,
+        credential.credentialSubject.appIndex
+      );
 
-    return state.revoked === 0;
+      return state.revoked === 0;
+    } else {
+      return true;
+    }
   } catch (ignore) {
     return false;
   }
+};
+
+export const verifyCredentialStatuses = async (
+  algod: algosdk.Algodv2,
+  credentials: didJwtKit.VerifiableCredential[]
+): Promise<boolean[]> => {
+  const vcStatusPromises = credentials.map((credential) => {
+    return verifyCredentialStatus(algod, credential);
+  });
+
+  return Promise.all(vcStatusPromises);
 };
