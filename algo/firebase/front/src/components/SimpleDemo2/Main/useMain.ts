@@ -7,15 +7,13 @@ import { getAlgod } from '@/lib/algo/algod/algods';
 
 import chainState from '@/lib/states/chainState';
 import accountsPreparedState from '@/lib/states/accountsPreparedState';
-import corVCRequestState from '@/lib/states/corVCRequestState';
-import corVCState from '@/lib/states/corVCState';
-import corVPState from '@/lib/states/corVPState';
+import corVCRequestState from '@/lib/states/corVCRequestJWTState';
+import corVCState from '@/lib/states/corVCJWTState';
+import corVPState from '@/lib/states/corVPJWTState';
 import corVPVerifiedState from '@/lib/states/corVPVerifiedState';
-import issuerDidAccountState from '@/lib/states/issuerDidAccountState';
+import issuerDIDAccountState from '@/lib/states/issuerDIDAccount2State';
+import * as didvc from '@/lib/didvc';
 
-import * as cryptUtils from '@/lib/algosbt/utils/cryptUtils';
-
-import deleteAllApps from '@/lib/algo/api/deleteAllApps';
 import { issuerPw } from '@/lib/algo/account/accounts';
 
 const useMain = () => {
@@ -33,7 +31,7 @@ const useMain = () => {
   const [vpGlobal, setVPGlobal] = useRecoilState(corVPState);
   const [vpVerifiedGlobal, setVPVerifiedGlobal] =
     useRecoilState(corVPVerifiedState);
-  const [issuerDidAccount] = useRecoilState(issuerDidAccountState);
+  const [issuerDIDAccount] = useRecoilState(issuerDIDAccountState);
   const [chainType] = useRecoilState(chainState);
 
   const errorHandler = useErrorHandler();
@@ -53,6 +51,7 @@ const useMain = () => {
   ]);
 
   const onClearClickHandler = () => {
+    setAccountsPrepared(false);
     setVCRequestGlobal(undefined);
     setVCGlobal(undefined);
     setVPGlobal(undefined);
@@ -62,7 +61,7 @@ const useMain = () => {
       return;
     }
 
-    if (!issuerDidAccount) {
+    if (!issuerDIDAccount) {
       return;
     }
 
@@ -72,23 +71,18 @@ const useMain = () => {
       const indexer = getIndexer(chainType);
       const algod = getAlgod(chainType);
 
-      const sk = cryptUtils.decryptByPassword(
-        Buffer.from(issuerDidAccount.encSecretKey, 'base64'),
+      await didvc.deleteAllApps(
+        indexer,
+        algod,
+        issuerDIDAccount.encryptedSecretKey,
         issuerPw
       );
-
-      await deleteAllApps(indexer, algod, sk);
 
       setClearing(false);
     };
 
     func().catch(errorHandler);
   };
-
-  (async () => {
-    //await tryDidjwt();
-  })();
-  console.log(vpVerified);
 
   return {
     accountsPrepared,

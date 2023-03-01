@@ -21,7 +21,6 @@ import { issuerPw } from '@/lib/algo/account/accounts';
 
 const createVCContent = (vcRequestContent: CORVCRequestContent) => {
   const content: CORVCContent = {
-    issueDate: new Date().toISOString(),
     address: vcRequestContent.address,
     name: vcRequestContent.name,
   };

@@ -1,12 +1,21 @@
 import { VerifiableCredential, VerifiableMessage } from '../algosbt/types';
 
-/* eslint-disable unused-imports/no-unused-vars */
 export type ErrorHandlerType = (error: unknown) => void;
 
 export enum ChainType {
   MainNet = 'MainNet',
   TestNet = 'TestNet',
 }
+
+export type DIDAccount = {
+  did: string;
+  address: string;
+  encryptedSecretKey: string;
+};
+
+export type Revocable = {
+  appIndex: number;
+};
 
 export type CORVCRequestContent = {
   purpose: string;
@@ -15,7 +24,6 @@ export type CORVCRequestContent = {
 };
 
 export type CORVCContent = {
-  issueDate: string;
   address: string;
   name: string;
 };

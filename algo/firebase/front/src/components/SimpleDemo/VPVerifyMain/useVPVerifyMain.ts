@@ -13,15 +13,10 @@ import issuerDidAccountState from '@/lib/states/issuerDidAccountState';
 import { getAlgod } from '@/lib/algo/algod/algods';
 
 import { verifyVerifiablePresentation } from '@/lib/algosbt';
-import {
-  DidAccount,
-  VerifiablePresentationVerified,
-} from '@/lib/algosbt/types';
+import { DidAccount } from '@/lib/algosbt/types';
 
 const useVPVerifyMain = () => {
-  const [vpVerified, setVPVerified] = useState<
-    VerifiablePresentationVerified | undefined
-  >(undefined);
+  const [vpVerified, setVPVerified] = useState(false);
   const [vm, setVM] = useState('');
   const [holderDidAccount, setHolderDidAccount] = useState<DidAccount>();
   const [verifierDidAccount, setVerifierDidAccount] = useState<DidAccount>();
@@ -62,11 +57,11 @@ const useVPVerifyMain = () => {
 
   const onVPVerifyClickHandler = async () => {
     try {
-      if (!(vpVerifiedGlobal && vpVerifiedGlobal.vpVerified) && vpGlobal) {
+      if (!vpVerifiedGlobal && vpGlobal) {
         const algod = getAlgod(chain);
-        setVPVerifiedGlobal(
-          await verifyVerifiablePresentation(algod, vpGlobal)
-        );
+        const verified = await verifyVerifiablePresentation(algod, vpGlobal);
+
+        setVPVerifiedGlobal(verified.vpVerified);
       }
     } catch (e) {
       errorHandler(e);
