@@ -15,7 +15,7 @@ export type ResidentInputFormType = {
 
 export type AccountInputFormType = {
   id: number; // 仮のキー（申請日時-UNIX TIME）
-  bankCode: string; // 銀行コード
+  bankCode: string; // 金融機関コード
   branchNumber: string; // 支店番号
   accountNumber: string; // 口座番号
   corporateName: string; // 法人名称

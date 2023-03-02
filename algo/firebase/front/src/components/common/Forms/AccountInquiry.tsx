@@ -26,7 +26,7 @@ const AccountInquiry = ({ input }: AccountInquiryParams) => {
         <>
             <FormProvider {...methods} >
                 <section>
-                    <InputArea<AccountInputFormType> label={"銀行コード"} name={"bankCode"} isEnabled={false} size={"small"} />
+                    <InputArea<AccountInputFormType> label={"金融機関コード"} name={"bankCode"} isEnabled={false} size={"small"} />
                     <InputArea<AccountInputFormType> label={"支店番号"} name={"branchNumber"} isEnabled={false} size={"small"} />
                     <InputArea<AccountInputFormType> label={"口座番号"} name={"accountNumber"} isEnabled={false} />
                     <InputArea<AccountInputFormType> label={"法人名称"} name={"corporateName"} placeholder='' isEnabled={false} />

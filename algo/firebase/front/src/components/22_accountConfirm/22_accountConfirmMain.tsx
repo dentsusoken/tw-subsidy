@@ -67,7 +67,7 @@ const AccountConfirmMain = () => {
       <main className="bg-color-background">
         <Progress status='confirm' />
         <div className="mt-[9px] py-0 px-[53px]">
-          <div className="input-form-label">銀行コード</div>
+          <div className="input-form-label">金融機関コード</div>
           <input
             type="text"
             disabled={true}

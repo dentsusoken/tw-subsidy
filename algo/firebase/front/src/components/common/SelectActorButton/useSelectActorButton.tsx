@@ -11,7 +11,7 @@ const useSelectActorButton = (target: string) => {
     const msg = {
         applierMenu: "申請者メニュー",
         residentMenu: "自治体メニュー",
-        accountMenu: "銀行メニュー",
+        accountMenu: "金融機関メニュー",
         taxMenu: "税務署メニュー",
         subsidyMenu: "事務局メニュー",
     } as const;

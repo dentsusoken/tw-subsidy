@@ -18,7 +18,7 @@ const AccountListDoneMain = () => {
           </p>
           <div className={"flex flex-col justify-between gap-4"}>
             <ChangeUserButton text={"申請一覧へ"} onClick={() => router.push(urls.accountList)} />
-            <ChangeUserButton text={"銀行メニューへ"} onClick={() => router.push(urls.accountMenu)} />
+            <ChangeUserButton text={"金融機関メニューへ"} onClick={() => router.push(urls.accountMenu)} />
           </div>
         </Container>
       </main>

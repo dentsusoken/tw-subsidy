@@ -12,7 +12,7 @@ const VCRevokeDone = () => {
             case urls.residentVCListDone:
                 return { msg: "自治体メニューへ", listUrl: urls.residentVCList, menuUrl: urls.residentMenu };
             case urls.accountVCListDone:
-                return { msg: "銀行メニューへ", listUrl: urls.accountVCList, menuUrl: urls.accountMenu };
+                return { msg: "金融機関メニューへ", listUrl: urls.accountVCList, menuUrl: urls.accountMenu };
             case urls.taxVCListDone:
                 return { msg: "税務署メニューへ", listUrl: urls.taxVCList, menuUrl: urls.taxMenu };
             case urls.subsidyVCListDone:

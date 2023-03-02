@@ -43,7 +43,7 @@ const Header = () => {
           ) : (
             <div className="w-[62px]"></div>
           )}
-          <div className="flex">
+          <div className="flex items-center">
             {icon && <img src={icon} alt="アイコン" className={'pr-2'} />}
             <h1 className={'text-white text-lg font-bold'}>{heading}</h1>
           </div>
