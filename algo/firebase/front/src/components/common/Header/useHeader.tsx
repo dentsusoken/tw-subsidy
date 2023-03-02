@@ -31,7 +31,7 @@ const useHeader = () => {
     mainMenu: 'DEMO MENU',
     applierMenu: '申請者',
     residentMenu: '自治体',
-    accountMenu: '銀行',
+    accountMenu: '金融機関',
     taxMenu: '税務署',
     subsidyMenu: '事務局',
     accountAccept: '口座実在証明書の受入',
@@ -47,7 +47,7 @@ const useHeader = () => {
   const Titles = {
     applierMenu: '申請者メニュー',
     residentMenu: '自治体メニュー',
-    accountMenu: '銀行メニュー',
+    accountMenu: '金融機関メニュー',
     taxMenu: '税務署メニュー',
     subsidyMenu: '事務局メニュー',
   } as const;

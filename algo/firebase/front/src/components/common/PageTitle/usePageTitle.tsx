@@ -24,7 +24,7 @@ const usePageTitle = () => {
     subsidyList: '補助金申請一覧',
     subsidyListDetail: '補助金申請内容照会',
     issueDone: '処理完了',
-    accountMenu: '銀行メニュー',
+    accountMenu: '金融機関メニュー',
     taxMenu: '税務署メニュー',
     subsidyMenu: '事務局メニュー',
     applicationList: '申請一覧',

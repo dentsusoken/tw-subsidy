@@ -90,7 +90,7 @@ const AccountInputMain = () => {
           <div className="mt-[9px] py-0 px-[53px]">
             <form onSubmit={onSubmit}>
               <div className="input-form-label">
-                銀行コード
+                金融機関コード
                 <span className="input-form-label-required">（必須）</span>
                 <span className="text-error-message text-color-required">
                   {errors.bankCode && '・' + errors.bankCode.message}

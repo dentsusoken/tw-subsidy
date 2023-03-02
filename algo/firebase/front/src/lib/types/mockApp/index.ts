@@ -60,7 +60,7 @@ export const icons = {
 export const msg = {
     applierMenu: "申請者メニュー",
     residentMenu: "自治体メニュー",
-    accountMenu: "銀行メニュー",
+    accountMenu: "金融機関メニュー",
     taxMenu: "税務署メニュー",
     subsidyMenu: "申請先メニュー",
 } as const;
