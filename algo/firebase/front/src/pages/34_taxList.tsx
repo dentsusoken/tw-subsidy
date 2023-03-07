@@ -1,4 +1,4 @@
-import TaxListMain from '@/components/34_taxList';
+import TaxListMain from '@/components/jwt/34_taxList';
 import type { NextPage } from 'next';
 
 

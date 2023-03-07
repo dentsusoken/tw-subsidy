@@ -1,4 +1,4 @@
-import TaxVCListMain from "@/components/101_taxVCList";
+import TaxVCListMain from "@/components/jwt/101_taxVCList";
 
 const TaxVCList = () => {
     return <TaxVCListMain />

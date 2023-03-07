@@ -1,4 +1,4 @@
-import AccountVCListMain from "@/components/91_accountVCList";
+import AccountVCListMain from "@/components/jwt/91_accountVCList";
 
 const AccountVCList = () => {
     return <AccountVCListMain />

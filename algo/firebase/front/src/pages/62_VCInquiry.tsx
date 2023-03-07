@@ -1,7 +1,7 @@
-import VCInquiryMain from "@/components/62_VCInquiry";
+import VCDetailMain from "@/components/jwt/62_VCDetail";
 
 const VCInquiry = () => {
-    return <VCInquiryMain />
+    return <VCDetailMain />
 };
 
 export default VCInquiry;

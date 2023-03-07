@@ -1,4 +1,4 @@
-import VCListMain from '@/components/61_VCList';
+import VCListMain from '@/components/jwt/61_VCList';
 
 const VCList = () => {
     return <VCListMain />

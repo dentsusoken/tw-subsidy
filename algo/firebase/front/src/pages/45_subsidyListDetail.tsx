@@ -1,5 +1,5 @@
 import type { NextPage } from 'next';
-import SubsidyListDetailMain from '@/components/45_subsidyListDetail';
+import SubsidyListDetailMain from '@/components/jwt/45_subsidyListDetail';
 
 
 const SubsidyListDetail: NextPage = () => {

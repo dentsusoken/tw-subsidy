@@ -1,22 +1,13 @@
-import dayjs from 'dayjs';
-import 'dayjs/locale/ja';
+import { VCInfo } from '@/lib/mockApp/types';
 import useVCListContainer from './useVCListContainer';
-
-export type VCListItem = {
-  id: number;
-  applicationDate: string | undefined;
-  issueDate: string | undefined;
-  revokeStatus: boolean;
-};
 
 export type VCListContainerTypes = {
   type: '住民票' | '口座実在証明書' | '納税証明書' | '補助金申請';
-  items?: VCListItem[];
+  items?: VCInfo[];
 };
 
 const VCListContainer = ({ type, items }: VCListContainerTypes) => {
   const { onInquiry } = useVCListContainer();
-  dayjs.locale('ja');
 
   return (
     <section className={''}>
@@ -34,13 +25,13 @@ const VCListContainer = ({ type, items }: VCListContainerTypes) => {
             >
               <span className={'w-fit text-color-gray'}>{index + 1}.</span>
               <span className={'w-fit text-xs text-color-gray mr-3'}>
-                {dayjs(item.issueDate).format('YY/MM/DD')}
+                {item.issueDate}
               </span>
               <span className={'w-35 text-xs font-bold'}>
                 {type} - VC{items.length - index}
               </span>
               <span className={'text-xs mr-2 text-color-gray'}>
-                {item.revokeStatus ? '発行済' : '取消済'}
+                {item.ApplicationStatus.revokeStatus ? '発行済' : '取消済'}
               </span>
               <button
                 className={'w-16 h-7 border rounded-lg'}

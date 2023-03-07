@@ -1,6 +1,6 @@
 import type { NextPage } from 'next';
 
-import AccountInputMain from '@/components/21_accountInput';
+import AccountInputMain from '@/components/jwt/21_accountInput';
 
 const AccountInput: NextPage = () => {
   return <AccountInputMain />;

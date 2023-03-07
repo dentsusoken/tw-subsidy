@@ -1,4 +1,4 @@
-import SubsidyVCListDoneMain from '@/components/113_subsidyVCListDone';
+import SubsidyVCListDoneMain from '@/components/jwt/113_subsidyVCListDone';
 import type { NextPage } from 'next';
 
 

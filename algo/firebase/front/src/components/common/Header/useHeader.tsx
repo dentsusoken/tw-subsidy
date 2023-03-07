@@ -1,15 +1,8 @@
 import { useRouter } from 'next/router';
-import { urls, icons } from '@/lib/types/mockApp';
-import useDataClear from '@/components/util/useDataClear';
-import { useEffect } from 'react';
+import { urls, icons } from '@/lib/mockApp/consts';
 
 const useHeader = () => {
   const router = useRouter();
-  const { clearOldData } = useDataClear();
-
-  useEffect(() => {
-    clearOldData();
-  }, [clearOldData]);
 
   const back = () => {
     router.back();

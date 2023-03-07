@@ -1,4 +1,4 @@
-import ResidentVCListDoneMain from "@/components/83_residentVCListDone";
+import ResidentVCListDoneMain from "@/components/jwt/83_residentVCListDone";
 
 const ResidentVCListDone = () => {
     return <ResidentVCListDoneMain />

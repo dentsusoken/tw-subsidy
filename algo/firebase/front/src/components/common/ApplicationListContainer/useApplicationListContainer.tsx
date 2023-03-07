@@ -16,7 +16,7 @@ const useApplicationListContainer = (type: string) => {
         }
     }
 
-    const onInquiry = (type: string, id: number) => {
+    const onInquiry = (type: string, id: string) => {
         router.push({
             pathname: "/72_applicationListDetail",
             query: {

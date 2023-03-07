@@ -1,4 +1,4 @@
-import ApplicationListDetailMain from "@/components/72_ApplicationListDetail";
+import ApplicationListDetailMain from "@/components/jwt/72_ApplicationListDetail";
 
 const ApplicationList = () => {
     return <ApplicationListDetailMain/>

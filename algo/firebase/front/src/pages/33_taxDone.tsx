@@ -1,4 +1,4 @@
-import TaxDoneMain from '@/components/33_taxDone';
+import TaxDoneMain from '@/components/jwt/33_taxDone';
 import type { NextPage } from 'next';
 
 

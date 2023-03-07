@@ -1,4 +1,4 @@
-import TaxConfirmMain from '@/components/32_taxConfirm';
+import TaxConfirmMain from '@/components/jwt/32_taxConfirm';
 import type { NextPage } from 'next';
 
 

@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { urls } from '@/lib/types/mockApp';
+import { urls } from '@/lib/mockApp/consts';
 
 const useApplicationDone = () => {
     const router = useRouter();
