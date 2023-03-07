@@ -1,7 +1,7 @@
 import Header from '@/components/common/Header';
 import Container from '@/components/common/Container';
 import ChangeUserButton from '@/components/common/ChangeUserButton';
-import { urls } from '@/lib/types/mockApp';
+import { urls } from '@/lib/mockApp/consts';
 import { useRouter } from 'next/router';
 
 const VCRevokeDone = () => {

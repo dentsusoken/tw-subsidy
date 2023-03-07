@@ -1,4 +1,4 @@
-import { urls } from "@/lib/types/mockApp";
+import { urls } from "@/lib/mockApp/consts";
 
 const useConfirmLink = (actor: string, type: string) => {
 

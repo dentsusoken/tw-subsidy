@@ -1,6 +1,6 @@
 import type { NextPage } from 'next';
 
-import SubsidyConfirmMain from '@/components/42_subsidyConfirm';
+import SubsidyConfirmMain from '@/components/jwt/42_subsidyConfirm';
 
 const SubsidyConfirm: NextPage = () => {
     return <SubsidyConfirmMain />

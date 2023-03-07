@@ -1,6 +1,6 @@
 import type { NextPage } from 'next';
 
-import ResidentDoneMain from '@/components/13_residentDone';
+import ResidentDoneMain from '@/components/jwt/13_residentDone';
 
 const ResidentDone: NextPage = () => {
   return <ResidentDoneMain />;

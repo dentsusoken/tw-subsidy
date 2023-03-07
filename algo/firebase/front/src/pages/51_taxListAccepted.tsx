@@ -1,4 +1,4 @@
-import TaxListAcceptedMain from '@/components/51_taxListAccepted';
+import TaxListAcceptedMain from '@/components/jwt/51_taxListAccepted';
 import type { NextPage } from 'next';
 
 

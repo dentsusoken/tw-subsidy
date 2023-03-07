@@ -1,47 +1,32 @@
-import { useVerifyHandler } from '@/lib/hooks/MockApp';
-import {
-  AccountVCType,
-  ResidentVCType,
-  SubsidyInputFormType,
-  SubsidyVCType,
-  TaxVCType,
-} from '@/lib/types/mockApp';
+import useVCHandler from '@/lib/mockApp/hooks/useVCHandler';
+import { VCInfo } from '@/lib/mockApp/types';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { UrlObject } from 'url';
 
-export type VCInfo = {
-  id: number;
-  name: string;
-  issueDate: string | undefined;
-  revoked: boolean;
-  VCName: string;
-  vc: ResidentVCType | AccountVCType | TaxVCType | SubsidyVCType;
-  vp?: SubsidyInputFormType;
-};
-
 export type VCListItemParams = {
   item: VCInfo;
   url: string | UrlObject;
+  vcName: string;
 };
 
-const VCListItem = ({ item, url }: VCListItemParams) => {
+const VCListItem = ({ item, url, vcName }: VCListItemParams) => {
   const router = useRouter();
-  const { verifyVCHandler, verifyVPHandler } = useVerifyHandler();
+  const vcHandler = useVCHandler();
   const [verifyResult, setVerifyResult] = useState<boolean | undefined>(
     undefined
   );
-  dayjs.locale('ja');
 
   useEffect(() => {
     (async () => {
-      let result = true;
-      if (item.vp && result) {
-        const verifyVPResult = await verifyVPHandler(item.vp);
-        result = verifyVPResult.verifyStatus;
+      let result: boolean = item.vc.verified;
+      if (item.vc.payload.vc.credentialSubject.vp && result) {
+        const verifyVPResult = await vcHandler.verifyVP(
+          item.vc.payload.vc.credentialSubject.vp
+        );
+        result = verifyVPResult ? verifyVPResult.vpRevoked : false;
       }
-
       setVerifyResult(result);
     })();
   });
@@ -57,15 +42,15 @@ const VCListItem = ({ item, url }: VCListItemParams) => {
           }
         >
           <span className={'w-fit'}>
-            {dayjs(item.issueDate).format('M月D日(ddd)')}
+            {item.issueDate}
           </span>
           <div className={`flex flex-col w-28} `}>
-            <span>{item.name}</span>
-            <span>{item.VCName}</span>
+            <span>{item.fullName}</span>
+            <span>{vcName}</span>
           </div>
           <div className={'flex w-10 h-12 items-center'}>
             {typeof verifyResult === 'boolean' ? (
-              verifyResult && item.revoked ? (
+              verifyResult && item.ApplicationStatus.revokeStatus ? (
                 <img
                   src="./authenticated.svg"
                   alt=""
@@ -77,7 +62,7 @@ const VCListItem = ({ item, url }: VCListItemParams) => {
             ) : null}
           </div>
           <span className={'w-fit text-color-gray-accepted'}>
-            {item.revoked ? '発行済' : '取消済'}
+            {item.ApplicationStatus.revokeStatus ? '発行済' : '取消済'}
           </span>
           <button
             onClick={() => {

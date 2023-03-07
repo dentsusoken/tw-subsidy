@@ -1,4 +1,4 @@
-import SubsidyVCListMain from "@/components/111_subsidyVCList";
+import SubsidyVCListMain from "@/components/jwt/111_subsidyVCList";
 
 const SubsidyVCList = () => {
     return <SubsidyVCListMain />

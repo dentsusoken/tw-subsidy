@@ -1,6 +1,6 @@
 import type { NextPage } from 'next';
 
-import AccountListDetailMain from '@/components/25_accountListDetail';
+import AccountListDetailMain from '@/components/jwt/25_accountListDetail';
 
 const AccountListDetail: NextPage = () => {
   return <AccountListDetailMain />;

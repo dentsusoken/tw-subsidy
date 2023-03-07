@@ -1,4 +1,4 @@
-import { urls, icons } from "@/lib/types/mockApp";
+import { urls, icons } from "@/lib/mockApp/consts";
 
 const useSelectActorButton = (target: string) => {
 

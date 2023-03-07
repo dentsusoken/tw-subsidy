@@ -1,6 +1,6 @@
 import type { NextPage } from 'next';
 
-import TaxInputMain from '@/components/31_taxInput';
+import TaxInputMain from '@/components/jwt/31_taxInput';
 
 const TaxInput: NextPage = () => {
     return <TaxInputMain />
